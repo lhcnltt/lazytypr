@@ -73,10 +73,25 @@ real audio or inference is introduced.
   at least one refused or unverifiable target that remains copy-only, and at
   least five cancellations during capture or processing.
 - **D-11:** Planning and implementation stay on
-  `phase/1-secure-electron-walking-skeleton`, use committed sanitized GSD
+  `phase/01-secure-electron-walking-skeleton`, use committed sanitized GSD
   artifacts, and do not auto-advance. No implementation begins until the Phase
   1 plans pass the configured research, UI, security, Nyquist, context-coverage,
   and plan-checker gates and are accepted.
+- **D-12:** The Phase 1 tracer uses the dictation-slot defaults already fixed in
+  `PLAN.md`: `Ctrl+Shift+Space` on Windows and `Control+Option+Space` on macOS.
+  Registration and retry state are main-owned and injected for tests; durable
+  user-configurable settings remain a later-phase concern.
+- **D-13:** Implement the platform-native boundary already fixed in `PLAN.md`:
+  an attributed MIT-derived C helper on Windows and an attributed Swift helper
+  on macOS, each built on its target OS. The helper boundary uses a bounded,
+  sanitized request/result protocol, retains target identity only in main
+  memory, and returns fail-closed outcome codes without target or clipboard
+  content.
+- **D-14:** Cancellation uses a main-owned output commit barrier. Escape
+  accepted before the synchronous clipboard write produces the no-output
+  cancelled outcome. After commit begins, lazytypr never restores or clears the
+  result; cancellation accepted before native paste dispatch suppresses paste,
+  completes copy-only, and never claims that nothing was copied.
 
 ### the agent's Discretion
 

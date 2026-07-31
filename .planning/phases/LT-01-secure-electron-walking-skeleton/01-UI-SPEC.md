@@ -1,10 +1,11 @@
 ---
 phase: 1
 slug: secure-electron-walking-skeleton
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-07-31
+reviewed: 2026-07-31
 ---
 
 # Phase 1 — UI Design Contract
@@ -99,7 +100,7 @@ Accent is reserved for: the primary safe-test CTA, keyboard focus, the active li
 ### Minimum control window
 
 - Use a conventional, focusable window titled `lazytypr — Tracer test`. It is the accessible alternate route for status and cancellation; opening it must not alter a running session or the captured target.
-- The window has one visible `Tracer test` section, not the future History/Models/Settings/Diagnostics navigation. It contains, in this order: a hotkey-status card; a clipboard/paste safety card; the primary `Run Safe Test` button; and a visible `Cancel tracer` button while a session is active.
+- The window has one visible `Tracer test` section, not the future History/Models/Settings/Diagnostics navigation. It contains, in this order: a hotkey-status card; a clipboard/paste safety card; the primary `Run Safe Test` button; and a visible `Cancel tracer` button while a session is cancellable before the output commit barrier.
 - In idle, the safety status is read first and `Run Safe Test` is the primary visual focal action. During an active session, the current state card becomes the focal element and `Cancel tracer` becomes the primary available action. Preserve that scan order through heading level, source order, spacing, and focus order rather than color alone.
 - The hotkey card displays exactly one normalized status: `Ready`, `Busy`, or `Unavailable`. `Unavailable` includes the recovery action `Check hotkey settings` only when that destination is available; otherwise use `Close Tracer Test` and state that the hotkey must be resolved before retrying.
 - The safety card states `Results are copied first.` It shows `Clipboard-only` by default and an `Auto-paste to verified target` switch. Enabling is unavailable while a session is active.
@@ -118,8 +119,8 @@ Only main may advance a session state. Each update is keyed to the active sessio
 | Start accepted / acquiring stub capture | Microphone/status shape + `Preparing capture` | Disable `Run Safe Test`; reveal `Cancel tracer` | Capture the foreground target before showing the overlay |
 | Listening stub capture | Bounded waveform + `Listening` | Active session status; cancellation available | Same hotkey ends capture; Escape cancels |
 | Stub processing | Spinner + `Processing` | `Busy` status; a further hotkey must not create another session | A further hotkey displays the busy outcome and preserves the active session |
-| Copying | Clipboard icon + `Copying` | Keep controls disabled except cancel while copying is still cancellable | Copy the exact final stub result before any paste decision |
-| Pasting | Target icon + `Pasting` | Show only while opt-in auto-paste is enabled and main has reactivated/reverified the original target | Never expose target identity; verification failure skips directly to copy-only |
+| Copying | Clipboard icon + `Copying` | Hide the cancel action when main crosses the synchronous clipboard commit barrier | Check cancellation immediately before commit, then copy the exact final stub result before any paste decision |
+| Pasting | Target icon + `Pasting` | Show only while opt-in auto-paste is enabled and main has reactivated/reverified the original target | Cancellation accepted before native dispatch suppresses paste and finishes copy-only; never expose target identity or retry another target |
 | Success: copy-only | Check + `Copied` | Restore ready controls | Show for 2 seconds, then hide to idle |
 | Success: verified paste | Check + `Pasted` | Restore ready controls | Show for 2 seconds, then hide to idle |
 | Safe paste fallback | Warning + `Copied — paste target could not be verified` | Restore ready controls; retain the exact clipboard result | Show for 2 seconds, then hide to idle; never retry against another target |
@@ -161,7 +162,7 @@ All copy is represented by stable message keys; interpolation is named and bound
 ## Accessibility, Responsive, and Localization Contract
 
 - Use semantic `button`, `switch`/checkbox, dialog, headings, and status roles; do not create clickable `div`s. Every icon has an adjacent visible label or an accessible name. No operation relies on hover, color alone, or overlay focus.
-- Keyboard order is heading/status summary → auto-paste switch → `Run Safe Test` → conditional `Cancel tracer`. Enter/Space activate controls; Escape closes the auto-paste modal or cancels an active session through main. The non-focusable overlay is never placed in the tab order.
+- Keyboard order is heading/status summary → auto-paste switch → `Run Safe Test` → conditional `Cancel tracer`. Enter/Space activate controls; Escape closes the auto-paste modal or requests cancellation through main while the session is before its output commit barrier. After commit, main never restores the clipboard; it suppresses a not-yet-dispatched paste and reports copy-only. The non-focusable overlay is never placed in the tab order.
 - The control window has a visible 2px accent focus ring with a 2px offset, logical tab order, and no focus trap except the modal. Opening and closing the modal restores focus to its invoking switch.
 - Overlay and control status changes use polite live announcements. Failure, hotkey-unavailable, and safety fallback messages are assertive; repeated busy updates are deduplicated so assistive technology is not spammed.
 - Support Windows 100/125/150/200% scaling, macOS Retina scaling, and 200% text with no clipped label, clipped focus ring, or horizontal page scroll. The compact control window may grow vertically and scroll its content vertically at narrow heights; it may not create horizontal scrolling.
