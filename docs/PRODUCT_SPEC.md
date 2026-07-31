@@ -75,6 +75,11 @@ translation and sidecar-security outcomes.
 - STT failure produces no clipboard, paste, or history item.
 - Translation failure preserves successful Portuguese and marks the one history
   row `translation_failed`; user cancellation does not activate fallback.
+- Cancellation linearizes at a main-owned output commit barrier. An Escape
+  accepted before the synchronous clipboard write cancels with no output. Once
+  that write begins, lazytypr never restores or clears the copied result; an
+  accepted cancellation before native paste dispatch suppresses paste and
+  finishes copy-only, and the UI must not claim that nothing was copied.
 - Paste activation/verification failure becomes copy-only and never targets a
   different application.
 - Sidecar cancellation waits two seconds, force-kills if needed, restarts, and
