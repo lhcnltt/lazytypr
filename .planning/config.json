@@ -39,6 +39,7 @@
   "git": {
     "branching_strategy": "phase",
     "base_branch": "main",
+    "phase_branch_template": "phase/{phase}-{slug}",
     "create_tag": false
   },
   "safety": {
