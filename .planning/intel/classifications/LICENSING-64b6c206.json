@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/LICENSING.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "Licensing and Release Compliance",
+  "summary": "Defines licensing, provenance, model redistribution, notices, SBOM, and release compliance requirements for lazytypr.",
+  "scope": ["MIT", "REUSE 3.3", "provenance", "OpenWhispr", "model downloads", "SBOM", "release gates"],
+  "cross_refs": ["REUSE.toml", "THIRD_PARTY_NOTICES.md", "third_party/openwhispr/LICENSE", "PROVENANCE.yaml"],
+  "locked": false,
+  "precedence": 20,
+  "notes": ""
+}

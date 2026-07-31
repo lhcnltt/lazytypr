@@ -1,0 +1,28 @@
+version = 1
+
+[[annotations]]
+path = [
+  ".gitignore",
+  ".markdownlint.json",
+  ".github/**",
+  ".planning/**",
+  "ACKNOWLEDGMENTS.md",
+  "AGENTS.md",
+  "CONTRIBUTING.md",
+  "PLAN.md",
+  "PRIVACY.md",
+  "README.md",
+  "README.pt-BR.md",
+  "SECURITY.md",
+  "THIRD_PARTY_NOTICES.md",
+  "docs/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 lhcnltt"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "third_party/openwhispr/LICENSE"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2024 OpenWhispr Team"
+SPDX-License-Identifier = "MIT"

@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/adr/0007-native-focus-and-paste.md",
+  "type": "ADR",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "ADR 0007: Platform-native focus restoration and paste",
+  "summary": "Decides to capture and validate the foreground target, then paste through a native helper with copy-only fallback and no persisted focus targets.",
+  "scope": ["foreground target", "lazytypr", "native helper", "clipboard", "paste", "Windows", "macOS"],
+  "cross_refs": [],
+  "locked": true,
+  "precedence": 0,
+  "notes": ""
+}

@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/adr/0008-mit-reuse-provenance.md",
+  "type": "ADR",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "ADR 0008: MIT publication, REUSE, and provenance",
+  "summary": "Adopts MIT publication with REUSE compliance, preserved upstream notices, immutable provenance, and release SBOMs.",
+  "scope": ["MIT", "REUSE 3.3", "upstream licenses", "provenance", "SPDX", "CycloneDX SBOM"],
+  "cross_refs": [],
+  "locked": true,
+  "precedence": 0,
+  "notes": ""
+}

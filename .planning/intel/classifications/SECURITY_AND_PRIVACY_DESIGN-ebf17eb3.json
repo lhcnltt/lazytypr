@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/SECURITY_AND_PRIVACY_DESIGN.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "Security and Privacy Design",
+  "summary": "Specifies assets, adversaries, security boundaries, privacy controls, network restrictions, recovery properties, and residual risks.",
+  "scope": ["microphone PCM", "transcripts", "clipboard", "focus targets", "sidecar secrets", "renderers", "IPC", "MessagePort", "providers", "OS", "persistence", "build/release", "network privacy"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": 20,
+  "notes": ""
+}

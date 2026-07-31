@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/ARCHITECTURE.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "Architecture",
+  "summary": "Defines the lazytypr Electron architecture, trust boundaries, deployment, dictation and translation flows, ownership, and lifecycle contracts.",
+  "scope": ["Electron main", "sandboxed renderers", "loopback sidecars", "model downloads", "SQLite history", "dictation", "translation", "deployment"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": 20,
+  "notes": ""
+}

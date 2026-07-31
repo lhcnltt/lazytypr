@@ -1,0 +1,64 @@
+{
+  "runtime": "codex",
+  "mode": "interactive",
+  "granularity": "fine",
+  "model_profile": "inherit",
+  "planning": {
+    "commit_docs": true,
+    "search_gitignored": false,
+    "sub_repos": []
+  },
+  "workflow": {
+    "research": true,
+    "research_before_questions": true,
+    "plan_check": true,
+    "plan_review_convergence": true,
+    "verifier": true,
+    "auto_advance": false,
+    "nyquist_validation": true,
+    "ui_phase": true,
+    "ui_safety_gate": true,
+    "ui_review": true,
+    "human_verify_mode": "end-of-phase",
+    "tdd_mode": true,
+    "use_worktrees": false,
+    "code_review": true,
+    "code_review_depth": "deep",
+    "security_enforcement": true,
+    "security_asvs_level": 2,
+    "security_block_on": "high",
+    "context_coverage_gate": true
+  },
+  "hooks": {
+    "context_warnings": true,
+    "workflow_guard": true
+  },
+  "parallelization": {
+    "enabled": false
+  },
+  "git": {
+    "branching_strategy": "phase",
+    "base_branch": "main",
+    "create_tag": false
+  },
+  "safety": {
+    "always_confirm_destructive": true,
+    "always_confirm_external_services": true
+  },
+  "security": {
+    "injection_blocking": true
+  },
+  "capabilities": {
+    "strict_known_registries": ["github.com", "npm"],
+    "auto_update": false
+  },
+  "project_code": "LT",
+  "response_language": "en",
+  "features": {
+    "global_learnings": false
+  },
+  "graphify": {
+    "enabled": false,
+    "auto_update": false
+  }
+}

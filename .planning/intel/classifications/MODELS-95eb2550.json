@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/MODELS.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "Model and Runtime Catalog Specification",
+  "summary": "Specifies immutable speech-to-text and translation model catalogs, compatibility, licenses, pinned hashes, and download lifecycle controls.",
+  "scope": ["speech-to-text models", "translation models", "llama.cpp", "sherpa", "model catalog", "licenses", "SHA-256 validation", "download lifecycle"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": 20,
+  "notes": ""
+}

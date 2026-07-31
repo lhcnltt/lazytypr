@@ -1,0 +1,59 @@
+schemaVersion: 1
+project: lazytypr
+records:
+  - id: openwhispr-pinned-evidence
+    sourceUrl: https://github.com/OpenWhispr/openwhispr
+    revision: bf8b7e0b4e1de0c9779c63f4752bd80bdd39ee2c
+    upstreamPath: LICENSE
+    localPath: third_party/openwhispr/LICENSE
+    relationship: evidence-and-license-preservation
+    spdx: MIT
+    copyright: Copyright (c) 2024 OpenWhispr Team
+    sha256: ecf1a12d3dc51085d2f3a720dc177c7da3cd075ea3fadcc6a1b719fb44ed30e0
+    bundled: false
+    downloaded: false
+    developmentOnly: true
+    notice: Preserve exact license; no application code copied in baseline.
+    reviewState: reviewed
+  - id: gsd-core-development-tool
+    sourceUrl: https://github.com/open-gsd/gsd-core
+    revision: 957ebd8e6c62201ce7a44d49bfa92a1c0807cc25
+    upstreamPath: package at tag v1.9.1
+    localPath: none
+    relationship: development-tool
+    spdx: MIT
+    copyright: Copyright (c) 2026 Open GSD
+    sha512: dDfc0cf6mI0BaklJOvsQY9FPa4fKFT5zF+t0XQSxpAYQHMhV+uF8xtWnRoCvNjDYg69nBWkFjpM2TB4SMx7jmQ==
+    bundled: false
+    downloaded: true
+    developmentOnly: true
+    notice: Installed through the official Codex transformer; never an app dependency.
+    reviewState: reviewed
+  - id: graphify-development-tool
+    sourceUrl: https://github.com/Graphify-Labs/graphify
+    revision: version-0.9.31
+    upstreamPath: none
+    localPath: none
+    relationship: research-tool
+    spdx: Apache-2.0
+    copyright: upstream
+    sha256: pending-tool-cache-verification
+    bundled: false
+    downloaded: false
+    developmentOnly: true
+    notice: Results summarized as pinned source inspection evidence.
+    reviewState: planned-verification
+  - id: opensrc-development-tool
+    sourceUrl: https://github.com/vercel-labs/opensrc
+    revision: version-0.7.3
+    upstreamPath: none
+    localPath: none
+    relationship: research-tool
+    spdx: Apache-2.0
+    copyright: upstream
+    sha256: pending-tool-cache-verification
+    bundled: false
+    downloaded: false
+    developmentOnly: true
+    notice: Selective source inspection only.
+    reviewState: planned-verification

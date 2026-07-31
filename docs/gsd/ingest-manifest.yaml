@@ -1,0 +1,64 @@
+docs:
+  - path: docs/adr/0001-standalone-application.md
+    type: ADR
+    precedence: 0
+  - path: docs/adr/0002-electron-main-authority.md
+    type: ADR
+    precedence: 0
+  - path: docs/adr/0003-in-memory-audio.md
+    type: ADR
+    precedence: 0
+  - path: docs/adr/0004-authenticated-loopback-sidecars.md
+    type: ADR
+    precedence: 0
+  - path: docs/adr/0005-immutable-model-catalog.md
+    type: ADR
+    precedence: 0
+  - path: docs/adr/0006-persistence.md
+    type: ADR
+    precedence: 0
+  - path: docs/adr/0007-native-focus-and-paste.md
+    type: ADR
+    precedence: 0
+  - path: docs/adr/0008-mit-reuse-provenance.md
+    type: ADR
+    precedence: 0
+  - path: docs/adr/0009-local-only-product.md
+    type: ADR
+    precedence: 0
+  - path: docs/adr/0010-gsd-phase-pr-workflow.md
+    type: ADR
+    precedence: 0
+  - path: docs/PRODUCT_SPEC.md
+    type: PRD
+    precedence: 10
+  - path: docs/ARCHITECTURE.md
+    type: SPEC
+    precedence: 20
+  - path: docs/IPC_CONTRACTS.md
+    type: SPEC
+    precedence: 20
+  - path: docs/UI_SPEC.md
+    type: SPEC
+    precedence: 20
+  - path: docs/MODELS.md
+    type: SPEC
+    precedence: 20
+  - path: docs/SECURITY_AND_PRIVACY_DESIGN.md
+    type: SPEC
+    precedence: 20
+  - path: docs/LICENSING.md
+    type: SPEC
+    precedence: 20
+  - path: docs/TESTING.md
+    type: SPEC
+    precedence: 20
+  - path: docs/TEST_DATA.md
+    type: SPEC
+    precedence: 20
+  - path: docs/upstream/OPENWHISPR_EVIDENCE.md
+    type: DOC
+    precedence: 20
+  - path: PLAN.md
+    type: DOC
+    precedence: 30

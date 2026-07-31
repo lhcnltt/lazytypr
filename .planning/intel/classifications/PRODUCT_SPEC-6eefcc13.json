@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/PRODUCT_SPEC.md",
+  "type": "PRD",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "Product Specification",
+  "summary": "Defines lazytypr's offline bilingual dictation and translation product promise, requirements, acceptance scenarios, failure behavior, and v1 exclusions.",
+  "scope": ["lazytypr", "dictation", "translation", "Whisper", "Qwen3.5", "clipboard", "hotkeys", "history", "packaging"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": 10,
+  "notes": ""
+}

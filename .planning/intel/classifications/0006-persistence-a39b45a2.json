@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/adr/0006-persistence.md",
+  "type": "ADR",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "ADR 0006: SQLite history and atomic JSON settings",
+  "summary": "Defines atomic JSON settings persistence and text-only SQLite history with WAL, migrations, parameterized queries, and bounded diagnostics.",
+  "scope": ["JSON settings", "atomic rename", "SQLite history", "WAL", "foreign keys", "migrations", "secure deletion", "diagnostics"],
+  "cross_refs": [],
+  "locked": true,
+  "precedence": 0,
+  "notes": ""
+}

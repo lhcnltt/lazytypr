@@ -1,0 +1,4 @@
+# SPDX-FileCopyrightText: 2026 lhcnltt
+# SPDX-License-Identifier: MIT
+# Only while using Plan mode
+plan_mode_reasoning_effort = "xhigh"

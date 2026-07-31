@@ -1,0 +1,13 @@
+{
+  "source_path": "PLAN.md",
+  "type": "DOC",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "lazytypr v1 — Decision-Complete Implementation Plan",
+  "summary": "Presents the lazytypr v1 implementation plan, architecture, upstream evidence, technology baseline, reuse decisions, and success criteria.",
+  "scope": ["lazytypr v1", "Electron application", "dictation", "translation", "OpenWhispr evidence", "architecture", "model runtimes", "implementation phases"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": 30,
+  "notes": ""
+}

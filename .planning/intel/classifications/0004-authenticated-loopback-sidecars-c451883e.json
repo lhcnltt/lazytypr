@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/adr/0004-authenticated-loopback-sidecars.md",
+  "type": "ADR",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "ADR 0004: Authenticated loopback inference sidecars",
+  "summary": "Decides to run inference sidecars outside Electron on random loopback ports with per-launch authentication secrets controlled by main.",
+  "scope": ["Whisper", "sherpa-onnx", "llama", "Electron", "loopback ports", "per-launch secrets", "renderer", "main process"],
+  "cross_refs": [],
+  "locked": true,
+  "precedence": 0,
+  "notes": ""
+}

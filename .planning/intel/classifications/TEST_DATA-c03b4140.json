@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/TEST_DATA.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "Test Data Policy",
+  "summary": "Specifies prohibited test data, fixture provenance, corpus structure, consent and retention rules, and release audit requirements.",
+  "scope": ["user speech", "recordings", "credentials", "personal data", "audio/text fixtures", "provenance", "licenses", "consent", "acceptance corpus", "CI", "retention", "release audit"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": 20,
+  "notes": ""
+}

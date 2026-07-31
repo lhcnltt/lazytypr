@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/IPC_CONTRACTS.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "IPC Contracts",
+  "summary": "Defines TypeScript-first IPC contracts, invocation and event catalogs, audio MessagePort framing, and authenticated sidecar protocol constraints.",
+  "scope": ["IPC", "TypeScript contracts", "Electron", "renderers", "sessions", "audio MessagePort", "sidecar protocol", "authentication", "settings", "models"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": 20,
+  "notes": ""
+}

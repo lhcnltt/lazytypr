@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/upstream/OPENWHISPR_EVIDENCE.md",
+  "type": "DOC",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "OpenWhispr Pinned Evidence",
+  "summary": "Records pinned OpenWhispr checkout evidence and maps observed capabilities to reuse, adaptation, reimplementation, or exclusion.",
+  "scope": ["OpenWhispr", "Electron", "React", "TypeScript", "audio capture", "IPC", "model storage", "packaging"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": 20,
+  "notes": "Manifest RESEARCH normalized to canonical DOC for context-only ingestion; precedence 20 preserved."
+}

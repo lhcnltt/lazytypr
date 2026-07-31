@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/TESTING.md",
+  "type": "SPEC",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "Testing and Evidence Strategy",
+  "summary": "Defines evidence labels, documentation gates, future tests, platform and package qualification, and product quality thresholds.",
+  "scope": ["evidence labels", "documentation gates", "static tests", "integration tests", "platform matrix", "packaged-build qualification", "product thresholds"],
+  "cross_refs": [],
+  "locked": false,
+  "precedence": 20,
+  "notes": ""
+}

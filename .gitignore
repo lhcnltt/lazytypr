@@ -1,0 +1,41 @@
+# Models, recordings, and application data
+models/
+recordings/
+*.wav
+*.webm
+*.mp3
+*.flac
+*.gguf
+*.onnx
+*.bin
+*.partial
+app-data/
+diagnostics/
+
+# Credentials, signing, and local environments
+.env
+.env.*
+!.env.example
+*.p12
+*.pfx
+*.key
+*.pem
+*.mobileprovision
+*.entitlements.local
+
+# Local reference/research checkouts
+reference/
+references/
+.reference/
+
+# Tool, editor, and OS output
+node_modules/
+dist/
+out/
+coverage/
+.cache/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

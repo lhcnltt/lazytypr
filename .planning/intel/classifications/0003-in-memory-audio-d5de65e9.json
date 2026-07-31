@@ -1,0 +1,13 @@
+{
+  "source_path": "docs/adr/0003-in-memory-audio.md",
+  "type": "ADR",
+  "confidence": "high",
+  "manifest_override": true,
+  "title": "ADR 0003: In-memory PCM and no persistent recordings",
+  "summary": "Captures short-lived in-memory PCM audio and prohibits filesystem audio paths and persistent recordings.",
+  "scope": ["in-memory PCM", "AudioWorklet", "MessagePort", "audio recordings", "filesystem audio path", "text history"],
+  "cross_refs": [],
+  "locked": true,
+  "precedence": 0,
+  "notes": ""
+}
