@@ -20,6 +20,15 @@ interface CapturedWindow {
 
 class FakeElectronRuntime {
   public readonly windows: CapturedWindow[] = [];
+  public readonly ipcMain = {
+    handlers: new Map<string, unknown>(),
+    handle: (channel: string, handler: unknown) => {
+      this.ipcMain.handlers.set(channel, handler);
+    },
+    removeHandler: (channel: string) => {
+      this.ipcMain.handlers.delete(channel);
+    },
+  };
   public readonly defaultSession = {
     permissionCheckHandler: undefined as ((...arguments_: unknown[]) => boolean) | undefined,
     permissionRequestHandler: undefined as ((...arguments_: unknown[]) => void) | undefined,
@@ -137,4 +146,39 @@ test("installs the Phase 1 deny-by-default session and content policy before loc
   const downloadEvent = { preventDefault: () => { downloadPrevented = true; } };
   runtime.defaultSession.downloadListener?.(downloadEvent);
   expect(downloadPrevented).toBe(true);
+});
+
+test("registers only fixed guarded IPC handlers with main-owned services", async () => {
+  const runtime = new FakeElectronRuntime();
+  const application = createApplication({
+    runtime,
+    paths: {
+      controlHtml: "dist/renderer/control.html",
+      overlayHtml: "dist/renderer/overlay.html",
+      controlPreload: "dist/preload/control.js",
+      overlayPreload: "dist/preload/overlay.js",
+    },
+    services: {
+      getBootstrap: () => ({ ok: true as const, value: { autoPasteEnabled: false, hotkeyStatus: "ready" as const } }),
+      runSafeTest: () => ({ ok: true as const, value: undefined }),
+      setAutoPaste: () => ({ ok: true as const, value: undefined }),
+      retryHotkeys: () => ({ ok: true as const, value: undefined }),
+      cancelSession: () => ({ ok: true as const, value: undefined }),
+      dismissSession: () => ({ ok: true as const, value: undefined }),
+      currentSession: () => undefined,
+    },
+  });
+
+  await application.start();
+
+  expect([...runtime.ipcMain.handlers.keys()]).toEqual([
+    "app:get-bootstrap",
+    "tracer:run-safe-test",
+    "tracer:set-auto-paste",
+    "hotkeys:retry",
+    "session:cancel",
+    "session:dismiss",
+  ]);
+  application.stop();
+  expect(runtime.ipcMain.handlers.size).toBe(0);
 });
