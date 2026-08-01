@@ -45,20 +45,26 @@ one-shot execution and may not use watch mode.
 
 ## Per-Task Verification Map
 
-Plan and task identifiers are assigned by the planner. Every resulting task
-must map back to at least one row below and carry an executable `<automated>`
-verification or an explicit target-hardware checkpoint.
+The approved planner assigned the task identifiers below. Every implementation
+task maps to at least one row and carries an executable `<automated>`
+verification; the three human-only gates are explicitly identified.
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| TBD-W0 | TBD | 0 | LT-LIC-001 | T-01-SUPPLY | Only human-verified exact packages enter the lockfile; new files satisfy REUSE | static/license | `reuse lint` | ❌ W0 | ⬜ pending |
-| TBD-STATE | TBD | TBD | LT-FUN-001, LT-CAN-001 | T-01-STALE | One main-owned session; stale callbacks cannot mutate state; pre-commit cancellation reaches idle without output | unit/property | `npm run test:unit -- tracer-state tracer-cancel` | ❌ W0 | ⬜ pending |
-| TBD-OUTPUT | TBD | TBD | LT-OUT-001 | T-01-OUTPUT | Clipboard commit precedes paste; post-commit cancellation retains copied output and suppresses undispatched paste | unit/integration | `npm run test:unit -- tracer-output` | ❌ W0 | ⬜ pending |
-| TBD-PASTE | TBD | TBD | LT-PST-001 | T-01-TARGET | Capture precedes overlay; only the same reverified target may receive paste; every refusal is copy-only | unit/fake-adapter integration | `npm run test:unit -- focus-paste` | ❌ W0 | ⬜ pending |
-| TBD-IPC | TBD | TBD | LT-SEC-001 | T-01-IPC | Wrong-role, stale, unknown-key, oversize, and unregistered-sender requests fail closed | unit/Electron integration | `npm run test:security -- ipc` | ❌ W0 | ⬜ pending |
-| TBD-NET | TBD | TBD | LT-NET-001 | T-01-NET | No non-loopback route, external navigation, download, webview, or sidecar launch exists in tracer operation | static/Electron integration | `npm run test:security -- network` | ❌ W0 | ⬜ pending |
-| TBD-PRIV | TBD | TBD | LT-PRV-001 | T-01-DISCLOSURE | Renderers, logs, reports, fixtures, and screenshots omit result text, target identity, paths, secrets, and session identifiers | unit/static/integration | `npm run test:security -- redaction` | ❌ W0 | ⬜ pending |
-| TBD-UI | TBD | TBD | LT-FUN-001 foundation | T-01-FOCUS | Overlay stays non-focusable and inactive; control route remains keyboard operable and reports truthful terminal states | Electron integration/accessibility | `npm run test:electron -- tracer-ui` | ❌ W0 | ⬜ pending |
+| 01-01-01 | 01 | 0 | LT-LIC-001 | T-LT01-01-SUPPLY | Only human-verified exact packages may enter the lockfile | human package gate | Blocking approval recorded in `01-01-SUMMARY.md` | N/A gate | ⬜ pending |
+| 01-02-01, 01-02-02 | 02 | 1 | LT-SEC-001, LT-LIC-001 | T-LT01-02-SUPPLY | The approved exact graph and strict one-shot unit runner are reproducible | smoke/unit | `npm run test:unit` | ❌ W0 | ⬜ pending |
+| 01-03-01, 01-03-02 | 03 | 2 | LT-NET-001, LT-SEC-001, LT-PRV-001 | T-LT01-03-I | Local renderer/test entries and privacy-safe evidence seams fail closed | build/unit/static | `npm run test:unit && npm run check:security && npm run check:privacy` | ❌ W0 | ⬜ pending |
+| 01-04-01, 01-04-02 | 04 | 3 | LT-FUN-001, LT-CAN-001 | T-LT01-04-T | One main-owned session rejects stale callbacks and reaches idle after pre-commit cancellation | unit/property | `npm run test:unit -- tracer-state tracer-cancel` | ❌ W0 | ⬜ pending |
+| 01-04-03, 01-08-01, 01-08-02 | 04, 08 | 3, 5 | LT-OUT-001 | T-LT01-04-I | Clipboard commit precedes paste; post-commit cancellation retains copied output and suppresses undispatched paste | unit/integration | `npm run test:unit -- tracer-output && npm run test:electron -- tracer` | ❌ W0 | ⬜ pending |
+| 01-05-01, 01-05-02, 01-05-03 | 05 | 4 | LT-NET-001, LT-SEC-001 | T-LT01-05-E | Secure windows, exact role/sender/schema IPC, and network denial fail closed | unit/Electron integration | `npm run test:security -- ipc network && npm run test:electron -- secure-shell` | ❌ W0 | ⬜ pending |
+| 01-06-01, 01-06-02 | 06 | 4 | LT-PST-001, LT-LIC-001 | T-LT01-06-T | Windows protocol/adapter accepts only same-target verified outcomes and is attributable | unit/native-contract | `npm run test:unit -- windows-native-contract windows-focus-paste` | ❌ W0 | ⬜ pending |
+| 01-07-01, 01-07-02 | 07 | 4 | LT-PST-001, LT-LIC-001 | T-LT01-07-T | macOS protocol/adapter accepts only same-target verified outcomes and is attributable | unit/native-contract | `npm run test:unit -- macos-native-contract macos-focus-paste` | ❌ W0 | ⬜ pending |
+| 01-08-03 | 08 | 5 | LT-FUN-001, LT-CAN-001 | T-LT01-08-D | Hotkey retry, busy, Escape, and teardown remain repeatable | integration | `npm run test:electron -- tracer` | ❌ W0 | ⬜ pending |
+| 01-09-01, 01-09-02, 01-09-03 | 09 | 6 | LT-FUN-001, LT-OUT-001, LT-PRV-001 | T-LT01-09-I | The non-focusable overlay and keyboard-operable control report only truthful redacted states | Electron/accessibility | `npm run test:electron -- tracer-ui` | ❌ W0 | ⬜ pending |
+| 01-10-01, 01-10-02 | 10 | 7 | LT-LIC-001 | T-LT01-10-SUPPLY | REUSE, provenance, notices, dependency review, and development SBOM are complete | static/license | `reuse lint && npm run test:security -- licensing` | ❌ W0 | ⬜ pending |
+| 01-11-01, 01-11-02 | 11 | 8 | LT-NET-001, LT-SEC-001, LT-PRV-001 | T-LT01-11-E | Misuse paths fail closed and the local 20-cycle evidence is sanitized and honestly labeled | security/integration | `npm run check` | ❌ W0 | ⬜ pending |
+| 01-12-01 | 12 | 9 | LT-OUT-001, LT-PST-001 | T-LT01-12-R | The evidence validator rejects wrong counts, labels, platforms, or sensitive fields | unit/static | `npm run test:unit -- hardware-evidence-validator` | ❌ W0 | ⬜ pending |
+| 01-12-02, 01-12-03 | 12 | 9 | LT-OUT-001, LT-PST-001, LT-CAN-001 | T-LT01-12-TARGET | Windows and macOS each pass their distinct 20-cycle native proof | target-hardware | Blocking Windows/macOS run-sheet approval | N/A gate | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
