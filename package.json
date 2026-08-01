@@ -7,6 +7,11 @@
     "node": "24.x"
   },
   "scripts": {
+    "build:renderer": "vite build",
+    "check": "npm run typecheck && npm run test:unit && npm run build:renderer && npm run test:electron && npm run test:security && npm run check:privacy",
+    "check:privacy": "node scripts/check-privacy.mjs",
+    "test:electron": "playwright test tests/integration",
+    "test:security": "node scripts/check-security.mjs",
     "typecheck": "tsc --noEmit",
     "test:unit": "vitest run"
   },
