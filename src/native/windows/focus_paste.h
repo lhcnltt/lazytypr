@@ -1,0 +1,12 @@
+/*
+ * SPDX-FileCopyrightText: 2026 lhcnltt
+ * SPDX-License-Identifier: MIT
+ */
+
+#ifndef LAZYTYPR_WINDOWS_FOCUS_PASTE_H
+#define LAZYTYPR_WINDOWS_FOCUS_PASTE_H
+
+#define FOCUS_PASTE_PROTOCOL_VERSION 1
+#define FOCUS_PASTE_PROTOCOL_MAX_BYTES 4096
+
+#endif
