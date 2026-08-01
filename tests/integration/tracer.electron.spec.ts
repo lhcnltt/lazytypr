@@ -6,6 +6,7 @@ import { expect, test } from "@playwright/test";
 import { Phase1Application } from "../../src/main/application.js";
 import { createApplication } from "../../src/main/bootstrap.js";
 import { selectProductionFocusPastePort } from "../../src/main/os/platform-focus-paste.js";
+import type { IpcInvokeEvent } from "../../src/main/security/ipc-guard.js";
 import { DeterministicStubProcessor } from "../../src/main/tracer/stub-processor.js";
 import { TracerController } from "../../src/main/tracer/controller.js";
 import type { HotkeyPort } from "../../src/main/os/hotkey.js";
@@ -84,8 +85,8 @@ class FakePresentation implements PresentationPort {
 class FakeElectronRuntime {
   public readonly windows: FakeWindow[] = [];
   public readonly ipcMain = {
-    handlers: new Map<string, (event: unknown, payload: unknown) => Promise<Result<unknown>>>(),
-    handle: (channel: string, handler: (event: unknown, payload: unknown) => Promise<Result<unknown>>) => {
+    handlers: new Map<string, (event: IpcInvokeEvent, payload: unknown) => Promise<Result<unknown>>>(),
+    handle: (channel: string, handler: (event: IpcInvokeEvent, payload: unknown) => Promise<Result<unknown>>) => {
       this.ipcMain.handlers.set(channel, handler);
     },
     removeHandler: (channel: string) => {
@@ -193,8 +194,11 @@ test("routes the guarded safe test through the main-owned copy-only tracer", asy
   const invoke = runtime.ipcMain.handlers.get("tracer:run-safe-test");
   expect(control).toBeDefined();
   expect(invoke).toBeDefined();
-  const started = await invoke?.({ sender: control, senderFrame: control?.mainFrame }, {});
-  expect(started?.ok).toBe(true);
+  if (control === undefined || invoke === undefined) {
+    throw new Error("Expected the guarded control safe-test handler.");
+  }
+  const started = await invoke({ sender: control, senderFrame: control.mainFrame }, {});
+  expect(started.ok).toBe(true);
   expect(sequence).toEqual(["capture-target"]);
   expect(presentation.sequence).toEqual(["show-inactive"]);
 
@@ -229,6 +233,8 @@ function success<T>(value: T): Result<T> {
 }
 
 async function flushAsyncWork(): Promise<void> {
+  await Promise.resolve();
+  await Promise.resolve();
   await Promise.resolve();
   await Promise.resolve();
 }
