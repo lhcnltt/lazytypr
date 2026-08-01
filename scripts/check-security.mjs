@@ -21,6 +21,13 @@ const profiles = {
     "dist/renderer/control.html",
     "dist/renderer/overlay.html",
   ],
+  native: [
+    "src/native/windows/focus_paste.c",
+    "src/native/windows/focus_paste.h",
+    "src/native/windows/build.ps1",
+    "src/native/macos/FocusPaste.swift",
+    "src/native/macos/build.sh",
+  ],
   "window-policy": [
     "src/main/bootstrap.ts",
     "src/main/security/window-policy.ts",
@@ -39,6 +46,11 @@ const profiles = {
     "src/native/macos/build.sh",
   ],
   "ui-redaction": [
+    "src/renderer/control/ControlApp.tsx",
+    "src/renderer/overlay/OverlayApp.tsx",
+    "src/shared/messages.ts",
+  ],
+  redaction: [
     "src/renderer/control/ControlApp.tsx",
     "src/renderer/overlay/OverlayApp.tsx",
     "src/shared/messages.ts",
@@ -222,7 +234,7 @@ async function main() {
     }
   }
 
-  if (selection.profileNames.has("native-protocol-windows")) {
+  if (selection.profileNames.has("native-protocol-windows") || selection.profileNames.has("native")) {
     requireFragments(files.get("src/native/windows/focus_paste.c"), "SECURITY_WINDOWS_NATIVE_HELPER_MISSING", [
       "GetForegroundWindow",
       "GetWindowThreadProcessId",
@@ -244,7 +256,7 @@ async function main() {
     ]);
   }
 
-  if (selection.profileNames.has("native-protocol-macos")) {
+  if (selection.profileNames.has("native-protocol-macos") || selection.profileNames.has("native")) {
     requireFragments(files.get("src/native/macos/FocusPaste.swift"), "SECURITY_MACOS_NATIVE_HELPER_MISSING", [
       "NSWorkspace.shared.frontmostApplication",
       "AXIsProcessTrusted()",
@@ -262,7 +274,7 @@ async function main() {
     ]);
   }
 
-  if (selection.profileNames.has("ui-redaction")) {
+  if (selection.profileNames.has("ui-redaction") || selection.profileNames.has("redaction")) {
     requireFragments(files.get("src/renderer/control/ControlApp.tsx"), "SECURITY_CONTROL_UI_REDACTION_MISSING", [
       "controlStateForSnapshot",
       "bridge?.runSafeTest()",

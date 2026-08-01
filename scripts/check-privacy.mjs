@@ -6,13 +6,13 @@ import { relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repositoryRoot = resolve(fileURLToPath(new URL("../", import.meta.url)));
-const defaultInputs = [
+const rendererInputs = [
   "src/renderer/control.html",
   "src/renderer/overlay.html",
 ];
-const allowedPrefixes = ["src/", "dist/", "evidence/", "scripts/", "test-results/"];
+const allowedPrefixes = ["src/", "dist/", "evidence/", "scripts/", "test-results/", "tests/evidence/"];
 const privacyRules = [
-  ["PRIVACY_PROTECTED_FIELD", /\b(?:clipboard(?:text)?|stub(?:result)?|focusTarget|processId|windowId|bundleId|secret|sessionId|screenshot|audio)\b/iu],
+  ["PRIVACY_PROTECTED_FIELD", /\b(?:clipboard(?:text)?|stub(?:result)?|focusTarget|processId|windowId|bundleId|secret|sessionId|screenshot|audio|transcript|prompt|provider(?:Body)?|stack)\b/iu],
   ["PRIVACY_ABSOLUTE_PATH", /(?:\/home\/|~\/|[A-Z]:\\)/u],
   ["PRIVACY_CREDENTIAL", /\b(?:token|password|api[_-]?key)\b/iu],
 ];
@@ -46,7 +46,7 @@ function parseInputs(argumentsList) {
     paths.push(argument);
   }
 
-  return paths.length > 0 ? paths : defaultInputs;
+  return paths.length > 0 ? paths : rendererInputs;
 }
 
 async function readRepositoryFile(input) {
