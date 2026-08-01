@@ -59,7 +59,7 @@ LT-LIC-001, and LT-PRV-001 while owning LT-OUT-001.
   Acceptance: resume, mismatch, hash, disk, cancel, traversal, symlink, and
   activation cases pass.
 
-- [ ] **LT-NET-001**: Allow no non-loopback traffic except an active,
+- [x] **LT-NET-001**: Allow no non-loopback traffic except an active,
   user-initiated download. Acceptance: network audit passes during normal and
   offline packaged use.
 
@@ -124,7 +124,7 @@ silently promoted to a future commitment.
 | LT-PST-001 | Phase 3 | Pending |
 | LT-CAN-001 | Phase 3 | Pending |
 | LT-MOD-001 | Phase 4 | Pending |
-| LT-NET-001 | Phase 4 | Pending |
+| LT-NET-001 | Phase 4 | Complete |
 | LT-SEC-001 | Phase 5 | Complete |
 | LT-HIS-001 | Phase 6 | Pending |
 | LT-UX-001 | Phase 6 | Pending |
