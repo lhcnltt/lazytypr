@@ -221,7 +221,7 @@ test("selects only reviewed production focus adapters and fails closed elsewhere
   expect(selectProductionFocusPastePort("linux")).toBeUndefined();
 });
 
-test("continues a refused target capture as a copy-only safe test", async () => {
+test("continues a refused target capture as a copy-only dictation session", async () => {
   const timers = new FakeTimers();
   const presentation = new FakePresentation();
   const copied: string[] = [];
@@ -248,12 +248,13 @@ test("continues a refused target capture as a copy-only safe test", async () => 
     presentation,
   });
 
-  const started = await application.runSafeTest();
+  expect(application.setAutoPaste(true, true).ok).toBe(true);
+  const started = await application.handleDictationHotkey();
   expect(started.ok).toBe(true);
-  timers.advanceBy(150);
-  await flushAsyncWork();
+  const completion = application.handleDictationHotkey();
   timers.advanceBy(250);
   await flushAsyncWork();
+  await completion;
 
   expect(copied).toEqual(["committed"]);
   expect(presentation.outcomes).toEqual(["copy_only"]);

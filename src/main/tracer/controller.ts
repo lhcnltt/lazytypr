@@ -116,12 +116,10 @@ export class TracerController {
     if (!this.isCurrent(session)) {
       return success(undefined);
     }
-    if (!captured.ok) {
-      this.fail(session, captured.error);
-      return captured;
+    if (captured.ok) {
+      session.target = captured.value;
     }
 
-    session.target = captured.value;
     this.ports.presentation.showInactive(this.toSnapshot(session));
 
     const captureStarted = await this.callPort(() =>
