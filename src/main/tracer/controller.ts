@@ -22,6 +22,7 @@ import type {
 } from "./ports.js";
 
 const TERMINAL_DISPLAY_MS = 2_000;
+const BUSY_DISPLAY_MS = 600;
 
 interface ActiveSession {
   readonly id: string;
@@ -31,6 +32,8 @@ interface ActiveSession {
   target: FocusTarget | undefined;
   copied: boolean;
   pasted: boolean;
+  outcome?: TracerOutcome;
+  error?: Pick<AppError, "code" | "messageKey">;
   outputCommitStarted: boolean;
   copyOnlyAfterCommit: boolean;
   terminal: boolean;
@@ -72,6 +75,12 @@ export class TracerController {
       return this.stopAndProcess(session, options.autoPaste);
     }
 
+    this.ports.presentation.publishState(this.toSnapshot(session, undefined, "busy"));
+    this.ports.timers.setTimeout(() => {
+      if (this.isCurrent(session) && !session.terminal) {
+        this.ports.presentation.publishState(this.toSnapshot(session));
+      }
+    }, BUSY_DISPLAY_MS);
     this.ports.presentation.publishOutcome("busy");
     return success(undefined);
   }
@@ -270,9 +279,10 @@ export class TracerController {
     if (!this.isCurrent(session)) {
       return;
     }
+    session.error = { code: error.code, messageKey: error.messageKey };
     session.phase = "transcription_error";
-    this.ports.presentation.publishState(this.toSnapshot(session, error));
-    this.finish(session, "failed", 0);
+    this.ports.presentation.publishState(this.toSnapshot(session));
+    this.finish(session, "failed", TERMINAL_DISPLAY_MS);
   }
 
   private finish(session: ActiveSession, outcome: TracerOutcome, delayMs: number): void {
@@ -280,6 +290,7 @@ export class TracerController {
       return;
     }
     session.terminal = true;
+    session.outcome = outcome;
     session.phase = outcome === "cancelled" ? "cancelled" : "success";
     this.ports.presentation.publishState(this.toSnapshot(session));
     this.ports.presentation.publishOutcome(outcome);
@@ -336,7 +347,11 @@ export class TracerController {
     return this.activeSession?.id === session.id;
   }
 
-  private toSnapshot(session: ActiveSession, error?: AppError): SessionSnapshot {
+  private toSnapshot(
+    session: ActiveSession,
+    error?: AppError,
+    transientOutcome?: TracerOutcome,
+  ): SessionSnapshot {
     return {
       sessionId: session.id,
       mode: "dictation",
@@ -344,9 +359,12 @@ export class TracerController {
       startedAt: session.startedAt,
       copied: session.copied,
       pasted: session.pasted,
-      ...(error === undefined
+      ...(transientOutcome === undefined && session.outcome === undefined
         ? {}
-        : { error: { code: error.code, messageKey: error.messageKey } }),
+        : { outcome: transientOutcome ?? session.outcome }),
+      ...(error === undefined && session.error === undefined
+        ? {}
+        : { error: error === undefined ? session.error : { code: error.code, messageKey: error.messageKey } }),
     };
   }
 }

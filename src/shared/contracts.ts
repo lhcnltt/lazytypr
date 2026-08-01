@@ -44,6 +44,8 @@ export interface SessionSnapshot {
   readonly startedAt: string;
   readonly copied: boolean;
   readonly pasted: boolean;
+  /** Finite terminal/transient outcome metadata; it never carries controlled text. */
+  readonly outcome?: TracerOutcome;
   readonly error?: Pick<AppError, "code" | "messageKey">;
 }
 

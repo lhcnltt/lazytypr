@@ -28,8 +28,10 @@ test.describe("overlay state", () => {
     const states: readonly [SessionSnapshot, OverlayPresentationState][] = [
       [snapshot("acquiring_microphone"), { icon: "microphone", messageKey: "tracer.preparing" }],
       [snapshot("listening"), { icon: "wave", messageKey: "tracer.listening" }],
+      [{ ...snapshot("transcribing"), outcome: "busy" }, { icon: "keyboard", messageKey: "tracer.busy" }],
       [{ ...snapshot("success"), copied: true }, { icon: "check", messageKey: "tracer.outcome.copied" }],
       [{ ...snapshot("success"), copied: true, pasted: true }, { icon: "check", messageKey: "tracer.outcome.pasted" }],
+      [{ ...snapshot("success"), copied: true, outcome: "copy_only" }, { icon: "warning", messageKey: "tracer.outcome.copyOnly" }],
       [{ ...snapshot("cancelled") }, { icon: "stop", messageKey: "tracer.cancelled" }],
     ];
 

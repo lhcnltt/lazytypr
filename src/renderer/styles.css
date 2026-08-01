@@ -35,6 +35,19 @@ button:disabled, input:disabled { cursor: not-allowed; opacity: 0.7; }
 .confirmation-dialog { display: grid; gap: 16px; max-width: 520px; border: 1px solid #7da4b5; border-radius: 8px; background: #172033; padding: 24px; }
 .dialog-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
+.overlay-app { display: grid; place-items: center; min-height: 100vh; overflow: hidden; background: transparent; }
+.overlay-pill { display: flex; align-items: center; gap: 8px; min-width: 200px; max-width: 440px; min-height: 40px; overflow-wrap: anywhere; border: 1px solid #4e6582; border-radius: 999px; background: rgb(23 32 51 / 88%); padding: 8px; color: #f5f7fa; font-size: 14px; font-weight: 600; line-height: 1.4; }
+.overlay-icon { flex: 0 0 auto; width: 24px; height: 24px; fill: none; stroke: #7da4b5; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+.overlay-icon-check { stroke: #65bf7d; }
+.overlay-icon-warning { stroke: #c7c27d; }
+.overlay-icon-stop, .overlay-icon-error { stroke: #b06363; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .overlay-icon-spinner { animation: overlay-spin 120ms linear; }
+}
+
+@keyframes overlay-spin { to { transform: rotate(360deg); } }
+
 @media (prefers-reduced-motion: no-preference) {
   .status-card, .safety-card, .confirmation-dialog { transition: opacity 120ms ease, transform 120ms ease; }
 }

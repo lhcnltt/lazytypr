@@ -38,6 +38,11 @@ const profiles = {
     "src/native/macos/FocusPaste.swift",
     "src/native/macos/build.sh",
   ],
+  "ui-redaction": [
+    "src/renderer/control/ControlApp.tsx",
+    "src/renderer/overlay/OverlayApp.tsx",
+    "src/shared/messages.ts",
+  ],
 };
 const defaultProfileNames = Object.keys(profiles);
 const allowedPrefixes = ["src/", "dist/", "evidence/", "scripts/", "test-results/"];
@@ -246,6 +251,25 @@ async function main() {
       "Darwin",
       "arm64",
       "swiftc -warnings-as-errors",
+    ]);
+  }
+
+  if (selection.profileNames.has("ui-redaction")) {
+    requireFragments(files.get("src/renderer/control/ControlApp.tsx"), "SECURITY_CONTROL_UI_REDACTION_MISSING", [
+      "controlStateForSnapshot",
+      "bridge?.runSafeTest()",
+      "bridge?.cancelSession(snapshot.sessionId)",
+      "setAutoPaste({ enabled: true, acknowledged: true })",
+    ]);
+    requireFragments(files.get("src/renderer/overlay/OverlayApp.tsx"), "SECURITY_OVERLAY_UI_REDACTION_MISSING", [
+      "overlayStateForSnapshot",
+      "message(\"en-US\", presentation.messageKey)",
+      "aria-live",
+    ]);
+    requireFragments(files.get("src/shared/messages.ts"), "SECURITY_FIXED_UI_COPY_MISSING", [
+      '"tracer.outcome.copyOnly"',
+      '"tracer.cancelled"',
+      '"hotkey.unavailable"',
     ]);
   }
 

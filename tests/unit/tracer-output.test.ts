@@ -64,7 +64,10 @@ describe("tracer-output", () => {
     expect(result.ok).toBe(false);
     expect(pasteCalls).toEqual([]);
     expect(presentation.outcomes).toEqual(["failed"]);
-    expect(controller.snapshot()).toBeUndefined();
+    expect(controller.snapshot()).toMatchObject({
+      outcome: "failed",
+      error: { code: "clipboard_write_failed" },
+    });
   });
 
   it("reports no output before commit and retains the copy when cancellation wins after commit", async () => {

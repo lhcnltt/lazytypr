@@ -30,6 +30,9 @@ declare global {
 
 /** Maps a redacted main snapshot to a finite control presentation value. */
 export function controlStateForSnapshot(snapshot: SessionSnapshot): ControlPresentationState {
+  if (snapshot.outcome === "copy_only") return "copy-only";
+  if (snapshot.outcome === "failed") return "error";
+  if (snapshot.outcome === "cancelled") return "cancelled";
   if (snapshot.phase === "acquiring_microphone") return "preparing";
   if (snapshot.phase === "listening") return "listening";
   if (snapshot.phase === "transcribing") return "processing";
