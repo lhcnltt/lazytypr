@@ -86,4 +86,47 @@ describe("licensing and provenance", () => {
     expect(review).toContain("No unreviewed install lifecycle script remains.");
     expect(review).toContain("The root MIT license does not relicense dependencies.");
   });
+
+  it("keeps a sanitized development SPDX SBOM aligned with the exact direct graph", async () => {
+    const [manifestText, lockfile, sbomText] = await Promise.all([
+      readRepositoryFile("package.json"),
+      readRepositoryFile("package-lock.json"),
+      readRepositoryFile("artifacts/sbom/phase1-development.spdx.json"),
+    ]);
+    const manifest = JSON.parse(manifestText) as { scripts: Record<string, string> };
+    const lock = JSON.parse(lockfile) as {
+      packages: Record<string, { version?: string }>;
+    };
+    const sbom = JSON.parse(sbomText) as {
+      SPDXID?: string;
+      spdxVersion?: string;
+      creationInfo?: { created?: string; creators?: string[] };
+      packages?: Array<{ name?: string; versionInfo?: string }>;
+    };
+
+    expect(manifest.scripts["sbom:development"]).toContain("npm sbom --sbom-format spdx");
+    expect(manifest.scripts["sbom:development"]).toContain("--package-lock-only");
+    expect(manifest.scripts["sbom:development"]).toContain("--offline");
+    expect(sbom.spdxVersion).toMatch(/^SPDX-2\./u);
+    expect(sbom.SPDXID).toBe("SPDXRef-DOCUMENT");
+    expect(sbom.creationInfo?.created).toMatch(/^\d{4}-\d{2}-\d{2}T/u);
+    expect(sbom.creationInfo?.creators).toContain("Tool: npm");
+
+    for (const [name, version] of Object.entries({
+      electron: "41.2.0",
+      react: "19.1.0",
+      "react-dom": "19.1.0",
+      zod: "4.3.6",
+      "@playwright/test": "1.62.1",
+      typescript: "6.0.2",
+      vite: "8.1.4",
+      vitest: "4.1.10",
+    })) {
+      expect(lock.packages[`node_modules/${name}`]?.version).toBe(version);
+      expect(sbom.packages).toContainEqual(expect.objectContaining({ name, versionInfo: version }));
+    }
+
+    expect(sbomText).toContain("development evidence");
+    expect(sbomText).not.toMatch(/(?:\/home\/|\\\\Users\\\\|lhchine|clipboard|audio|prompt|session|target|secret)/iu);
+  });
 });
