@@ -36,6 +36,7 @@ describe("toolchain smoke", () => {
       "test:security": "node scripts/check-security.mjs",
       "test:licensing": "vitest run --config vitest.security.config.ts",
       "test:unit": "vitest run",
+      "verify:hardware-evidence": "node scripts/validate-phase1-run-sheet.mjs",
       typecheck: "tsc --noEmit",
     });
     expect(manifest.scripts.check).toBe(

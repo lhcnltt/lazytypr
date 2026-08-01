@@ -16,7 +16,8 @@
     "test:licensing": "vitest run --config vitest.security.config.ts",
     "test:security": "node scripts/check-security.mjs",
     "typecheck": "tsc --noEmit",
-    "test:unit": "vitest run"
+    "test:unit": "vitest run",
+    "verify:hardware-evidence": "node scripts/validate-phase1-run-sheet.mjs"
   },
   "dependencies": {
     "electron": "41.2.0",
