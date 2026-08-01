@@ -65,7 +65,7 @@ LT-LIC-001, and LT-PRV-001 while owning LT-OUT-001.
 
 ### Security, Persistence, and Privacy
 
-- [ ] **LT-SEC-001**: Use sandboxed role-specific renderers and authenticated
+- [x] **LT-SEC-001**: Use sandboxed role-specific renderers and authenticated
   loopback sidecars. Acceptance: sender, schema, payload, token, and port
   boundary tests reject unauthorized traffic.
 
@@ -73,7 +73,7 @@ LT-LIC-001, and LT-PRV-001 while owning LT-OUT-001.
   stored Portuguese without paste. Acceptance: migration, restart, delete,
   clear, and retry tests update one record and store no audio.
 
-- [ ] **LT-PRV-001**: Diagnostics contain no audio, text, prompts, secrets, or
+- [x] **LT-PRV-001**: Diagnostics contain no audio, text, prompts, secrets, or
   user paths. Acceptance: redaction and packaged-content scans pass.
 
 ### Product Experience, Packaging, and Release
@@ -125,12 +125,12 @@ silently promoted to a future commitment.
 | LT-CAN-001 | Phase 3 | Pending |
 | LT-MOD-001 | Phase 4 | Pending |
 | LT-NET-001 | Phase 4 | Pending |
-| LT-SEC-001 | Phase 5 | Pending |
+| LT-SEC-001 | Phase 5 | Complete |
 | LT-HIS-001 | Phase 6 | Pending |
 | LT-UX-001 | Phase 6 | Pending |
 | LT-PKG-001 | Phase 7 | Pending |
 | LT-LIC-001 | Phase 8 | Complete |
-| LT-PRV-001 | Phase 8 | Pending |
+| LT-PRV-001 | Phase 8 | Complete |
 | LT-PER-001 | Phase 8 | Pending |
 
 **Coverage:**
