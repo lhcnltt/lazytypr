@@ -26,3 +26,22 @@ path = "third_party/openwhispr/LICENSE"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2024 OpenWhispr Team"
 SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [
+  ".nvmrc",
+  "package-lock.json",
+  "package.json",
+  "tsconfig.json",
+  "tests/fixtures/native/macos-protocol.json",
+  "tests/fixtures/native/windows-protocol.json",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 lhcnltt"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "artifacts/sbom/phase1-development.spdx.json"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 lhcnltt"
+SPDX-License-Identifier = "MIT"

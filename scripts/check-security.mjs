@@ -43,9 +43,17 @@ const profiles = {
     "src/renderer/overlay/OverlayApp.tsx",
     "src/shared/messages.ts",
   ],
+  licensing: [
+    "REUSE.toml",
+    "docs/DEPENDENCY_REVIEW.md",
+    "docs/PROVENANCE.yaml",
+    "THIRD_PARTY_NOTICES.md",
+    "src/native/windows/focus_paste.c",
+    "src/native/macos/FocusPaste.swift",
+  ],
 };
 const defaultProfileNames = Object.keys(profiles);
-const allowedPrefixes = ["src/", "dist/", "evidence/", "scripts/", "test-results/"];
+const allowedPrefixes = ["src/", "dist/", "docs/", "evidence/", "scripts/", "test-results/"];
 
 function fail(ruleId, path) {
   console.error(path === undefined ? `SECURITY_FAIL ${ruleId}` : `SECURITY_FAIL ${ruleId} ${path}`);
@@ -280,6 +288,45 @@ async function main() {
     for (const path of files.keys()) {
       console.log(`SECURITY_OK ${path}`);
     }
+  }
+
+  if (selection.profileNames.has("licensing")) {
+    requireFragments(files.get("REUSE.toml"), "SECURITY_REUSE_COVERAGE_MISSING", [
+      '".nvmrc"',
+      '"package-lock.json"',
+      '"package.json"',
+      '"tsconfig.json"',
+      '"tests/fixtures/native/macos-protocol.json"',
+      '"tests/fixtures/native/windows-protocol.json"',
+      '"artifacts/sbom/phase1-development.spdx.json"',
+    ]);
+    requireFragments(files.get("docs/DEPENDENCY_REVIEW.md"), "SECURITY_DEPENDENCY_REVIEW_MISSING", [
+      "`electron@41.2.0`",
+      "`zod@4.3.6`",
+      "No unreviewed install lifecycle script remains.",
+      "The root MIT license does not relicense dependencies",
+    ]);
+    requireFragments(files.get("docs/PROVENANCE.yaml"), "SECURITY_PROVENANCE_MISSING", [
+      "localPath: src/native/windows/focus_paste.c",
+      "localPath: src/native/macos/FocusPaste.swift",
+      "relationship: substantially-adapted-source",
+      "851cedde6cc8e2b1476d0e121eadd3a2951161873a0f712444828c65717c9165",
+      "b8a075370d44fd6893948fb532f7b2974888d664df47ba15ccc526c25bf014d1",
+    ]);
+    requireFragments(files.get("THIRD_PARTY_NOTICES.md"), "SECURITY_NOTICE_MISSING", [
+      "`src/native/windows/focus_paste.c`",
+      "`src/native/macos/FocusPaste.swift`",
+      "no native helper binary is",
+      "currently built, bundled, or distributed",
+    ]);
+    requireFragments(files.get("src/native/windows/focus_paste.c"), "SECURITY_WINDOWS_PROVENANCE_HEADER_MISSING", [
+      "SPDX-FileCopyrightText: 2024 OpenWhispr Team",
+      `Adapted from resources/windows-fast-paste.c at ${"bf8b7e0b4e1de0c9779c63f4752bd80bdd39ee2c"}`,
+    ]);
+    requireFragments(files.get("src/native/macos/FocusPaste.swift"), "SECURITY_MACOS_PROVENANCE_HEADER_MISSING", [
+      "SPDX-FileCopyrightText: 2024 OpenWhispr Team",
+      `Adapted from resources/macos-fast-paste.swift at ${"bf8b7e0b4e1de0c9779c63f4752bd80bdd39ee2c"}`,
+    ]);
   }
 }
 

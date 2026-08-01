@@ -57,3 +57,31 @@ records:
     developmentOnly: true
     notice: Selective source inspection only.
     reviewState: planned-verification
+  - id: openwhispr-windows-fast-paste-adaptation
+    sourceUrl: https://github.com/OpenWhispr/openwhispr
+    revision: bf8b7e0b4e1de0c9779c63f4752bd80bdd39ee2c
+    upstreamPath: resources/windows-fast-paste.c
+    localPath: src/native/windows/focus_paste.c
+    relationship: substantially-adapted-source
+    spdx: MIT
+    copyright: Copyright (c) 2024 OpenWhispr Team; Copyright (c) 2026 lhcnltt
+    sha256: 851cedde6cc8e2b1476d0e121eadd3a2951161873a0f712444828c65717c9165
+    bundled: false
+    downloaded: false
+    developmentOnly: true
+    notice: THIRD_PARTY_NOTICES.md#source-adapted-material records this admitted source adaptation and its retained MIT notice.
+    reviewState: reviewed
+  - id: openwhispr-macos-fast-paste-adaptation
+    sourceUrl: https://github.com/OpenWhispr/openwhispr
+    revision: bf8b7e0b4e1de0c9779c63f4752bd80bdd39ee2c
+    upstreamPath: resources/macos-fast-paste.swift
+    localPath: src/native/macos/FocusPaste.swift
+    relationship: substantially-adapted-source
+    spdx: MIT
+    copyright: Copyright (c) 2024 OpenWhispr Team; Copyright (c) 2026 lhcnltt
+    sha256: b8a075370d44fd6893948fb532f7b2974888d664df47ba15ccc526c25bf014d1
+    bundled: false
+    downloaded: false
+    developmentOnly: true
+    notice: THIRD_PARTY_NOTICES.md#source-adapted-material records this admitted source adaptation and its retained MIT notice.
+    reviewState: reviewed
