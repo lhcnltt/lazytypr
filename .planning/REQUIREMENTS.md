@@ -16,7 +16,7 @@ LT-LIC-001, and LT-PRV-001 while owning LT-OUT-001.
 
 ### Session Lifecycle and Audio
 
-- [ ] **LT-FUN-001**: One session at a time; repeated hotkey stops recording
+- [x] **LT-FUN-001**: One session at a time; repeated hotkey stops recording
   and a processing hotkey reports busy. Acceptance: 50 rapid
   start/stop/cancel and 100 sequential sessions produce no stale session or
   orphan.
@@ -25,7 +25,7 @@ LT-LIC-001, and LT-PRV-001 while owning LT-OUT-001.
   minutes. Acceptance: filesystem audit finds no recording after success,
   failure, cancel, crash, quit, or restart.
 
-- [ ] **LT-CAN-001**: Escape cancels any active phase without copy, paste, or
+- [x] **LT-CAN-001**: Escape cancels any active phase without copy, paste, or
   history after transcription. Acceptance: cancellation returns idle within
   two seconds except bounded sidecar restart.
 
@@ -45,10 +45,10 @@ LT-LIC-001, and LT-PRV-001 while owning LT-OUT-001.
 
 ### Output and Focus Safety
 
-- [ ] **LT-OUT-001**: Copy every successful or fallback result before optional
+- [x] **LT-OUT-001**: Copy every successful or fallback result before optional
   paste. Acceptance: paste failure retains the exact clipboard result.
 
-- [ ] **LT-PST-001**: Paste only into the captured and reverified target.
+- [x] **LT-PST-001**: Paste only into the captured and reverified target.
   Acceptance: Notepad, Office, browsers, VS Code, Electron apps, terminals,
   and refused activation never receive misdirected text.
 
@@ -115,14 +115,14 @@ silently promoted to a future commitment.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| LT-FUN-001 | Phase 3 | Pending |
+| LT-FUN-001 | Phase 3 | Complete |
 | LT-AUD-001 | Phase 2 | Pending |
 | LT-STT-001 | Phase 4 | Pending |
 | LT-TRN-001 | Phase 5 | Pending |
 | LT-TRN-002 | Phase 5 | Pending |
-| LT-OUT-001 | Phase 1 | Pending |
-| LT-PST-001 | Phase 3 | Pending |
-| LT-CAN-001 | Phase 3 | Pending |
+| LT-OUT-001 | Phase 1 | Complete |
+| LT-PST-001 | Phase 3 | Complete |
+| LT-CAN-001 | Phase 3 | Complete |
 | LT-MOD-001 | Phase 4 | Pending |
 | LT-NET-001 | Phase 4 | Complete |
 | LT-SEC-001 | Phase 5 | Complete |

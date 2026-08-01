@@ -65,12 +65,12 @@ GSD ownership mappings.
   2. Twenty consecutive development-build tracer cycles pass on each supported OS with no stale focus/session state or misdirected paste, including clipboard-only, verified Notepad/TextEdit paste, a refused or unverifiable target that remains copy-only, and at least five cancellations during capture or processing that return idle within two seconds without clipboard, paste, or history output.
   3. The tracer operates through sandboxed overlay and control windows with typed, role-limited IPC, main-owned session ownership, deterministic terminal cleanup, no unauthorized external network, and no sensitive diagnostic content before real inference is admitted.
 
-**Plans**: 3/12 plans executed
+**Plans**: 4/12 plans executed
 
 - [x] 01-01-PLAN.md
 - [x] 01-02-PLAN.md
 - [x] 01-03-PLAN.md
-- [ ] 01-04-PLAN.md
+- [x] 01-04-PLAN.md
 - [ ] 01-05-PLAN.md
 - [ ] 01-06-PLAN.md
 - [ ] 01-07-PLAN.md
@@ -90,7 +90,7 @@ GSD ownership mappings.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-03: Add packaged-local renderer entries and privacy-safe validation scaffolding.
+- [x] 01-03: Add packaged-local renderer entries and privacy-safe validation scaffolding.
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -250,7 +250,7 @@ Phase 6 → Phase 7 → Phase 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Secure Electron walking skeleton | 3/12 | In Progress|  |
+| 1. Secure Electron walking skeleton | 4/12 | In Progress|  |
 | 2. In-memory PCM and Whisper dictation | 0/TBD | Not started | - |
 | 3. Cross-platform lifecycle hardening | 0/TBD | Not started | - |
 | 4. Complete model lifecycle and STT catalog | 0/TBD | Not started | - |
