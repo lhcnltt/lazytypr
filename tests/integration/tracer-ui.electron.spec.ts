@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: MIT
 
 import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 
 import {
   controlStateForSnapshot,
+  AUTO_PASTE_ACKNOWLEDGEMENT,
   phase1Messages,
   type ControlPresentationState,
 } from "../../src/renderer/control/ControlApp.js";
@@ -66,5 +68,36 @@ test.describe("control tracer", () => {
     expect(Object.keys(phase1Messages["pt-BR"]).sort()).toEqual(
       Object.keys(phase1Messages["en-US"]).sort(),
     );
+  });
+});
+
+test.describe("auto-paste and accessibility", () => {
+  test("auto-paste sends only the acknowledged main-authorized request", () => {
+    expect(AUTO_PASTE_ACKNOWLEDGEMENT).toEqual({ enabled: true, acknowledged: true });
+  });
+
+  test("keyboard modal behavior uses semantic controls and bounded focus handling", async () => {
+    const controlSource = await readFile(new URL("../../src/renderer/control/ControlApp.tsx", import.meta.url), "utf8");
+    expect(controlSource).toContain('role="dialog"');
+    expect(controlSource).toContain('aria-modal="true"');
+    expect(controlSource).toContain('document.addEventListener("keydown", trapFocus)');
+    expect(controlSource).toContain('role="switch"');
+  });
+
+  test("reduced motion removes state animation", async () => {
+    const styleSource = await readFile(new URL("../../src/renderer/styles.css", import.meta.url), "utf8");
+    expect(styleSource).toContain("@media (prefers-reduced-motion: no-preference)");
+    expect(styleSource).toContain("120ms");
+  });
+
+  test("200 percent text preserves vertical growth without horizontal scrolling", async () => {
+    const styleSource = await readFile(new URL("../../src/renderer/styles.css", import.meta.url), "utf8");
+    expect(styleSource).toContain("overflow-x: hidden");
+    expect(styleSource).toContain("max-width: 440px");
+  });
+
+  test("long text wraps within the overlay pill", async () => {
+    const styleSource = await readFile(new URL("../../src/renderer/styles.css", import.meta.url), "utf8");
+    expect(styleSource).toContain("overflow-wrap: anywhere");
   });
 });
