@@ -26,17 +26,19 @@ describe("toolchain smoke", () => {
       scripts: Record<string, string>;
     };
     const config = await readProjectFile("vitest.config.ts");
+    const securityConfig = await readProjectFile("vitest.security.config.ts");
 
     expect(manifest.scripts).toMatchObject({
       "build:renderer": "vite build",
       "check:privacy": "node scripts/check-privacy.mjs",
       "test:electron": "playwright test tests/integration --pass-with-no-tests",
       "test:security": "node scripts/check-security.mjs",
+      "test:licensing": "vitest run --config vitest.security.config.ts",
       "test:unit": "vitest run",
       typecheck: "tsc --noEmit",
     });
     expect(manifest.scripts.check).toBe(
-      "npm run typecheck && npm run test:unit && npm run build:renderer && npm run test:electron && npm run test:security && npm run check:privacy",
+      "npm run typecheck && npm run test:unit && npm run build:renderer && npm run test:electron && npm run test:security && npm run test:licensing && npm run check:privacy",
     );
     expect(config).toContain('environment: "node"');
     expect(config).toContain(
@@ -53,5 +55,8 @@ describe("toolchain smoke", () => {
     expect(config).toContain('reporters: ["dot"]');
     expect(config).toContain("silent: true");
     expect(config).toContain("watch: false");
+    expect(securityConfig).toContain('include: ["tests/security/**/*.test.ts"]');
+    expect(securityConfig).toContain("fileParallelism: false");
+    expect(securityConfig).toContain("passWithNoTests: false");
   });
 });

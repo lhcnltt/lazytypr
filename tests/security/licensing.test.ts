@@ -77,6 +77,9 @@ describe("licensing and provenance", () => {
       vitest: "4.1.10",
     })) {
       const entry = lock.packages[`node_modules/${name}`];
+      if (entry === undefined) {
+        throw new Error(`Missing lockfile entry for ${name}.`);
+      }
       expect(entry?.version).toBe(version);
       expect(entry?.integrity).toBeTruthy();
       expect(entry?.license).toBeTruthy();
@@ -110,7 +113,9 @@ describe("licensing and provenance", () => {
     expect(sbom.spdxVersion).toMatch(/^SPDX-2\./u);
     expect(sbom.SPDXID).toBe("SPDXRef-DOCUMENT");
     expect(sbom.creationInfo?.created).toMatch(/^\d{4}-\d{2}-\d{2}T/u);
-    expect(sbom.creationInfo?.creators).toContain("Tool: npm");
+    expect(sbom.creationInfo?.creators).toEqual(
+      expect.arrayContaining([expect.stringMatching(/^Tool: npm/u)]),
+    );
 
     for (const [name, version] of Object.entries({
       electron: "41.2.0",
@@ -126,7 +131,7 @@ describe("licensing and provenance", () => {
       expect(sbom.packages).toContainEqual(expect.objectContaining({ name, versionInfo: version }));
     }
 
-    expect(sbomText).toContain("development evidence");
+    expect(sbomText).toMatch(/development evidence/iu);
     expect(sbomText).not.toMatch(/(?:\/home\/|\\\\Users\\\\|lhchine|clipboard|audio|prompt|session|target|secret)/iu);
   });
 });
