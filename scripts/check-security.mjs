@@ -29,6 +29,11 @@ const profiles = {
     "dist/renderer/control.html",
     "dist/renderer/overlay.html",
   ],
+  "native-protocol-windows": [
+    "src/native/windows/focus_paste.c",
+    "src/native/windows/focus_paste.h",
+    "src/native/windows/build.ps1",
+  ],
 };
 const defaultProfileNames = Object.keys(profiles);
 const allowedPrefixes = ["src/", "dist/", "evidence/", "scripts/", "test-results/"];
@@ -198,6 +203,28 @@ async function main() {
         checkCsp(file);
       }
     }
+  }
+
+  if (selection.profileNames.has("native-protocol-windows")) {
+    requireFragments(files.get("src/native/windows/focus_paste.c"), "SECURITY_WINDOWS_NATIVE_HELPER_MISSING", [
+      "GetForegroundWindow",
+      "GetWindowThreadProcessId",
+      "IsWindow",
+      "SetForegroundWindow",
+      "AttachThreadInput",
+      "SendInput",
+      "FOREGROUND_POLL_TIMEOUT_MS 750",
+      "invalid_request",
+    ]);
+    requireFragments(files.get("src/native/windows/focus_paste.h"), "SECURITY_WINDOWS_NATIVE_HEADER_MISSING", [
+      "LAZYTYPR_WINDOWS_FOCUS_PASTE_H",
+      "FOCUS_PASTE_PROTOCOL_MAX_BYTES 4096",
+    ]);
+    requireFragments(files.get("src/native/windows/build.ps1"), "SECURITY_WINDOWS_NATIVE_BUILD_MISSING", [
+      "cl.exe",
+      "/WX",
+      "user32.lib",
+    ]);
   }
 
   for (const file of files.values()) {
