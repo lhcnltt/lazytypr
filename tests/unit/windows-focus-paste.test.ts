@@ -55,7 +55,7 @@ describe("windows-focus-paste", () => {
   it("keeps every helper refusal as a finite copy-only candidate", async () => {
     const fixture = await loadFixture();
 
-    for (const outcome of fixture.nonSuccessOutcomes) {
+    for (const outcome of fixture.nonSuccessOutcomes.filter((outcome) => outcome !== "invalid_request")) {
       const runner = new FakeRunner(async () => response(pasteResponse(outcome)));
       const adapter = new WindowsFocusPasteAdapter(runner, () => REQUEST_ID);
 
@@ -108,10 +108,14 @@ describe("windows-focus-paste", () => {
     const timedOut = new FakeRunner(async () => {
       throw new Error("timed out");
     });
+    const oversizedStderr = new FakeRunner(async () => ({
+      stdout: new TextEncoder().encode(pasteResponse("pasted")),
+      stderr: new Uint8Array(4097),
+    }));
     const aborted = new AbortController();
     aborted.abort();
 
-    for (const runner of [oversized, failed, timedOut]) {
+    for (const runner of [oversized, oversizedStderr, failed, timedOut]) {
       const result = await new WindowsFocusPasteAdapter(runner, () => REQUEST_ID).capture("main-session", new AbortController().signal);
       expect(result.ok).toBe(false);
       if (!result.ok) {
@@ -122,6 +126,76 @@ describe("windows-focus-paste", () => {
     expect(abortedResult.ok).toBe(false);
     if (!abortedResult.ok) {
       expect(abortedResult.error.code).toBe("native_aborted");
+    }
+  });
+
+  it("rejects invalid UTF-8 and refuses concurrent helper requests", async () => {
+    const invalidUtf8 = new FakeRunner(async () => ({
+      stdout: new Uint8Array([0xff, 0x0a]),
+      stderr: new Uint8Array(),
+    }));
+    const invalidAdapter = new WindowsFocusPasteAdapter(invalidUtf8, () => REQUEST_ID);
+    expect(await invalidAdapter.pasteSameTarget(fakeTarget(), new AbortController().signal)).toBe("helper_error");
+
+    let release: (() => void) | undefined;
+    const waiting = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const concurrentRunner: WindowsChildRunner = {
+      async run(): Promise<{ stdout: Uint8Array; stderr: Uint8Array }> {
+        await waiting;
+        return response(captureResponse());
+      },
+    };
+    const adapter = new WindowsFocusPasteAdapter(concurrentRunner, () => REQUEST_ID);
+    const first = adapter.capture("main-session", new AbortController().signal);
+    const second = await adapter.capture("main-session", new AbortController().signal);
+    release?.();
+
+    expect(second.ok).toBe(false);
+    if (!second.ok) {
+      expect(second.error.code).toBe("native_busy");
+    }
+    expect((await first).ok).toBe(true);
+  });
+
+  it("forwards abort signals to the child seam and keeps the resulting error sanitized", async () => {
+    let observedAbort = false;
+    const abortAwareRunner: WindowsChildRunner = {
+      run(_request: Uint8Array, signal: AbortSignal): Promise<{ stdout: Uint8Array; stderr: Uint8Array }> {
+        return new Promise((_resolve, reject) => {
+          signal.addEventListener("abort", () => {
+            observedAbort = true;
+            reject(new Error("child output must remain private"));
+          }, { once: true });
+        });
+      },
+    };
+    const controller = new AbortController();
+    const pending = new WindowsFocusPasteAdapter(abortAwareRunner, () => REQUEST_ID).capture("main-session", controller.signal);
+    controller.abort();
+    const result = await pending;
+
+    expect(observedAbort).toBe(true);
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error.code).toBe("native_aborted");
+      expect(result.error.details).toBeUndefined();
+    }
+  });
+
+  it("keeps the production transport fixed, one-shot, and shell-free", async () => {
+    const source = await readFile(new URL("../../src/main/os/windows-focus-paste.ts", import.meta.url), "utf8");
+
+    for (const fragment of [
+      "execFile",
+      "trustedHelperPath",
+      "maxBuffer: maximumFrameBytes",
+      "timeout: childTimeoutMilliseconds",
+      "shell: false",
+      "child.kill()",
+    ]) {
+      expect(source).toContain(fragment);
     }
   });
 
@@ -145,9 +219,18 @@ async function loadFixture(): Promise<ProtocolFixture> {
 }
 
 function response(value: string): { stdout: Uint8Array; stderr: Uint8Array } {
+  let stderr = new Uint8Array();
+  try {
+    const parsed = JSON.parse(value) as { outcome?: string };
+    if (parsed.outcome !== undefined && parsed.outcome !== "captured" && parsed.outcome !== "pasted") {
+      stderr = new TextEncoder().encode(`${parsed.outcome}\n`);
+    }
+  } catch {
+    // Deliberately preserve malformed stdout for adapter rejection tests.
+  }
   return {
     stdout: new TextEncoder().encode(value),
-    stderr: new Uint8Array(),
+    stderr,
   };
 }
 

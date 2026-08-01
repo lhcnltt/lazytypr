@@ -39,6 +39,15 @@ describe("windows-native-contract", () => {
         "invalid_request",
       ],
       invalidRequestLabels: ["malformed", "oversize", "unknown_key"],
+      adapterRefusalLabels: [
+        "missing_binary",
+        "timeout",
+        "aborted",
+        "extra_frame",
+        "invalid_utf8",
+        "wrong_request",
+        "wrong_platform",
+      ],
     });
     expect(JSON.stringify(fixture)).not.toMatch(/windowHandle|pid|capturedAt|path|title/iu);
     expect(header).toContain("LAZYTYPR_WINDOWS_FOCUS_PASTE_H");

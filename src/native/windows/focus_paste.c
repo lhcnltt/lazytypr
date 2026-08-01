@@ -232,6 +232,7 @@ static BOOL parse_request(const char *input, size_t input_length, Request *reque
     BOOL saw_version = FALSE;
     BOOL saw_request_id = FALSE;
     BOOL saw_operation = FALSE;
+    BOOL saw_platform = FALSE;
 
     if (!consume_character(&cursor, '{')) {
         return FALSE;
@@ -258,12 +259,13 @@ static BOOL parse_request(const char *input, size_t input_length, Request *reque
                 return FALSE;
             }
             saw_operation = TRUE;
-        } else if (strcmp(key, "platform") == 0 && strcmp(request->operation, "capture") == 0) {
+        } else if (strcmp(key, "platform") == 0 && !saw_platform) {
             char platform[8];
             if (!read_json_string(&cursor, platform, sizeof(platform)) || strcmp(platform, "win32") != 0) {
                 return FALSE;
             }
-        } else if (strcmp(key, "target") == 0 && strcmp(request->operation, "paste") == 0 && !request->has_target) {
+            saw_platform = TRUE;
+        } else if (strcmp(key, "target") == 0 && !request->has_target) {
             if (!parse_target(&cursor, &request->target)) {
                 return FALSE;
             }
@@ -283,9 +285,9 @@ static BOOL parse_request(const char *input, size_t input_length, Request *reque
         return FALSE;
     }
     if (strcmp(request->operation, "capture") == 0) {
-        return !request->has_target;
+        return saw_platform && !request->has_target;
     }
-    return request->has_target;
+    return !saw_platform && request->has_target;
 }
 
 static const char *outcome_name(FocusOutcome outcome) {
