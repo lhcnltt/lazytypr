@@ -168,6 +168,16 @@ status: complete
 **Total deviations:** 4 auto-fixed Rule 1 bugs
 **Impact on plan:** Each correction was required for deterministic packaged output, strict type safety, or a usable fail-closed scan seam. No dependency, application-behavior, model, audio, network, telemetry, or hardware-proof scope was added.
 
+### Post-Wave Test-Gate Repair
+
+**[Rule 1 - Bug] Allowed the intentionally empty future Electron integration suite to complete successfully.**
+
+- **Found during:** Post-wave aggregate `npm run check` after Plan 01-03.
+- **Issue:** Playwright returned a failure solely because `tests/integration/` has no tests until Plan 01-05, blocking the aggregate gate before the planned suite exists.
+- **Fix:** Added Playwright's `--pass-with-no-tests` CLI option to `test:electron`, retained the runner invocation for all present tests, updated the locked toolchain script assertion, and ignored generated `test-results/` artifacts.
+- **Verification:** `npm run check` passes with the current empty suite; a temporary failing Playwright probe exited non-zero as expected before removal. This repair was validated with the available host Node `v26.1.0`; the pinned Node `24.13.1` runtime is not currently installed.
+- **Files modified:** `package.json`, `tests/unit/toolchain-smoke.test.ts`, `.gitignore`.
+
 ## Issues Encountered
 
 - The host's default Node runtime is not the approved Phase 1 toolchain. Every Node/npm command used the already-installed Node `24.13.1` runtime.

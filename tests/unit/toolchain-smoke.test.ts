@@ -30,7 +30,7 @@ describe("toolchain smoke", () => {
     expect(manifest.scripts).toMatchObject({
       "build:renderer": "vite build",
       "check:privacy": "node scripts/check-privacy.mjs",
-      "test:electron": "playwright test tests/integration",
+      "test:electron": "playwright test tests/integration --pass-with-no-tests",
       "test:security": "node scripts/check-security.mjs",
       "test:unit": "vitest run",
       typecheck: "tsc --noEmit",
