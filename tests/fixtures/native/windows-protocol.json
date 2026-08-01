@@ -11,5 +11,14 @@
     "helper_error",
     "invalid_request"
   ],
-  "invalidRequestLabels": ["malformed", "oversize", "unknown_key"]
+  "invalidRequestLabels": ["malformed", "oversize", "unknown_key"],
+  "adapterRefusalLabels": [
+    "missing_binary",
+    "timeout",
+    "aborted",
+    "extra_frame",
+    "invalid_utf8",
+    "wrong_request",
+    "wrong_platform"
+  ]
 }
