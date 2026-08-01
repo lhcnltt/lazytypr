@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: Secure Electron walking skeleton
 status: executing
-stopped_at: Completed LT-01-06-PLAN.md
-last_updated: "2026-08-01T13:39:08.299Z"
+stopped_at: Completed LT-01-07-PLAN.md
+last_updated: "2026-08-01T13:48:38.645Z"
 last_activity: 2026-08-01
 last_activity_desc: Phase 1 execution started
 progress:
   total_phases: 8
   completed_phases: 0
   total_plans: 12
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -27,13 +27,13 @@ recordings or exposing it to cloud services, while retaining a dependable
 copy-first result.
 
 **Current focus:** Phase 1 — Secure Electron walking skeleton authorized
-execution run; Plans 01-01 through 01-06 are complete.
+execution run; Plans 01-01 through 01-07 are complete.
 
 ## Current Position
 
 Phase: 1 (Secure Electron walking skeleton) — EXECUTING
 
-Plan: 7 of 12
+Plan: 8 of 12
 
 Total Plans in Phase: 12
 
@@ -44,21 +44,21 @@ plan-checker convergence.
 
 Last Activity Description: Phase 1 execution started
 
-Progress: [█████░░░░░] 50%
+Progress: [██████░░░░] 58%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 5
-- Average duration: 10m
-- Total execution time: 49m
+- Total plans completed: 7
+- Average duration: 9m
+- Total execution time: 63m
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| LT-01 | 5 | 49m | 10m |
+| LT-01 | 7 | 63m | 9m |
 
 **Recent Trend:** No execution data yet.
 **Per-Plan Metrics:**
@@ -71,6 +71,7 @@ Progress: [█████░░░░░] 50%
 | Phase LT-01 P04 | 7m | 3 tasks | 6 files |
 | Phase LT-01 P05 | 15m | 3 tasks | 9 files |
 | Phase LT-01 P06 | 9m | 2 tasks | 8 files |
+| Phase LT-01 P07 | 5m | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -109,6 +110,9 @@ relevant to the first tracer-first phases are:
 - [Phase 1]: Windows helper refuses held modifiers rather than synthesizing release/repress input.
 - [Phase 1]: Windows adapter accepts only canonical version-one frames with strict Zod keys and fixed finite stderr codes.
 - [Phase 1]: Windows compile and focus validation remain assigned to Plan 01-12 target hardware.
+- [Phase 1]: macOS native focus/paste keeps Accessibility refusal and identity uncertainty as finite copy-only outcomes.
+- [Phase 1]: macOS helper transport uses a fixed execFile path, strict protocol v1 frames, a two-second timeout, and no shell fallback.
+- [Phase 1]: Linux proves macOS source, protocol, and adapter behavior only; Plan 01-12 retains target-native compile and hardware focus validation.
 
 ### Pending Todos
 
@@ -133,8 +137,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-08-01T13:39:08.287Z
+Last session: 2026-08-01T13:48:38.633Z
 
-Stopped at: Completed LT-01-06-PLAN.md
+Stopped at: Completed LT-01-07-PLAN.md
 
 Resume file: None
