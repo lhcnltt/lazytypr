@@ -95,7 +95,12 @@ export class TracerController {
 
   /** Applies the same idempotent cleanup path for renderer teardown and app shutdown. */
   public shutdown(): Result<void> {
-    return this.cancel();
+    return this.teardown();
+  }
+
+  /** Releases an active session when a presentation window is destroyed. */
+  public onWindowTeardown(): Result<void> {
+    return this.teardown();
   }
 
   /** Returns an outcome-safe copy of the active renderer snapshot. */
@@ -131,7 +136,8 @@ export class TracerController {
     }
 
     this.transition(session, "listening");
-    return options.autoPaste ? success(undefined) : success(undefined);
+    void options;
+    return success(undefined);
   }
 
   private async captureTarget(session: ActiveSession): Promise<Result<FocusTarget>> {
@@ -295,6 +301,27 @@ export class TracerController {
     }
     this.activeSession = undefined;
     this.ports.presentation.hide();
+  }
+
+  private teardown(): Result<void> {
+    const session = this.activeSession;
+    if (session === undefined) {
+      return success(undefined);
+    }
+    if (session.terminal) {
+      this.cleanup(session);
+      return success(undefined);
+    }
+
+    session.abortController.abort();
+    if (session.outputCommitStarted) {
+      session.copyOnlyAfterCommit = true;
+      this.finish(session, "copied", 0);
+      return success(undefined);
+    }
+
+    this.finish(session, "cancelled", 0);
+    return success(undefined);
   }
 
   private isCurrent(session: ActiveSession): boolean {
