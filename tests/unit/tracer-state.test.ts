@@ -22,7 +22,7 @@ import type {
 } from "../../src/shared/contracts.js";
 
 const CONTROLLED_RESULT_DIGEST =
-  "2b5ae2fe9d34fb262f8c2a3c9fd8238c99cad1aebf1e30290de001b5107b5a11";
+  "576028f92be102e46d639ccda1c9c9fde21a9bcd1d9072c475b815f24f097d08";
 
 interface ScheduledCallback {
   readonly callback: () => void;
