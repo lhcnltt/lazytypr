@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 
 import { Phase1Application } from "../../src/main/application.js";
 import { createApplication } from "../../src/main/bootstrap.js";
@@ -55,6 +56,10 @@ class FakeTimers implements ClockPort, TimerPort {
         scheduled.callback();
       }
     }
+  }
+
+  public pendingCount(): number {
+    return [...this.callbacks.values()].filter((callback) => !callback.cancelled).length;
   }
 }
 
@@ -219,6 +224,15 @@ test("selects only reviewed production focus adapters and fails closed elsewhere
   expect(selectProductionFocusPastePort("win32")?.constructor.name).toBe("WindowsFocusPasteAdapter");
   expect(selectProductionFocusPastePort("darwin")?.constructor.name).toBe("MacosFocusPasteAdapter");
   expect(selectProductionFocusPastePort("linux")).toBeUndefined();
+});
+
+test("requires the one-shot check to run the exact local 20-cycle tracer matrix", async () => {
+  const packageJson = JSON.parse(await readFile(new URL("../../package.json", import.meta.url), "utf8")) as {
+    scripts: Record<string, string>;
+  };
+
+  expect(packageJson.scripts["test:cycles"]).toContain("20 local cycles");
+  expect(packageJson.scripts.check).toContain("npm run test:cycles");
 });
 
 test("continues a refused target capture as a copy-only dictation session", async () => {
