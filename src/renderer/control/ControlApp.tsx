@@ -22,6 +22,9 @@ export type ControlPresentationState =
   | "cancelled"
   | "error";
 
+/** Exact acknowledgement payload required by the main-side IPC guard. */
+export const AUTO_PASTE_ACKNOWLEDGEMENT = { enabled: true, acknowledged: true } as const;
+
 declare global {
   interface Window {
     readonly lazytyprControl?: ControlBridge;
@@ -112,6 +115,7 @@ export function ControlApp({ bridge = window.lazytyprControl }: ControlAppProps)
       if (event.key === "Escape") {
         event.preventDefault();
         setDialogOpen(false);
+        queueMicrotask(() => switchRef.current?.focus());
       }
       if (event.key === "Tab") {
         const dialog = event.currentTarget as Document;
@@ -151,7 +155,7 @@ export function ControlApp({ bridge = window.lazytyprControl }: ControlAppProps)
   };
   const confirmAutoPaste = () => {
     if (bridge === undefined) return;
-    void bridge.setAutoPaste({ enabled: true, acknowledged: true }).then((result) => {
+    void bridge.setAutoPaste(AUTO_PASTE_ACKNOWLEDGEMENT).then((result) => {
       if (result.ok) setAutoPasteEnabled(true);
       closeDialog();
     });

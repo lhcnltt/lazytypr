@@ -259,7 +259,7 @@ async function main() {
       "controlStateForSnapshot",
       "bridge?.runSafeTest()",
       "bridge?.cancelSession(snapshot.sessionId)",
-      "setAutoPaste({ enabled: true, acknowledged: true })",
+      "AUTO_PASTE_ACKNOWLEDGEMENT",
     ]);
     requireFragments(files.get("src/renderer/overlay/OverlayApp.tsx"), "SECURITY_OVERLAY_UI_REDACTION_MISSING", [
       "overlayStateForSnapshot",
