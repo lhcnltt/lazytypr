@@ -180,7 +180,17 @@ export class TracerController {
 
     this.transition(session, "copying");
     session.outputCommitStarted = true;
-    this.ports.clipboard.writeText(text);
+    try {
+      this.ports.clipboard.writeText(text);
+    } catch {
+      const error = {
+        code: "clipboard_write_failed",
+        messageKey: "tracer.clipboard_write_failed",
+        retryable: true,
+      };
+      this.fail(session, error);
+      return failure(error.code, error.messageKey, error.retryable);
+    }
     session.copied = true;
 
     if (session.abortController.signal.aborted || session.copyOnlyAfterCommit || !autoPaste) {

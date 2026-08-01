@@ -155,6 +155,7 @@ describe("tracer-output", () => {
   it("suppresses a deferred paste result after post-commit cancellation", async () => {
     const presentation = new FakePresentation();
     const paste = deferred<FocusPasteOutcome>();
+    const pasteStarted = deferred<void>();
     let pasteCalls = 0;
     const controller = new TracerController(
       createPorts(new ImmediateTimers(), presentation, {
@@ -162,6 +163,7 @@ describe("tracer-output", () => {
           capture: async (sessionId) => success(fakeTarget(sessionId)),
           pasteSameTarget: async () => {
             pasteCalls += 1;
+            pasteStarted.resolve(undefined);
             return paste.promise;
           },
         },
@@ -170,7 +172,7 @@ describe("tracer-output", () => {
 
     await controller.toggle({ autoPaste: true });
     const output = controller.toggle({ autoPaste: true });
-    await Promise.resolve();
+    await pasteStarted.promise;
     controller.cancel();
     paste.resolve("pasted");
     await output;
