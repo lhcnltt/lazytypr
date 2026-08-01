@@ -39,10 +39,19 @@ describe("toolchain smoke", () => {
       "npm run typecheck && npm run test:unit && npm run build:renderer && npm run test:electron && npm run test:security && npm run check:privacy",
     );
     expect(config).toContain('environment: "node"');
-    expect(config).toContain('include: ["tests/unit/**/*.test.ts"]');
-    expect(config).toContain('exclude: ["tests/integration/**", "tests/hardware/**", "dist/**", "evidence/**", "**/*.node"]');
+    expect(config).toContain(
+      'include: ["tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts"]',
+    );
+    expect(config).toContain(
+      'exclude: ["tests/hardware/**", "dist/**", "evidence/**", "**/*.node"]',
+    );
     expect(config).toContain("testTimeout: 5_000");
     expect(config).toContain("hookTimeout: 5_000");
+    expect(config).toContain("teardownTimeout: 5_000");
+    expect(config).toContain("fileParallelism: false");
+    expect(config).toContain("passWithNoTests: false");
+    expect(config).toContain('reporters: ["dot"]');
+    expect(config).toContain("silent: true");
     expect(config).toContain("watch: false");
   });
 });
