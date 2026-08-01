@@ -1,97 +1,103 @@
 # Session Checkpoint
 
-Updated: 2026-07-31 during documentation baseline generation.
+Updated: 2026-07-31 after Phase 1 plan-checker convergence.
 
-## User intent and hard boundary
+## Current outcome
 
-Implement the approved “lazytypr Public Documentation and GSD Readiness Plan.”
-This phase is documentation-only: no Electron/application source, package
-manifest, native helper, sidecar, installer, model, application test, remote,
-tag, release, or push. Initialize local Git on `main` and finish with one
-path-scoped documentation baseline commit.
+The public documentation/GSD baseline and Phase 1 planning are complete.
+Implementation has not started. The current branch is
+`phase/01-secure-electron-walking-skeleton`; `main` remains the documentation
+baseline, and no Git remote, tag, release, or push exists.
 
-Keep `.codex/config.toml` with:
+`STATE.md` is authoritative for resume status:
 
-```toml
-# Only while using Plan mode
-plan_mode_reasoning_effort = "xhigh"
-```
+- Phase: 1 of 8, Secure Electron walking skeleton.
+- Status: Ready to execute.
+- Plans: 0 of 12 completed.
+- Next file: `01-01-PLAN.md`.
+- Auto-advance remains disabled.
 
-## Completed in the working tree
+Do not run `$gsd-execute-phase` or create application artifacts without an
+explicit user request to begin Phase 1 execution.
 
-- Revised all 16 sections of `PLAN.md` for public/local-first publication,
-  authenticated sidecars, JSON translation payloads, direct provider downloads,
-  test-audio provenance, GSD phases 1–8, and public/release risks.
-- Added root publication/policy files, MIT/REUSE material, OpenWhispr license,
-  GitHub CODEOWNERS/templates, `.gitignore`, and repository `AGENTS.md`.
-- Added ten accepted ADRs and normative product, architecture, IPC, UI, model,
-  testing, test-data, security/privacy, licensing, provenance, development, GSD,
-  release, and upstream-evidence documents.
-- Added six Mermaid diagrams in `docs/ARCHITECTURE.md`.
-- Installed GSD Core 1.9.1 globally through the official Codex transformer.
-  Verified commit `957ebd8e6c62201ce7a44d49bfa92a1c0807cc25`, npm integrity
-  `sha512-dDfc0cf6mI0BaklJOvsQY9FPa4fKFT5zF+t0XQSxpAYQHMhV+uF8xtWnRoCvNjDYg69nBWkFjpM2TB4SMx7jmQ==`,
-  and Codex 0.146.0.
-- Initialized local Git on branch `main`; no commit, remote, tag, or push yet.
-- Added the exact requested `.planning/config.json` and a 21-document ingest
-  manifest. Normalized the evidence document from unsupported type `RESEARCH`
-  to GSD-supported context type `DOC` at precedence 20.
+## Preserved planning artifacts
 
-## GSD generation result
+The Phase 1 directory contains:
 
-The pinned `$gsd-ingest-docs` workflow completed in new mode against the curated
-21-document manifest. It generated:
+- `01-CONTEXT.md` and `01-DISCUSSION-LOG.md`
+- approved `01-UI-SPEC.md`
+- `01-RESEARCH.md`, `01-PATTERNS.md`, and `01-VALIDATION.md`
+- `COVERAGE.md`, documenting that Electron IPC/native OS APIs are not an
+  external service integration
+- `01-01-PLAN.md` through `01-12-PLAN.md`, covering Waves 0 through 9
 
-- `.planning/PROJECT.md`
-- `.planning/REQUIREMENTS.md`
-- `.planning/ROADMAP.md`
-- `.planning/STATE.md`
-- `.planning/INGEST-CONFLICTS.md`
-- `.planning/intel/`
+The independent GSD plan-checker initially blocked a 15-file Wave 0 plan and
+flagged a broad 14-file compliance plan. Both were split. The fresh convergence
+check approved the revised set: every plan is below 15 files, every
+implementation task touches at most five files, the graph is acyclic, and no
+same-wave file ownership collision remains.
 
-The result contains 10 locked decisions, 17 requirements mapped exactly once,
-and the exact eight tracer-first phases. `INGEST-CONFLICTS.md` reports zero
-blockers, warnings, and informational resolutions. Native GSD roadmap validation
-passes. Documentation is complete; implementation Phase 1 is not started. No
-GSD phase specification, planning, or execution command ran.
+## Locked Phase 1 details
 
-## Remaining work
+- Use production process/security boundaries with deterministic stub capture
+  and processing; real PCM and Whisper remain Phase 2.
+- Main owns the sole session, hotkeys, clipboard, captured target, native paste,
+  window lifecycle, and all privileged IPC decisions.
+- Windows uses `Ctrl+Shift+Space`; macOS uses `Control+Option+Space`.
+- The native boundary is an attributed C helper on Windows and Swift helper on
+  macOS, each target-built and limited to a bounded sanitized protocol.
+- Clipboard-only is the default. Copy occurs before optional verified paste.
+- Cancellation linearizes at the main-owned clipboard commit barrier: before
+  commit, no output; after commit, retain the copy and suppress an undispatched
+  paste rather than claiming nothing was copied.
+- No cloud, telemetry, updater, runtime catalog, inference sidecar, model,
+  recording, history, or later-phase placeholder enters Phase 1.
 
-At resume, inspect Git first. If `main` has no commit, re-run the final static
-checks, stage only the documented baseline paths, and create the one baseline
-commit. If `main` has one baseline commit, the tree is clean, and no remote
-exists, this documentation phase is complete; do not begin Phase 1 without a
-separately accepted GSD phase plan.
+## Execution gates when explicitly resumed
 
-## Validation completed
+1. Plan 01-01 is a blocking human review of the exact SUS npm package
+   identities. No package installation may precede that approval.
+2. Plans 01-02 through 01-11 build and validate the local tracer slices with
+   TDD, ASVS L2 high/critical blocking, REUSE/provenance, privacy, and local
+   repeatability evidence.
+3. Plan 01-12 contains separately blocking Windows 11 x64 and macOS 13+ arm64
+   20-cycle hardware checkpoints. Linux, fake-port, or Playwright results cannot
+   satisfy either checkpoint.
 
-- Markdown lint: 45 Markdown files, zero errors with the repository policy.
-- Markdown links: all checked links passed.
-- Mermaid: all six diagrams compiled with Mermaid CLI 11.12.0.
-- JSON, YAML, `REUSE.toml`, and `.codex/config.toml`: parsed successfully.
-- REUSE 3.3: 75/75 files licensed and copyrighted; zero errors.
-- OpenWhispr preserved license SHA-256: exact pinned
-  `ecf1a12d3dc51085d2f3a720dc177c7da3cd075ea3fadcc6a1b719fb44ed30e0`.
-- Requirements/ADRs/roadmap: 17 requirements, 10 accepted ADRs, eight phases;
-  generated traceability is complete and one-to-one.
-- Scope/security scan: no local-user paths, credential patterns, audio/model
-  weights, signing material, executables, application source, or package
-  manifest found.
-- Fresh-context reader review found no contradiction. It identified ambiguous
-  Phase 1 shared-gate ownership and repeatability/platform scope; the product
-  spec, `PLAN.md`, generated requirements, and roadmap now clarify 20 cycles per
-  OS, Notepad/TextEdit verification, refused-target copy-only behavior, and
-  continuing security/network/privacy/licensing gates. A retest found and then
-  closed the remaining LT-CAN-001 omission: at least five cycles per OS must
-  cancel cleanly during stub capture or processing.
-- GSD 1.9.1 roadmap validation passes. Its config validator warns that the
-  bundled-template `safety` namespace is unknown/ignored; the exact locked keys
-  remain in config, and repository/Codex confirmation rules remain authoritative.
-- Final fresh-context retest: PASS; no missing product or technical decision
-  prevents Phase 1 planning.
+## Tooling and configuration
 
-## Evidence boundaries
+- GSD Core is installed at version 1.9.1 through its official Codex
+  transformer.
+- Repository `.codex/config.toml` and global Codex config both set
+  `plan_mode_reasoning_effort = "xhigh"`.
+- `.planning/config.json` keeps committed planning, phase branches, TDD,
+  research, UI review/safety, Nyquist, deep code review, ASVS L2 security,
+  context coverage, no auto-advance, and no worktrees/parallelization.
+- The known GSD 1.9.1 warning that the bundled `safety` namespace is ignored
+  does not weaken repository or Codex confirmation rules.
 
-Current evidence is limited to pinned upstream source inspection, local
-static/document validation, and generated GSD planning validation. No
-implementation, packaged-build, or Windows/macOS hardware test has occurred.
+## Validation checkpoint
+
+Latest completed evidence:
+
+- Markdown lint: 64 files, zero errors with pinned
+  `markdownlint-cli2@0.20.0`.
+- Markdown links: all checked internal and external links pass with pinned
+  `markdown-link-check@3.13.7`.
+- Mermaid: six architecture diagrams plus one research diagram compile with
+  pinned Mermaid CLI 11.4.2 and the local Linux Chromium executable.
+- JSON, YAML, and `REUSE.toml` parse successfully.
+- REUSE Specification 3.3: 94/94 files licensed and copyrighted; zero errors.
+- Traceability: 17/17 requirements mapped; 10/10 accepted ADRs present;
+  Phase 1 decision coverage 14/14.
+- GSD state validates with no warning; ingest remains at zero blockers and zero
+  warnings; the revised 12-plan set passed independent plan checking.
+- Sensitive-content/scope scans find no credential pattern, local-user path,
+  audio/model/signing file, tracked binary, application source, or package
+  manifest.
+
+## Evidence boundary
+
+Current evidence is pinned upstream source inspection, local static/document
+validation, and generated GSD planning validation only. No implementation,
+packaged-build, Windows hardware, or macOS hardware test has occurred.
