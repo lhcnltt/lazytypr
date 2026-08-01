@@ -7,11 +7,15 @@ import type { WindowRole } from "../shared/contracts.js";
 import {
   createControlWindowOptions,
   createOverlayWindowOptions,
+  installPhaseOneContentPolicy,
+  installPhaseOneSessionPolicy,
+  type ContentPolicyTarget,
+  type SessionPolicyTarget,
 } from "./security/window-policy.js";
 
 export interface ManagedWebContents {
   readonly id: number;
-  on(event: "destroyed", listener: () => void): void;
+  on(event: string, listener: (...arguments_: unknown[]) => void): void;
   setWindowOpenHandler(handler: () => { action: "deny" }): void;
 }
 
@@ -26,6 +30,7 @@ export interface ManagedWindow {
 /** Minimal Electron boundary kept injectable for deterministic integration tests. */
 export interface ElectronRuntime {
   createBrowserWindow(options: BrowserWindowConstructorOptions): ManagedWindow;
+  readonly defaultSession: SessionPolicyTarget;
 }
 
 export interface ApplicationPaths {
@@ -62,6 +67,7 @@ export function createApplication(dependencies: CreateApplicationDependencies): 
   function registerWindow(window: ManagedWindow, role: WindowRole): void {
     const { id } = window.webContents;
     roles.set(id, role);
+    installPhaseOneContentPolicy(window.webContents as ContentPolicyTarget);
     window.webContents.on("destroyed", () => {
       roles.delete(id);
     });
@@ -73,6 +79,7 @@ export function createApplication(dependencies: CreateApplicationDependencies): 
         return;
       }
       started = true;
+      installPhaseOneSessionPolicy(dependencies.runtime.defaultSession);
 
       controlWindow = dependencies.runtime.createBrowserWindow(
         createControlWindowOptions(dependencies.paths.controlPreload),
