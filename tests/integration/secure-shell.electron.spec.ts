@@ -20,6 +20,31 @@ interface CapturedWindow {
 
 class FakeElectronRuntime {
   public readonly windows: CapturedWindow[] = [];
+  public readonly defaultSession = {
+    permissionCheckHandler: undefined as ((...arguments_: unknown[]) => boolean) | undefined,
+    permissionRequestHandler: undefined as ((...arguments_: unknown[]) => void) | undefined,
+    downloadListener: undefined as ((event: { preventDefault(): void }) => void) | undefined,
+    beforeRequestListener: undefined as ((...arguments_: unknown[]) => void) | undefined,
+    setPermissionCheckHandler: (handler: (...arguments_: unknown[]) => boolean) => {
+      this.defaultSession.permissionCheckHandler = handler;
+    },
+    setPermissionRequestHandler: (handler: (...arguments_: unknown[]) => void) => {
+      this.defaultSession.permissionRequestHandler = handler;
+    },
+    on: (event: "will-download", listener: (event: { preventDefault(): void }) => void) => {
+      if (event === "will-download") {
+        this.defaultSession.downloadListener = listener;
+      }
+    },
+    webRequest: {
+      onBeforeRequest: (...arguments_: unknown[]) => {
+        const listener = arguments_.at(-1);
+        if (typeof listener === "function") {
+          this.defaultSession.beforeRequestListener = listener as (...arguments_: unknown[]) => void;
+        }
+      },
+    },
+  };
   private nextId = 1;
 
   public createBrowserWindow(options: Record<string, unknown>): CapturedWindow {
@@ -79,4 +104,37 @@ test("creates one hardened control window and one inactive overlay", async () =>
   });
   expect(application.roleForWebContents(control?.webContents.id ?? 0)).toBe("control");
   expect(application.roleForWebContents(overlay?.webContents.id ?? 0)).toBe("overlay");
+});
+
+test("installs the Phase 1 deny-by-default session and content policy before local pages load", async () => {
+  const runtime = new FakeElectronRuntime();
+  const application = createApplication({
+    runtime,
+    paths: {
+      controlHtml: "dist/renderer/control.html",
+      overlayHtml: "dist/renderer/overlay.html",
+      controlPreload: "dist/preload/control.js",
+      overlayPreload: "dist/preload/overlay.js",
+    },
+  });
+
+  await application.start();
+
+  expect(runtime.defaultSession.permissionCheckHandler?.()).toBe(false);
+  let permissionGranted: boolean | undefined;
+  const permissionCallback = (granted: boolean) => {
+    permissionGranted = granted;
+  };
+  runtime.defaultSession.permissionRequestHandler?.({}, "media", permissionCallback, {});
+  expect(permissionGranted).toBe(false);
+  let requestResult: unknown;
+  const requestCallback = (result: unknown) => {
+    requestResult = result;
+  };
+  runtime.defaultSession.beforeRequestListener?.({ url: "https://example.invalid" }, requestCallback);
+  expect(requestResult).toEqual({ cancel: true });
+  let downloadPrevented = false;
+  const downloadEvent = { preventDefault: () => { downloadPrevented = true; } };
+  runtime.defaultSession.downloadListener?.(downloadEvent);
+  expect(downloadPrevented).toBe(true);
 });
