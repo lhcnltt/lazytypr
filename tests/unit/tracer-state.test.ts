@@ -66,6 +66,10 @@ class FakeTimers implements ClockPort, TimerPort {
       }
     }
   }
+
+  public lastCallback(): (() => void) | undefined {
+    return Array.from(this.callbacks.values()).at(-1)?.callback;
+  }
 }
 
 class FakePresentation implements PresentationPort {
@@ -164,6 +168,94 @@ describe("tracer-state", () => {
       true,
     );
   });
+
+  it("keeps exactly one session, reports busy, and ignores stale completion and timer callbacks", async () => {
+    const timers = new FakeTimers();
+    const presentation = new FakePresentation();
+    const firstProcessing = deferred<Result<string>>();
+    let processingCalls = 0;
+    const controller = new TracerController(
+      createPorts(timers, presentation, {
+        processor: {
+          beginCapture: async () => success(undefined),
+          stopAndProcess: async () => {
+            processingCalls += 1;
+            return processingCalls === 1
+              ? firstProcessing.promise
+              : success("lazytypr secure tracer");
+          },
+        },
+      }),
+    );
+
+    await controller.toggle({ autoPaste: false });
+    const originalSessionId = controller.snapshot()?.sessionId;
+    const processing = controller.toggle({ autoPaste: false });
+    await controller.toggle({ autoPaste: false });
+
+    expect(presentation.outcomes).toContain("busy");
+    expect(controller.snapshot()?.sessionId).toBe(originalSessionId);
+
+    controller.cancel();
+    await controller.toggle({ autoPaste: false });
+    const replacementSessionId = controller.snapshot()?.sessionId;
+    expect(replacementSessionId).not.toBe(originalSessionId);
+
+    firstProcessing.resolve(success("lazytypr secure tracer"));
+    await processing;
+    expect(controller.snapshot()?.sessionId).toBe(replacementSessionId);
+    expect(controller.snapshot()?.phase).toBe("listening");
+
+    await controller.toggle({ autoPaste: false });
+    const staleTimer = timers.lastCallback();
+    controller.onWindowTeardown();
+    await controller.toggle({ autoPaste: false });
+    staleTimer?.();
+
+    expect(controller.snapshot()?.phase).toBe("listening");
+    expect(presentation.events.filter((event) => event === "hide")).toHaveLength(2);
+  });
+
+  it("cancels acquiring, listening, and transcribing with no output and shared terminal cleanup", async () => {
+    const timers = new FakeTimers();
+    const presentation = new FakePresentation();
+    const capture = deferred<Result<FocusTarget>>();
+    const clipboardWrites: string[] = [];
+    const pastedTargets: FocusTarget[] = [];
+    const controller = new TracerController(
+      createPorts(timers, presentation, {
+        clipboard: { writeText: (text) => clipboardWrites.push(text) },
+        focusPaste: {
+          capture: async () => capture.promise,
+          pasteSameTarget: async (target) => {
+            pastedTargets.push(target);
+            return "pasted";
+          },
+        },
+      }),
+    );
+
+    const acquiring = controller.toggle({ autoPaste: true });
+    controller.cancel();
+    capture.resolve(success(fakeTarget("stale-session")));
+    await acquiring;
+
+    expect(controller.snapshot()).toBeUndefined();
+    expect(clipboardWrites).toEqual([]);
+    expect(pastedTargets).toEqual([]);
+    expect(presentation.outcomes).toContain("cancelled");
+
+    await controller.toggle({ autoPaste: false });
+    controller.cancel();
+    expect(controller.snapshot()).toBeUndefined();
+
+    await controller.toggle({ autoPaste: false });
+    controller.onWindowTeardown();
+    controller.shutdown();
+    expect(controller.snapshot()).toBeUndefined();
+    expect(clipboardWrites).toEqual([]);
+    expect(pastedTargets).toEqual([]);
+  });
 });
 
 function success<T>(value: T): Result<T> {
@@ -172,4 +264,66 @@ function success<T>(value: T): Result<T> {
 
 function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
+}
+
+function createPorts(
+  timers: FakeTimers,
+  presentation: FakePresentation,
+  overrides: Partial<{
+    clipboard: ClipboardPort;
+    focusPaste: FocusPastePort;
+    processor: StubProcessorPort;
+  }> = {},
+): {
+  readonly clock: ClockPort;
+  readonly timers: TimerPort;
+  readonly clipboard: ClipboardPort;
+  readonly focusPaste: FocusPastePort;
+  readonly processor: StubProcessorPort;
+  readonly presentation: PresentationPort;
+} {
+  return {
+    clock: timers,
+    timers,
+    clipboard: overrides.clipboard ?? { writeText: () => undefined },
+    focusPaste:
+      overrides.focusPaste ??
+      {
+        capture: async (sessionId) => success(fakeTarget(sessionId)),
+        pasteSameTarget: async () => "pasted",
+      },
+    processor:
+      overrides.processor ??
+      {
+        beginCapture: async () => success(undefined),
+        stopAndProcess: async () => success("lazytypr secure tracer"),
+      },
+    presentation,
+  };
+}
+
+function fakeTarget(sessionId: string): FocusTarget {
+  return {
+    platform: "win32",
+    pid: 42,
+    windowHandle: "opaque-window-handle",
+    capturedAt: "1970-01-01T00:00:00.000Z",
+    sessionId,
+  };
+}
+
+function deferred<T>(): {
+  readonly promise: Promise<T>;
+  resolve(value: T): void;
+} {
+  let resolvePromise: ((value: T) => void) | undefined;
+  const promise = new Promise<T>((resolve) => {
+    resolvePromise = resolve;
+  });
+  return {
+    promise,
+    resolve(value: T): void {
+      resolvePromise?.(value);
+    },
+  };
 }
