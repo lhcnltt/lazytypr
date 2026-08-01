@@ -4,6 +4,7 @@
 import type { BrowserWindowConstructorOptions } from "electron";
 
 import type { WindowRole } from "../shared/contracts.js";
+import { IpcGuard, type IpcMainRegistrar, type IpcServices } from "./security/ipc-guard.js";
 import {
   createControlWindowOptions,
   createOverlayWindowOptions,
@@ -31,6 +32,7 @@ export interface ManagedWindow {
 export interface ElectronRuntime {
   createBrowserWindow(options: BrowserWindowConstructorOptions): ManagedWindow;
   readonly defaultSession: SessionPolicyTarget;
+  readonly ipcMain?: IpcMainRegistrar;
 }
 
 export interface ApplicationPaths {
@@ -43,6 +45,7 @@ export interface ApplicationPaths {
 export interface CreateApplicationDependencies {
   readonly runtime: ElectronRuntime;
   readonly paths: ApplicationPaths;
+  readonly services?: IpcServices;
 }
 
 export interface Application {
@@ -62,6 +65,7 @@ export function createApplication(dependencies: CreateApplicationDependencies): 
   const roles = new Map<number, WindowRole>();
   let controlWindow: ManagedWindow | undefined;
   let overlayWindow: ManagedWindow | undefined;
+  let removeIpcHandlers: (() => void) | undefined;
   let started = false;
 
   function registerWindow(window: ManagedWindow, role: WindowRole): void {
@@ -78,6 +82,9 @@ export function createApplication(dependencies: CreateApplicationDependencies): 
       if (started) {
         return;
       }
+      if (dependencies.services !== undefined && dependencies.runtime.ipcMain === undefined) {
+        throw new Error("Main IPC registrar is required when Phase 1 services are configured.");
+      }
       started = true;
       installPhaseOneSessionPolicy(dependencies.runtime.defaultSession);
 
@@ -89,6 +96,11 @@ export function createApplication(dependencies: CreateApplicationDependencies): 
       );
       registerWindow(controlWindow, "control");
       registerWindow(overlayWindow, "overlay");
+      if (dependencies.services !== undefined) {
+        removeIpcHandlers = new IpcGuard(roles, dependencies.services).register(
+          dependencies.runtime.ipcMain as IpcMainRegistrar,
+        );
+      }
 
       await Promise.all([
         controlWindow.loadFile(dependencies.paths.controlHtml),
@@ -100,6 +112,8 @@ export function createApplication(dependencies: CreateApplicationDependencies): 
         return;
       }
       started = false;
+      removeIpcHandlers?.();
+      removeIpcHandlers = undefined;
       controlWindow?.destroy();
       overlayWindow?.destroy();
       controlWindow = undefined;
@@ -112,5 +126,23 @@ export function createApplication(dependencies: CreateApplicationDependencies): 
     roleForWebContents(webContentsId: number): WindowRole | undefined {
       return roles.get(webContentsId);
     },
+  };
+}
+
+/**
+ * Adapts Electron main modules into the injectable production runtime.
+ *
+ * The caller supplies only main-process Electron values after app readiness; no
+ * renderer, preload, or URL-derived value can construct this authority.
+ */
+export function createElectronRuntime(
+  BrowserWindow: new (options: BrowserWindowConstructorOptions) => ManagedWindow,
+  defaultSession: SessionPolicyTarget,
+  ipcMain: IpcMainRegistrar,
+): ElectronRuntime {
+  return {
+    createBrowserWindow: (options) => new BrowserWindow(options),
+    defaultSession,
+    ipcMain,
   };
 }

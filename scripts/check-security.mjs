@@ -183,6 +183,7 @@ async function main() {
     requireFragments(files.get("src/main/bootstrap.ts"), "SECURITY_POLICY_NOT_INSTALLED", [
       "installPhaseOneSessionPolicy",
       "installPhaseOneContentPolicy",
+      "new IpcGuard(roles, dependencies.services).register",
     ]);
     for (const path of [
       "src/renderer/control.html",
