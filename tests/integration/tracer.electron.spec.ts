@@ -70,6 +70,7 @@ class FakeHotkeys implements HotkeyPort {
 
 class FakePresentation implements PresentationPort {
   public readonly sequence: string[] = [];
+  public readonly outcomes: TracerOutcome[] = [];
 
   public showInactive(_snapshot: SessionSnapshot): void {
     this.sequence.push("show-inactive");
@@ -77,7 +78,9 @@ class FakePresentation implements PresentationPort {
 
   public publishState(_snapshot: SessionSnapshot): void {}
 
-  public publishOutcome(_outcome: TracerOutcome): void {}
+  public publishOutcome(outcome: TracerOutcome): void {
+    this.outcomes.push(outcome);
+  }
 
   public hide(): void {}
 }
@@ -218,6 +221,88 @@ test("selects only reviewed production focus adapters and fails closed elsewhere
   expect(selectProductionFocusPastePort("linux")).toBeUndefined();
 });
 
+test("continues a refused target capture as a copy-only safe test", async () => {
+  const timers = new FakeTimers();
+  const presentation = new FakePresentation();
+  const copied: string[] = [];
+  const controller = new TracerController({
+    clock: timers,
+    timers,
+    clipboard: {
+      writeText: () => {
+        copied.push("committed");
+      },
+    } satisfies ClipboardPort,
+    focusPaste: {
+      capture: async () => failure("target_unavailable", "tracer.target_unavailable"),
+      pasteSameTarget: async () => "pasted",
+    } satisfies FocusPastePort,
+    processor: new DeterministicStubProcessor(timers),
+    presentation,
+  });
+  const application = new Phase1Application({
+    platform: "win32",
+    controller,
+    hotkeys: new FakeHotkeys(),
+    timers,
+    presentation,
+  });
+
+  const started = await application.runSafeTest();
+  expect(started.ok).toBe(true);
+  timers.advanceBy(150);
+  await flushAsyncWork();
+  timers.advanceBy(250);
+  await flushAsyncWork();
+
+  expect(copied).toEqual(["committed"]);
+  expect(presentation.outcomes).toEqual(["copy_only"]);
+});
+
+test("retries an unavailable hotkey and releases Escape after a processing cancellation", async () => {
+  const timers = new FakeTimers();
+  const presentation = new FakePresentation();
+  const hotkeys = new ConflictThenReadyHotkeys();
+  const controller = new TracerController({
+    clock: timers,
+    timers,
+    clipboard: { writeText: () => undefined } satisfies ClipboardPort,
+    focusPaste: {
+      capture: async (sessionId) => success(fakeTarget(sessionId)),
+      pasteSameTarget: async () => "pasted",
+    } satisfies FocusPastePort,
+    processor: new DeterministicStubProcessor(timers),
+    presentation,
+  });
+  const statuses: string[] = [];
+  const application = new Phase1Application({
+    platform: "win32",
+    controller,
+    hotkeys,
+    timers,
+    presentation,
+    publishHotkeyStatus: (status) => statuses.push(status),
+  });
+
+  expect(application.start()).toBe("unavailable");
+  hotkeys.acceptDictation = true;
+  application.retryHotkeys();
+  expect(statuses).toEqual(["unavailable", "ready"]);
+
+  await application.handleDictationHotkey();
+  const processing = application.handleDictationHotkey();
+  await flushAsyncWork();
+  await application.handleDictationHotkey();
+  expect(presentation.outcomes).toEqual(["busy"]);
+  expect(hotkeys.registered.has("Escape")).toBe(true);
+
+  application.cancelSession();
+  await processing;
+  expect(application.currentSession()).toBeUndefined();
+  expect(hotkeys.registered.has("Escape")).toBe(false);
+  expect(presentation.outcomes).toEqual(["busy", "cancelled"]);
+});
+
 function fakeTarget(sessionId: string): FocusTarget {
   return {
     platform: "win32",
@@ -232,9 +317,34 @@ function success<T>(value: T): Result<T> {
   return { ok: true, value };
 }
 
+function failure<T>(code: string, messageKey: string): Result<T> {
+  return { ok: false, error: { code, messageKey, retryable: false } };
+}
+
 async function flushAsyncWork(): Promise<void> {
   await Promise.resolve();
   await Promise.resolve();
   await Promise.resolve();
   await Promise.resolve();
+}
+
+class ConflictThenReadyHotkeys implements HotkeyPort {
+  public acceptDictation = false;
+  public readonly registered = new Map<string, () => void>();
+
+  public register(accelerator: string, callback: () => void): boolean {
+    if (accelerator === "Ctrl+Shift+Space" && !this.acceptDictation) {
+      return false;
+    }
+    this.registered.set(accelerator, callback);
+    return true;
+  }
+
+  public unregister(accelerator: string): void {
+    this.registered.delete(accelerator);
+  }
+
+  public unregisterAll(): void {
+    this.registered.clear();
+  }
 }
