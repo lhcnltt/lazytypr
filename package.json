@@ -8,10 +8,11 @@
   },
   "scripts": {
     "build:renderer": "vite build",
-    "check": "npm run typecheck && npm run test:unit && npm run build:renderer && npm run test:electron && npm run test:security && npm run test:licensing && npm run check:privacy",
+    "check": "npm run typecheck && npm run test:unit && npm run build:renderer && npm run test:electron && npm run test:cycles && npm run test:security && npm run test:licensing && npm run check:privacy",
     "check:privacy": "node scripts/check-privacy.mjs",
     "sbom:development": "npm sbom --sbom-format spdx --package-lock-only --ignore-scripts --offline | node scripts/generate-development-sbom.mjs > artifacts/sbom/phase1-development.spdx.json",
-    "test:electron": "playwright test tests/integration --pass-with-no-tests",
+    "test:cycles": "playwright test tests/integration/tracer.electron.spec.ts --grep \"20 local cycles\"",
+    "test:electron": "playwright test tests/integration --pass-with-no-tests --grep-invert \"20 local cycles\"",
     "test:licensing": "vitest run --config vitest.security.config.ts",
     "test:security": "node scripts/check-security.mjs",
     "typecheck": "tsc --noEmit",

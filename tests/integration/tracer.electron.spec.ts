@@ -49,13 +49,20 @@ class FakeTimers implements ClockPort, TimerPort {
   }
 
   public advanceBy(milliseconds: number): void {
-    this.nowMilliseconds += milliseconds;
-    for (const [handle, scheduled] of this.callbacks) {
-      if (!scheduled.cancelled && scheduled.dueAt <= this.nowMilliseconds) {
-        this.callbacks.delete(handle);
-        scheduled.callback();
+    const target = this.nowMilliseconds + milliseconds;
+    while (true) {
+      const next = [...this.callbacks.entries()]
+        .filter(([, scheduled]) => !scheduled.cancelled && scheduled.dueAt <= target)
+        .sort(([, left], [, right]) => left.dueAt - right.dueAt)[0];
+      if (next === undefined) {
+        break;
       }
+      const [handle, scheduled] = next;
+      this.callbacks.delete(handle);
+      this.nowMilliseconds = scheduled.dueAt;
+      scheduled.callback();
     }
+    this.nowMilliseconds = target;
   }
 
   public pendingCount(): number {
@@ -64,13 +71,20 @@ class FakeTimers implements ClockPort, TimerPort {
 }
 
 class FakeHotkeys implements HotkeyPort {
-  public register(_accelerator: string, _callback: () => void): boolean {
+  public readonly registered = new Map<string, () => void>();
+
+  public register(accelerator: string, callback: () => void): boolean {
+    this.registered.set(accelerator, callback);
     return true;
   }
 
-  public unregister(_accelerator: string): void {}
+  public unregister(accelerator: string): void {
+    this.registered.delete(accelerator);
+  }
 
-  public unregisterAll(): void {}
+  public unregisterAll(): void {
+    this.registered.clear();
+  }
 }
 
 class FakePresentation implements PresentationPort {
@@ -235,6 +249,34 @@ test("requires the one-shot check to run the exact local 20-cycle tracer matrix"
   expect(packageJson.scripts.check).toContain("npm run test:cycles");
 });
 
+test("runs exactly 20 local cycles with five no-output cancellations and no residue", async () => {
+  const scenarios = [
+    "clipboard_only", "pasted", "capture_refused", "target_mismatch", "cancel_capture",
+    "clipboard_only", "pasted", "capture_refused", "target_mismatch", "cancel_processing",
+    "clipboard_only", "pasted", "capture_refused", "target_mismatch", "cancel_capture",
+    "clipboard_only", "pasted", "busy", "cancel_processing", "cancel_capture",
+  ] as const;
+  const outcomes: TracerOutcome[] = [];
+  let cancellations = 0;
+
+  for (const scenario of scenarios) {
+    const cycle = await runLocalCycle(scenario);
+    outcomes.push(...cycle.outcomes);
+    cancellations += cycle.cancellations;
+    expect(cycle.pendingTimers).toBe(0);
+    expect(cycle.hotkeysReleased).toBe(true);
+    expect(cycle.sessionCleared).toBe(true);
+  }
+
+  expect(scenarios).toHaveLength(20);
+  expect(cancellations).toBe(5);
+  expect(outcomes.filter((outcome) => outcome === "cancelled")).toHaveLength(5);
+  expect(outcomes.filter((outcome) => outcome === "busy")).toHaveLength(1);
+  expect(outcomes.filter((outcome) => outcome === "pasted")).toHaveLength(4);
+  expect(outcomes.filter((outcome) => outcome === "copy_only")).toHaveLength(6);
+  expect(outcomes.filter((outcome) => outcome === "copied")).toHaveLength(5);
+});
+
 test("continues a refused target capture as a copy-only dictation session", async () => {
   const timers = new FakeTimers();
   const presentation = new FakePresentation();
@@ -341,6 +383,82 @@ async function flushAsyncWork(): Promise<void> {
   await Promise.resolve();
   await Promise.resolve();
   await Promise.resolve();
+}
+
+type LocalScenario =
+  | "clipboard_only"
+  | "pasted"
+  | "capture_refused"
+  | "target_mismatch"
+  | "busy"
+  | "cancel_capture"
+  | "cancel_processing";
+
+async function runLocalCycle(scenario: LocalScenario): Promise<{
+  cancellations: number;
+  hotkeysReleased: boolean;
+  outcomes: readonly TracerOutcome[];
+  pendingTimers: number;
+  sessionCleared: boolean;
+}> {
+  const timers = new FakeTimers();
+  const presentation = new FakePresentation();
+  const hotkeys = new FakeHotkeys();
+  const copied: string[] = [];
+  const controller = new TracerController({
+    clock: timers,
+    timers,
+    clipboard: { writeText: () => copied.push("committed") } satisfies ClipboardPort,
+    focusPaste: {
+      capture: async (sessionId) => scenario === "capture_refused"
+        ? failure("target_unavailable", "tracer.target_unavailable")
+        : success(fakeTarget(sessionId)),
+      pasteSameTarget: async () => scenario === "target_mismatch" ? "target_mismatch" : "pasted",
+    } satisfies FocusPastePort,
+    processor: new DeterministicStubProcessor(timers),
+    presentation,
+  });
+  const application = new Phase1Application({
+    platform: "win32",
+    controller,
+    hotkeys,
+    timers,
+    presentation,
+  });
+
+  if (scenario === "pasted" || scenario === "capture_refused" || scenario === "target_mismatch") {
+    expect(application.setAutoPaste(true, true).ok).toBe(true);
+  }
+  expect((await application.handleDictationHotkey()).ok).toBe(true);
+
+  if (scenario === "cancel_capture") {
+    expect(application.cancelSession().ok).toBe(true);
+    expect(copied).toHaveLength(0);
+  } else {
+    const completion = application.handleDictationHotkey();
+    await flushAsyncWork();
+    if (scenario === "busy") {
+      await expect(application.handleDictationHotkey()).resolves.toMatchObject({ ok: true });
+    }
+    if (scenario === "cancel_processing") {
+      expect(application.cancelSession().ok).toBe(true);
+      expect(copied).toHaveLength(0);
+    } else {
+      timers.advanceBy(250);
+    }
+    await flushAsyncWork();
+    await completion;
+  }
+
+  timers.advanceBy(2_000);
+  await flushAsyncWork();
+  return {
+    cancellations: scenario.startsWith("cancel_") ? 1 : 0,
+    hotkeysReleased: !hotkeys.registered.has("Escape"),
+    outcomes: presentation.outcomes,
+    pendingTimers: timers.pendingCount(),
+    sessionCleared: application.currentSession() === undefined,
+  };
 }
 
 class ConflictThenReadyHotkeys implements HotkeyPort {
