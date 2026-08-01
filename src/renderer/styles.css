@@ -1,0 +1,45 @@
+/* SPDX-FileCopyrightText: 2026 lhcnltt */
+/* SPDX-License-Identifier: MIT */
+
+:root {
+  color: #f5f7fa;
+  background: #172033;
+  font-family: "Noto Sans", system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 0; background: #172033; }
+button, input { font: inherit; }
+button, input[type="checkbox"] { min-height: 44px; min-width: 44px; }
+button:focus-visible, input:focus-visible { outline: 2px solid #7db5b2; outline-offset: 2px; }
+
+.control-app { min-height: 100vh; overflow-x: hidden; padding: 32px; }
+.control-panel { display: grid; gap: 24px; margin: 0 auto; max-width: 640px; }
+h1, h2, p { margin: 0; }
+h1 { font-size: 20px; font-weight: 600; line-height: 1.2; }
+h2, button, .switch-row { font-size: 14px; font-weight: 600; line-height: 1.4; }
+.control-intro { font-size: 16px; line-height: 1.5; }
+.status-card, .safety-card { display: grid; gap: 8px; border: 1px solid #4e6582; border-radius: 8px; background: #4e6582; padding: 16px; }
+.switch-row { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
+.switch-row input { accent-color: #7db5b2; }
+.tracer-actions { display: grid; gap: 16px; }
+.current-state { min-height: 24px; color: #7da4b5; }
+.primary-action, .secondary-action { border: 1px solid #7da4b5; border-radius: 8px; padding: 8px 16px; cursor: pointer; }
+.primary-action { background: #7db5b2; color: #172033; }
+.secondary-action { background: #172033; color: #f5f7fa; }
+button:disabled, input:disabled { cursor: not-allowed; opacity: 0.7; }
+.dialog-backdrop { position: fixed; inset: 0; display: grid; place-items: center; padding: 16px; background: rgb(23 32 51 / 82%); }
+.confirmation-dialog { display: grid; gap: 16px; max-width: 520px; border: 1px solid #7da4b5; border-radius: 8px; background: #172033; padding: 24px; }
+.dialog-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .status-card, .safety-card, .confirmation-dialog { transition: opacity 120ms ease, transform 120ms ease; }
+}
+
+@media (max-width: 360px) {
+  .control-app { padding: 16px; }
+  .dialog-actions > button { width: 100%; }
+}
