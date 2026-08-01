@@ -8,6 +8,10 @@ import {
   phase1Messages,
   type ControlPresentationState,
 } from "../../src/renderer/control/ControlApp.js";
+import {
+  overlayStateForSnapshot,
+  type OverlayPresentationState,
+} from "../../src/renderer/overlay/OverlayApp.js";
 import type { SessionSnapshot } from "../../src/shared/contracts.js";
 
 const snapshot = (phase: SessionSnapshot["phase"]): SessionSnapshot => ({
@@ -17,6 +21,25 @@ const snapshot = (phase: SessionSnapshot["phase"]): SessionSnapshot => ({
   startedAt: "2026-08-01T00:00:00.000Z",
   copied: false,
   pasted: false,
+});
+
+test.describe("overlay state", () => {
+  test("maps only finite redacted outcome cues and never carries a snapshot into presentation", () => {
+    const states: readonly [SessionSnapshot, OverlayPresentationState][] = [
+      [snapshot("acquiring_microphone"), { icon: "microphone", messageKey: "tracer.preparing" }],
+      [snapshot("listening"), { icon: "wave", messageKey: "tracer.listening" }],
+      [{ ...snapshot("success"), copied: true }, { icon: "check", messageKey: "tracer.outcome.copied" }],
+      [{ ...snapshot("success"), copied: true, pasted: true }, { icon: "check", messageKey: "tracer.outcome.pasted" }],
+      [{ ...snapshot("cancelled") }, { icon: "stop", messageKey: "tracer.cancelled" }],
+    ];
+
+    for (const [nextSnapshot, expected] of states) {
+      const presentation = overlayStateForSnapshot(nextSnapshot);
+      expect(presentation).toEqual(expected);
+      expect(JSON.stringify(presentation)).not.toContain(nextSnapshot.sessionId);
+      expect(Object.keys(presentation)).toEqual(["icon", "messageKey"]);
+    }
+  });
 });
 
 test.describe("control tracer", () => {
