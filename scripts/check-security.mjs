@@ -34,6 +34,10 @@ const profiles = {
     "src/native/windows/focus_paste.h",
     "src/native/windows/build.ps1",
   ],
+  "native-protocol-macos": [
+    "src/native/macos/FocusPaste.swift",
+    "src/native/macos/build.sh",
+  ],
 };
 const defaultProfileNames = Object.keys(profiles);
 const allowedPrefixes = ["src/", "dist/", "evidence/", "scripts/", "test-results/"];
@@ -224,6 +228,24 @@ async function main() {
       "cl.exe",
       "/WX",
       "user32.lib",
+    ]);
+  }
+
+  if (selection.profileNames.has("native-protocol-macos")) {
+    requireFragments(files.get("src/native/macos/FocusPaste.swift"), "SECURITY_MACOS_NATIVE_HELPER_MISSING", [
+      "NSWorkspace.shared.frontmostApplication",
+      "AXIsProcessTrusted()",
+      "activate(options: [])",
+      "CGEvent(keyboardEventSource",
+      "maximumFrameBytes = 4096",
+      "target_mismatch",
+      "invalid_request",
+    ]);
+    requireFragments(files.get("src/native/macos/build.sh"), "SECURITY_MACOS_NATIVE_BUILD_MISSING", [
+      "set -euo pipefail",
+      "Darwin",
+      "arm64",
+      "swiftc -warnings-as-errors",
     ]);
   }
 
