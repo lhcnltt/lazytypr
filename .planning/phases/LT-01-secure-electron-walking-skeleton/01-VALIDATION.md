@@ -66,7 +66,7 @@ verification; the three human-only gates are explicitly identified.
 | 01-12-01 | 12 | 9 | LT-OUT-001, LT-PST-001 | T-LT01-12-R | The evidence validator rejects wrong counts, labels, platforms, or sensitive fields | unit/static | `npm run test:unit -- hardware-evidence-validator` | ❌ W0 | ⬜ pending |
 | 01-12-02, 01-12-03 | 12 | 9 | LT-OUT-001, LT-PST-001, LT-CAN-001 | T-LT01-12-TARGET | Windows and macOS each pass their distinct 20-cycle native proof | target-hardware | Blocking Windows/macOS run-sheet approval | N/A gate | ⬜ pending |
 
-*Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+Status legend: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky
 
 ## Wave 0 Requirements
 

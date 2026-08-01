@@ -117,6 +117,7 @@ The authoritative Phase 1 foundation is: “Phase 1 owns LT-OUT-001 and must als
 | LT-SEC-001 (foundation) | Sandboxed role-specific renderers and authenticated loopback sidecars. [VERIFIED: docs/PRODUCT_SPEC.md:43] | Phase 1 establishes role-specific preload/sender/schema validation; it must prove no sidecar is launched. |
 | LT-LIC-001 (foundation) | Preserve license, provenance, notices, and SBOM obligations. [VERIFIED: docs/PRODUCT_SPEC.md:47] | Add SPDX headers/provenance when required, exact lockfile, dependency review, and `reuse lint`; SBOM/package gates remain future scope. |
 | LT-PRV-001 (foundation) | Diagnostics contain no audio, text, prompts, secrets, or user paths. [VERIFIED: docs/PRODUCT_SPEC.md:48] | Treat stub text, clipboard, target identity, tokens, and paths as secret-bearing data: never render, log, or put them in test artifacts. |
+
 </phase_requirements>
 
 ## Summary
@@ -125,14 +126,14 @@ Implement Phase 1 as one production-owned Electron main-process slice with two s
 
 The plan must divide deterministic local behavior from hardware proof. Unit and Electron integration tests can exhaustively test the state controller with injected clipboard, target, clock, timer, hotkey, and focus/paste fakes. They cannot prove a Windows foreground activation or macOS Accessibility paste. The Phase 1 checkpoint still requires 20 development-build cycles per supported OS, successful paste only in Notepad/TextEdit, one refused/unverifiable copy-only case per OS, and five capture/processing cancellations per OS; label those as future Windows/macOS hardware validation until actually run. [VERIFIED: docs/PRODUCT_SPEC.md:53-63] [VERIFIED: docs/TESTING.md:3-14]
 
-**Primary recommendation:** Build the shared contracts and main-owned tracer state machine first, behind injected OS ports; then add thin Windows/macOS native adapter implementations and verify their only success targets on the matching hardware. Do not let renderer code, generic IPC, or a test fake decide output safety. [CITED: https://www.electronjs.org/docs/latest/tutorial/security]
+**Primary recommendation:** Build the shared contracts and main-owned tracer state machine first, behind injected OS ports; then add thin Windows/macOS native adapter implementations and verify their only success targets on the matching hardware. Do not let renderer code, generic IPC, or a test fake decide output safety. CITED: <https://www.electronjs.org/docs/latest/tutorial/security>
 
 ## Architectural Responsibility Map
 
 | Capability | Primary Tier | Secondary Tier | Rationale |
 |------------|--------------|----------------|-----------|
 | Session state, cancellation, stale-update rejection | Electron main / API backend | — | Only main may own active session, OS resources, and terminal cleanup. [VERIFIED: docs/ARCHITECTURE.md:129-144] |
-| Global hotkey registration/status | Electron main / OS integration | Control renderer | Electron’s `globalShortcut` is a main-process API; the renderer displays normalized status only. [CITED: https://www.electronjs.org/docs/latest/api/global-shortcut/] |
+| Global hotkey registration/status | Electron main / OS integration | Control renderer | Electron’s `globalShortcut` is a main-process API; the renderer displays normalized status only. CITED: <https://www.electronjs.org/docs/latest/api/global-shortcut/> |
 | Foreground target capture, reactivation, revalidation, paste | Native Windows/macOS adapter invoked by main | Electron main | The accepted ADR requires platform-native helpers; UI/renderer must never gain OS focus or clipboard authority. [VERIFIED: docs/adr/0007-native-focus-and-paste.md:6-16] |
 | Clipboard write and copy-first ordering | Electron main / OS integration | Native adapter reads system clipboard only to paste | Main owns clipboard/paste; copy must finish before any optional adapter paste call. [VERIFIED: docs/adr/0002-electron-main-authority.md:8-13] |
 | Overlay presentation | Sandboxed overlay renderer | Electron main | Renderer renders a redacted state snapshot; main shows it inactive and controls visibility. [VERIFIED: .planning/phases/LT-01-secure-electron-walking-skeleton/01-UI-SPEC.md:14-20] |
@@ -146,18 +147,18 @@ The plan must divide deterministic local behavior from hardware proof. Unit and 
 
 | Library | Version | Purpose | Why Standard |
 |---------|---------|---------|--------------|
-| `electron` [WARNING: flagged as suspicious — verify before using.] | `41.2.0` | Main process, windows, global hotkey, clipboard, and sandboxed renderer runtime. | Project-pinned and official Electron APIs cover the required two-window/main-process architecture. [VERIFIED: docs/DEVELOPMENT.md:5-10] [CITED: https://www.electronjs.org/docs/latest/api/browser-window] |
+| `electron` [WARNING: flagged as suspicious — verify before using.] | `41.2.0` | Main process, windows, global hotkey, clipboard, and sandboxed renderer runtime. | Project-pinned and official Electron APIs cover the required two-window/main-process architecture. [VERIFIED: docs/DEVELOPMENT.md:5-10] CITED: <https://www.electronjs.org/docs/latest/api/browser-window> |
 | `react` [WARNING: flagged as suspicious — verify before using.] and `react-dom` [WARNING: flagged as suspicious — verify before using.] | `19.1.0` | Declarative control and overlay rendering only. | React is project-pinned; `react-dom` is a necessary renderer counterpart but is not explicitly named by the project and therefore remains an assumption pending plan checkpoint. [VERIFIED: docs/DEVELOPMENT.md:5-10] [ASSUMED] |
-| `typescript` [WARNING: flagged as suspicious — verify before using.] | `6.0.2` | Strict shared contracts and process-boundary types. | Project-pinned; Zod complements rather than replaces TypeScript at runtime. [VERIFIED: docs/DEVELOPMENT.md:5-10] [CITED: https://zod.dev/] |
-| `vite` [WARNING: flagged as suspicious — verify before using.] | `8.1.4` | Renderer development/build pipeline. | Project-pinned; Vite documents the React TypeScript template family. [VERIFIED: docs/DEVELOPMENT.md:5-10] [CITED: https://vite.dev/guide/] |
-| `zod` | `4.3.6` | Runtime validation of IPC requests and snapshots. | Project-pinned; Zod supports TypeScript-first validation and strict object schemas needed to reject unknown IPC keys. [VERIFIED: docs/DEVELOPMENT.md:7-10] [CITED: https://zod.dev/api?id=sets] |
+| `typescript` [WARNING: flagged as suspicious — verify before using.] | `6.0.2` | Strict shared contracts and process-boundary types. | Project-pinned; Zod complements rather than replaces TypeScript at runtime. [VERIFIED: docs/DEVELOPMENT.md:5-10] CITED: <https://zod.dev/> |
+| `vite` [WARNING: flagged as suspicious — verify before using.] | `8.1.4` | Renderer development/build pipeline. | Project-pinned; Vite documents the React TypeScript template family. [VERIFIED: docs/DEVELOPMENT.md:5-10] CITED: <https://vite.dev/guide/> |
+| `zod` | `4.3.6` | Runtime validation of IPC requests and snapshots. | Project-pinned; Zod supports TypeScript-first validation and strict object schemas needed to reject unknown IPC keys. [VERIFIED: docs/DEVELOPMENT.md:7-10] CITED: <https://zod.dev/api?id=sets> |
 
 ### Supporting
 
 | Library | Version | Purpose | When to Use |
 |---------|---------|---------|-------------|
-| `vitest` [WARNING: flagged as suspicious — verify before using.] | `4.1.10` (registry current at research) | Node-environment domain/main unit and property tests. | Use for state-machine, race, IPC schema, and fake-port tests; it shares Vite configuration. [CITED: https://vitest.dev/guide/index.html] |
-| `@playwright/test` [WARNING: flagged as suspicious — verify before using.] | `1.62.1` (registry current at research) | Electron integration/UI boundary tests. | Use only for application windows and injected fakes; Playwright describes Electron automation support as experimental, so it is not hardware focus/paste evidence. [CITED: https://playwright.dev/docs/api/class-electron] |
+| `vitest` [WARNING: flagged as suspicious — verify before using.] | `4.1.10` (registry current at research) | Node-environment domain/main unit and property tests. | Use for state-machine, race, IPC schema, and fake-port tests; it shares Vite configuration. CITED: <https://vitest.dev/guide/index.html> |
+| `@playwright/test` [WARNING: flagged as suspicious — verify before using.] | `1.62.1` (registry current at research) | Electron integration/UI boundary tests. | Use only for application windows and injected fakes; Playwright describes Electron automation support as experimental, so it is not hardware focus/paste evidence. CITED: <https://playwright.dev/docs/api/class-electron> |
 
 ### Deliberately Deferred
 
@@ -170,7 +171,7 @@ Do **not** add Phase 1 dependencies merely because they appear in the project’
 | Main-owned Electron + native adapters | Renderer-side clipboard/focus packages | Rejected: contradicts the sole-main-authority ADR and gives an XSS-compromised renderer OS authority. [VERIFIED: docs/adr/0002-electron-main-authority.md:8-18] |
 | Thin, platform-specific native adapters | One cross-platform simulated paste implementation | Rejected: accepted ADR requires separate Windows/macOS helpers and hardware tests; platform focus policy is intentionally not abstracted away. [VERIFIED: docs/adr/0007-native-focus-and-paste.md:13-16] |
 | Vitest + injected ports | Unit tests that instantiate Electron/real OS globally | Rejected: real global shortcuts and clipboard state make unit tests nondeterministic and unsafe to run in parallel. [ASSUMED] |
-| Playwright Electron integration | Playwright as native focus/paste proof | Rejected: its Electron automation support is experimental and its main-process evaluation cannot establish OS-level target safety. [CITED: https://playwright.dev/docs/api/class-electron] |
+| Playwright Electron integration | Playwright as native focus/paste proof | Rejected: its Electron automation support is experimental and its main-process evaluation cannot establish OS-level target safety. CITED: <https://playwright.dev/docs/api/class-electron> |
 
 **Installation (after the required human package-verification checkpoint):**
 
@@ -183,7 +184,7 @@ The plan must make the version selection/review and lockfile creation an explici
 
 ## Package Legitimacy Audit
 
-Registry commands were executed on 2026-07-31. The published dates below are for the exact version when one is pinned; the legitimacy seam evaluates current package metadata. Each listed package had no reported `postinstall` script. Package names from `docs/DEVELOPMENT.md` are project-authoritative; `react-dom`, Vitest, and Playwright come from ordinary implementation knowledge/official documentation as noted above. [VERIFIED: docs/DEVELOPMENT.md:5-10] [CITED: https://vitest.dev/guide/index.html] [CITED: https://playwright.dev/docs/intro]
+Registry commands were executed on 2026-07-31. The published dates below are for the exact version when one is pinned; the legitimacy seam evaluates current package metadata. Each listed package had no reported `postinstall` script. Package names from `docs/DEVELOPMENT.md` are project-authoritative; `react-dom`, Vitest, and Playwright come from ordinary implementation knowledge/official documentation as noted above. [VERIFIED: docs/DEVELOPMENT.md:5-10] CITED: <https://vitest.dev/guide/index.html> CITED: <https://playwright.dev/docs/intro>
 
 | Package | Registry | Exact version / published | Source Repo | Verdict | Disposition |
 |---------|----------|---------------------------|-------------|---------|-------------|
@@ -284,7 +285,7 @@ The implementation sequence is non-negotiable: capture target → show inactive 
 
 ### Pattern 3: Narrow, role-checked IPC
 
-**What:** Register fixed named handlers; for each call, verify `event.sender` is the expected registered `webContents`, verify the expected role, parse a strict bounded schema, and return a sanitized result. Preloads export one function per allowed command/subscription and a disposer—never an arbitrary channel function or raw `ipcRenderer`. [CITED: https://www.electronjs.org/docs/latest/tutorial/ipc] [CITED: https://www.electronjs.org/docs/latest/tutorial/security]
+**What:** Register fixed named handlers; for each call, verify `event.sender` is the expected registered `webContents`, verify the expected role, parse a strict bounded schema, and return a sanitized result. Preloads export one function per allowed command/subscription and a disposer—never an arbitrary channel function or raw `ipcRenderer`. CITED: <https://www.electronjs.org/docs/latest/tutorial/ipc> CITED: <https://www.electronjs.org/docs/latest/tutorial/security>
 
 **When to use:** Both control actions (safe test, auto-paste preference, cancel) and overlay actions (dismiss/cancel only), as well as every state event. The existing contract is explicit that `session:cancel` is authorized only from the exact registered overlay/control sender for the current main-owned session. [VERIFIED: docs/IPC_CONTRACTS.md:102-115]
 
@@ -292,36 +293,36 @@ The implementation sequence is non-negotiable: capture target → show inactive 
 
 **What:** Each helper accepts only an opaque captured target held by main and a requested operation. It returns a bounded enum/reason code such as verified-pasted, target-not-verified, permission-denied, or activation-denied; helper stdout/stderr and main logs must not include target title, bundle name, user path, clipboard value, or stub text. Exact wire names are deliberately deferred to the plan. [ASSUMED]
 
-**When to use:** Windows adapter uses native foreground/window identity APIs; macOS adapter uses Accessibility APIs. Windows can deny `SetForegroundWindow` under foreground-stealing restrictions, so a false result is a normal safe fallback—not a retry/force-focus opportunity. [CITED: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow]
+**When to use:** Windows adapter uses native foreground/window identity APIs; macOS adapter uses Accessibility APIs. Windows can deny `SetForegroundWindow` under foreground-stealing restrictions, so a false result is a normal safe fallback—not a retry/force-focus opportunity. CITED: <https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow>
 
 ### Anti-Patterns to Avoid
 
 - **Renderer-owned OS access:** No renderer reads/writes clipboard, registers hotkeys, observes foreground windows, invokes shell/native helper, or owns a session. This violates the main-authority ADR. [VERIFIED: docs/adr/0002-electron-main-authority.md:8-18]
-- **Generic IPC proxy:** Do not expose `send`, `invoke`, channel strings, Electron objects, event senders, or arbitrary subscriptions through context bridge. [VERIFIED: docs/IPC_CONTRACTS.md:127-129] [CITED: https://www.electronjs.org/docs/latest/tutorial/ipc]
+- **Generic IPC proxy:** Do not expose `send`, `invoke`, channel strings, Electron objects, event senders, or arbitrary subscriptions through context bridge. [VERIFIED: docs/IPC_CONTRACTS.md:127-129] CITED: <https://www.electronjs.org/docs/latest/tutorial/ipc>
 - **Target identity by title/process name alone:** Capture exact platform identity and revalidate it after activation; titles are mutable and PID-only identity can be reused. [ASSUMED]
 - **Attempting paste before a confirmed clipboard write:** It violates LT-OUT-001 and makes a paste failure lose the only dependable output. [VERIFIED: docs/PRODUCT_SPEC.md:38-39]
 - **Making hidden overlay focusable to catch Escape:** Register Escape/cancellation in main and provide the conventional control window alternate action. [VERIFIED: docs/UI_SPEC.md:42-44]
-- **Treating the Vite dev server or Playwright as packaged/hardware evidence:** Development traffic and renderer automation are not proof of local packaged operation or native target safety. [VERIFIED: docs/TESTING.md:3-14] [CITED: https://playwright.dev/docs/api/class-electron]
+- **Treating the Vite dev server or Playwright as packaged/hardware evidence:** Development traffic and renderer automation are not proof of local packaged operation or native target safety. [VERIFIED: docs/TESTING.md:3-14] CITED: <https://playwright.dev/docs/api/class-electron>
 
 ## Don't Hand-Roll
 
 | Problem | Don't Build | Use Instead | Why |
 |---------|-------------|-------------|-----|
-| Renderer sandboxing/context bridging | A homegrown postMessage privilege layer | Electron `contextIsolation`, `sandbox`, preload `contextBridge`, and main validation | Electron documents these as core security controls; a custom bridge easily exposes arbitrary IPC. [CITED: https://www.electronjs.org/docs/latest/tutorial/security] |
-| IPC object validation | TypeScript casts or hand-written ad hoc checks per channel | Zod strict schemas at the main boundary | TypeScript disappears at runtime; Zod supports strict object rejection needed by the documented unknown-key policy. [VERIFIED: docs/IPC_CONTRACTS.md:1-6] [CITED: https://zod.dev/api?id=sets] |
-| Renderer E2E window automation | A custom DOM driver | Playwright Electron support behind injected fakes | It launches Electron and exposes window/main evaluation, but remains experimental and cannot replace hardware proof. [CITED: https://playwright.dev/docs/api/class-electron] |
+| Renderer sandboxing/context bridging | A homegrown postMessage privilege layer | Electron `contextIsolation`, `sandbox`, preload `contextBridge`, and main validation | Electron documents these as core security controls; a custom bridge easily exposes arbitrary IPC. CITED: <https://www.electronjs.org/docs/latest/tutorial/security> |
+| IPC object validation | TypeScript casts or hand-written ad hoc checks per channel | Zod strict schemas at the main boundary | TypeScript disappears at runtime; Zod supports strict object rejection needed by the documented unknown-key policy. [VERIFIED: docs/IPC_CONTRACTS.md:1-6] CITED: <https://zod.dev/api?id=sets> |
+| Renderer E2E window automation | A custom DOM driver | Playwright Electron support behind injected fakes | It launches Electron and exposes window/main evaluation, but remains experimental and cannot replace hardware proof. CITED: <https://playwright.dev/docs/api/class-electron> |
 | Cross-platform focus/paste | Keyboard simulation from Electron/renderer or one generic package | Small target-built Windows and macOS helpers behind one main-owned port | The accepted ADR requires native capture/validate/reactivate/revalidate/paste and separate hardware tests. [VERIFIED: docs/adr/0007-native-focus-and-paste.md:6-16] |
 | Session cleanup/race management | Scattered timer callbacks and mutable global booleans | One controller with session token + AbortController + centralized `finally` cleanup | The architecture explicitly requires stale callbacks to be discarded and resources released on terminal paths. [VERIFIED: docs/ARCHITECTURE.md:129-144] |
 
-**Key insight:** Phase 1 should hand-roll only its domain policy—the copy-first state machine and fail-closed adapter contract. The security/runtime primitives belong to Electron, Zod, native OS APIs, and the test framework. [CITED: https://www.electronjs.org/docs/latest/tutorial/security]
+**Key insight:** Phase 1 should hand-roll only its domain policy—the copy-first state machine and fail-closed adapter contract. The security/runtime primitives belong to Electron, Zod, native OS APIs, and the test framework. CITED: <https://www.electronjs.org/docs/latest/tutorial/security>
 
 ## Common Pitfalls
 
 ### Pitfall 1: Overlay steals focus or target is captured too late
 
 **What goes wrong:** The overlay becomes the foreground window and the adapter captures lazytypr instead of the user’s intended application.
-**Why it happens:** Showing/focusing UI before target capture or using `show()` rather than `showInactive()`. Electron documents that `showInactive()` displays a window without focusing it; `focusable: false` and `alwaysOnTop` have platform-specific behavior. [CITED: https://www.electronjs.org/docs/latest/api/base-window]
-**How to avoid:** Capture first; create overlay with transparency, `focusable: false`, `alwaysOnTop`, and show it only with `showInactive()`. Place it in the active target display work area using Electron DIP coordinates; recompute on display/work-area/scale events. [VERIFIED: .planning/phases/LT-01-secure-electron-walking-skeleton/01-UI-SPEC.md:91-97] [CITED: https://www.electronjs.org/docs/latest/api/screen]
+**Why it happens:** Showing/focusing UI before target capture or using `show()` rather than `showInactive()`. Electron documents that `showInactive()` displays a window without focusing it; `focusable: false` and `alwaysOnTop` have platform-specific behavior. CITED: <https://www.electronjs.org/docs/latest/api/base-window>
+**How to avoid:** Capture first; create overlay with transparency, `focusable: false`, `alwaysOnTop`, and show it only with `showInactive()`. Place it in the active target display work area using Electron DIP coordinates; recompute on display/work-area/scale events. [VERIFIED: .planning/phases/LT-01-secure-electron-walking-skeleton/01-UI-SPEC.md:91-97] CITED: <https://www.electronjs.org/docs/latest/api/screen>
 **Warning signs:** The captured adapter target belongs to lazytypr, the overlay becomes tab-focusable, or multi-display/scaled screenshots clip/spill the pill.
 
 ### Pitfall 2: State timers resurrect a completed/cancelled session
@@ -341,15 +342,15 @@ The implementation sequence is non-negotiable: capture target → show inactive 
 ### Pitfall 4: Native activation failure becomes a focus-stealing workaround
 
 **What goes wrong:** The app retries against the current foreground window, simulates keys blindly, or escalates privileges after target activation fails.
-**Why it happens:** Windows can deny foreground activation even for a desktop app, and target privilege/accessibility state varies. [CITED: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow]
+**Why it happens:** Windows can deny foreground activation even for a desktop app, and target privilege/accessibility state varies. CITED: <https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow>
 **How to avoid:** Any capture/verify/activate/reverify/paste mismatch or refusal maps exactly to copy-only. Do not broaden the target, restore old clipboard, or retry automatically. [VERIFIED: docs/PRODUCT_SPEC.md:73-79]
 **Warning signs:** A helper falls back to “current foreground”, an elevated/refused test receives text, or logs include identity data.
 
 ### Pitfall 5: Secure BrowserWindow defaults are assumed rather than enforced/tested
 
 **What goes wrong:** Development shortcuts add Node integration, broad permissions, navigation, new windows, remote assets, or raw IPC exposure.
-**Why it happens:** Electron defaults change and a preload remains privileged even with a sandboxed renderer. [CITED: https://www.electronjs.org/docs/latest/tutorial/sandbox]
-**How to avoid:** Explicitly configure `nodeIntegration: false`, `contextIsolation: true`, `sandbox: true`, and `webSecurity: true`; deny navigation/new windows/webviews/downloads; configure permission checks and requests to deny everything except only the eventual explicitly authorized path. Keep Phase 1 microphone permission denied because real capture is Phase 2. [VERIFIED: docs/ARCHITECTURE.md:57-60] [VERIFIED: docs/SECURITY_AND_PRIVACY_DESIGN.md:33-40] [CITED: https://www.electronjs.org/docs/latest/api/session]
+**Why it happens:** Electron defaults change and a preload remains privileged even with a sandboxed renderer. CITED: <https://www.electronjs.org/docs/latest/tutorial/sandbox>
+**How to avoid:** Explicitly configure `nodeIntegration: false`, `contextIsolation: true`, `sandbox: true`, and `webSecurity: true`; deny navigation/new windows/webviews/downloads; configure permission checks and requests to deny everything except only the eventual explicitly authorized path. Keep Phase 1 microphone permission denied because real capture is Phase 2. [VERIFIED: docs/ARCHITECTURE.md:57-60] [VERIFIED: docs/SECURITY_AND_PRIVACY_DESIGN.md:33-40] CITED: <https://www.electronjs.org/docs/latest/api/session>
 **Warning signs:** A security test can send from an unknown `webContents`, a renderer sees `ipcRenderer`, an external URL loads, or a CSP/network scan finds a non-loopback endpoint.
 
 ### Pitfall 6: Accidentally pulls later-phase behavior into the tracer
@@ -363,7 +364,7 @@ The implementation sequence is non-negotiable: capture target → show inactive 
 
 ### Secure window policy
 
-Use one shared main-only window factory that hardens both renderers, then applies overlay/control layout differences. This is a pattern derived from Electron’s security checklist and BrowserWindow documentation; exact project filenames and objects are intentionally left to the plan. [CITED: https://www.electronjs.org/docs/latest/tutorial/security] [CITED: https://www.electronjs.org/docs/latest/api/browser-window]
+Use one shared main-only window factory that hardens both renderers, then applies overlay/control layout differences. This is a pattern derived from Electron’s security checklist and BrowserWindow documentation; exact project filenames and objects are intentionally left to the plan. CITED: <https://www.electronjs.org/docs/latest/tutorial/security> CITED: <https://www.electronjs.org/docs/latest/api/browser-window>
 
 ```ts
 // [ASSUMED] Skeleton only: no renderer receives Electron or OS capabilities.
@@ -382,7 +383,7 @@ The shared contract values which remain authoritative are quoted verbatim: `type
 
 1. Map registered `webContents.id` to a fixed window role at creation; do not accept a role supplied by the renderer. [ASSUMED]
 2. On a named handler, reject a sender that does not exactly match the registered web contents and expected main-frame role. [VERIFIED: docs/IPC_CONTRACTS.md:111-115]
-3. Parse a strict Zod schema with a bounded string/identifier policy; unknown keys, empty/stale session IDs, and excessive payloads produce a sanitized rejection. [VERIFIED: docs/IPC_CONTRACTS.md:1-6] [CITED: https://zod.dev/api?id=sets]
+3. Parse a strict Zod schema with a bounded string/identifier policy; unknown keys, empty/stale session IDs, and excessive payloads produce a sanitized rejection. [VERIFIED: docs/IPC_CONTRACTS.md:1-6] CITED: <https://zod.dev/api?id=sets>
 4. Dispatch only a main-owned operation and return a data-minimized result. Expected errors use the project `Result` boundary rather than thrown implementation details: `type Result<T, E = AppError> = | { ok: true; value: T } | { ok: false; error: E };`. [VERIFIED: docs/IPC_CONTRACTS.md:19-28]
 
 ### Deterministic tracer test fake
@@ -393,11 +394,11 @@ Use a test-only fake that has controllable deferred completion, target outcome, 
 
 | Old Approach | Current Approach | When Changed | Impact |
 |--------------|------------------|--------------|--------|
-| Disable isolation or provide Node globals to make renderer development easy | Context isolation is Electron’s default from Electron 12; sandboxing is default from Electron 20 | Electron documentation | Explicitly keep both enabled; narrow preloads are still necessary. [CITED: https://www.electronjs.org/docs/latest/tutorial/context-isolation] [CITED: https://www.electronjs.org/docs/latest/tutorial/sandbox] |
-| Treat failed shortcut registration as an exception | `globalShortcut.register()` returns a boolean and OS conflicts silently fail | Current Electron API | Report normalized unavailable status, preserve prior registration, offer retry/recovery. [CITED: https://www.electronjs.org/docs/latest/api/global-shortcut/] |
-| Use a newer global-shortcut suspension API during rebinding | `globalShortcut.setSuspended()` is documented as Electron 42+ | Electron API | Do not use it: Phase 1 pins Electron 41.2.0; register/unregister behavior must be sufficient. [VERIFIED: docs/DEVELOPMENT.md:5-10] [CITED: https://www.electronjs.org/docs/latest/api/global-shortcut/] |
+| Disable isolation or provide Node globals to make renderer development easy | Context isolation is Electron’s default from Electron 12; sandboxing is default from Electron 20 | Electron documentation | Explicitly keep both enabled; narrow preloads are still necessary. CITED: <https://www.electronjs.org/docs/latest/tutorial/context-isolation> CITED: <https://www.electronjs.org/docs/latest/tutorial/sandbox> |
+| Treat failed shortcut registration as an exception | `globalShortcut.register()` returns a boolean and OS conflicts silently fail | Current Electron API | Report normalized unavailable status, preserve prior registration, offer retry/recovery. CITED: <https://www.electronjs.org/docs/latest/api/global-shortcut/> |
+| Use a newer global-shortcut suspension API during rebinding | `globalShortcut.setSuspended()` is documented as Electron 42+ | Electron API | Do not use it: Phase 1 pins Electron 41.2.0; register/unregister behavior must be sufficient. [VERIFIED: docs/DEVELOPMENT.md:5-10] CITED: <https://www.electronjs.org/docs/latest/api/global-shortcut/> |
 
-**Deprecated/outdated:** Do not enable deprecated renderer paste (`document.execCommand("paste")`) or any renderer clipboard-read route. Phase 1 has no renderer clipboard authority and main copies only the deterministic successful outcome. [VERIFIED: docs/adr/0002-electron-main-authority.md:8-13] [CITED: https://www.electronjs.org/docs/latest/api/browser-window]
+**Deprecated/outdated:** Do not enable deprecated renderer paste (`document.execCommand("paste")`) or any renderer clipboard-read route. Phase 1 has no renderer clipboard authority and main copies only the deterministic successful outcome. [VERIFIED: docs/adr/0002-electron-main-authority.md:8-13] CITED: <https://www.electronjs.org/docs/latest/api/browser-window>
 
 ## Assumptions Log
 
@@ -415,7 +416,7 @@ Use a test-only fake that has controllable deferred completion, target outcome, 
    - Resolution: `PLAN.md` section 11 fixes an attributed MIT-derived C helper on Windows and a Swift helper on macOS, each built on its target OS. The plan must specify a bounded, sanitized request/result protocol, native-target build instructions, source/license provenance, and a `checkpoint:human-verify` before adding an unpinned build dependency. Do not use a generic third-party focus/paste package without the same review.
 
 2. **Exact hotkey accelerator and persistence behavior**
-   - What we know: hotkey must be global/main-owned, conflict returns unavailable/recovery, and tap-to-start/tap-to-stop is locked. Electron can silently return `false` when another application owns the accelerator. [VERIFIED: .planning/phases/LT-01-secure-electron-walking-skeleton/01-CONTEXT.md:28-31] [CITED: https://www.electronjs.org/docs/latest/api/global-shortcut/]
+   - What we know: hotkey must be global/main-owned, conflict returns unavailable/recovery, and tap-to-start/tap-to-stop is locked. Electron can silently return `false` when another application owns the accelerator. [VERIFIED: .planning/phases/LT-01-secure-electron-walking-skeleton/01-CONTEXT.md:28-31] CITED: <https://www.electronjs.org/docs/latest/api/global-shortcut/>
    - Resolution: `PLAN.md` section 3 fixes `Ctrl+Shift+Space` on Windows and `Control+Option+Space` on macOS. Model registration as an injected main-owned port and defer durable configurable settings—not registration/retry state—to its owning phase.
 
 3. **Copying-state cancellation boundary**
@@ -445,9 +446,9 @@ Use a test-only fake that has controllable deferred completion, target outcome, 
 
 | Property | Value |
 |----------|-------|
-| Framework | Proposed `vitest@4.1.10` for Node/main-domain tests and proposed `@playwright/test@1.62.1` for Electron integration; both need the package legitimacy human checkpoint. [CITED: https://vitest.dev/guide/index.html] [CITED: https://playwright.dev/docs/api/class-electron] |
+| Framework | Proposed `vitest@4.1.10` for Node/main-domain tests and proposed `@playwright/test@1.62.1` for Electron integration; both need the package legitimacy human checkpoint. CITED: <https://vitest.dev/guide/index.html> CITED: <https://playwright.dev/docs/api/class-electron> |
 | Config file | None exists — Wave 0 creates TypeScript/Vite/Vitest and Playwright configuration after the plan is accepted. [VERIFIED: repository file discovery, 2026-07-31] |
-| Quick run command | Future: `npm run test:unit` (must execute `vitest run`). [CITED: https://vitest.dev/guide/index.html] |
+| Quick run command | Future: `npm run test:unit` (must execute `vitest run`). CITED: <https://vitest.dev/guide/index.html> |
 | Full suite command | Future: `npm run check` chaining format check, lint, strict typecheck, unit, Electron integration, security/package scans, and `reuse lint`. [VERIFIED: docs/TESTING.md:29-37] [VERIFIED: docs/LICENSING.md:49-55] |
 
 ### Phase Requirements → Test Map
@@ -472,7 +473,7 @@ Use a test-only fake that has controllable deferred completion, target outcome, 
 ### Wave 0 Gaps
 
 - [ ] `package.json` and exact npm lockfile — install only reviewed/pinned direct Phase 1 packages.
-- [ ] Strict `tsconfig` plus shared Vite/Vitest config; Zod documents strict TypeScript as a requirement. [CITED: https://zod.dev/]
+- [ ] Strict `tsconfig` plus shared Vite/Vitest config; Zod documents strict TypeScript as a requirement. CITED: <https://zod.dev/>
 - [ ] Test fixtures/ports: deterministic clock, hotkey, clipboard, target adapter, and stub processor fakes.
 - [ ] `tests/unit/tracer-state.test.ts` — controller, output ordering, cancellation, stale callbacks, and terminal cleanup.
 - [ ] `tests/unit/ipc-security.test.ts` — role/sender/schema/size rejection and public snapshot redaction.
@@ -489,10 +490,10 @@ Use a test-only fake that has controllable deferred completion, target outcome, 
 | V2 Authentication | No user/account authentication | No accounts exist; sidecar authentication is deferred and Phase 1 proves no sidecar launch. [VERIFIED: docs/adr/0009-local-only-product.md:6-15] |
 | V3 Session Management | Yes | One main-owned session token, abort signal, stale callback rejection, and terminal cleanup. [VERIFIED: docs/ARCHITECTURE.md:129-144] |
 | V4 Access Control | Yes | Exact sender webContents + fixed window-role authorization; role-specific preloads. [VERIFIED: docs/IPC_CONTRACTS.md:1-6] |
-| V5 Input Validation | Yes | Strict runtime schema, unknown-key rejection, bounded strings/identifiers; Zod in main. [VERIFIED: docs/IPC_CONTRACTS.md:1-6] [CITED: https://zod.dev/api?id=sets] |
+| V5 Input Validation | Yes | Strict runtime schema, unknown-key rejection, bounded strings/identifiers; Zod in main. [VERIFIED: docs/IPC_CONTRACTS.md:1-6] CITED: <https://zod.dev/api?id=sets> |
 | V6 Cryptography | No Phase 1 secret-bearing protocol | Do not invent cryptography; future sidecars use main-only per-launch secret on random loopback ports. [VERIFIED: docs/adr/0004-authenticated-loopback-sidecars.md:6-15] |
 | V7 Error Handling and Logging | Yes | Sanitized public error keys/reasons only; do not log clipboard, stub text, target identity, paths, secrets, or session IDs. [VERIFIED: .planning/phases/LT-01-secure-electron-walking-skeleton/01-CONTEXT.md:64-69] |
-| V14 Configuration | Yes | Explicit hardened BrowserWindow/session policy, packaged local content, restrictive CSP, no generic navigation/new windows/downloads. [VERIFIED: docs/SECURITY_AND_PRIVACY_DESIGN.md:33-40] [CITED: https://www.electronjs.org/docs/latest/tutorial/security] |
+| V14 Configuration | Yes | Explicit hardened BrowserWindow/session policy, packaged local content, restrictive CSP, no generic navigation/new windows/downloads. [VERIFIED: docs/SECURITY_AND_PRIVACY_DESIGN.md:33-40] CITED: <https://www.electronjs.org/docs/latest/tutorial/security> |
 
 ### Known Threat Patterns for Phase 1
 

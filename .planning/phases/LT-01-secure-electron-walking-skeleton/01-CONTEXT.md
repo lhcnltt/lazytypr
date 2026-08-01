@@ -1,5 +1,7 @@
 # Phase 1: Secure Electron walking skeleton - Context
 
+<!-- markdownlint-disable MD001 -->
+
 **Gathered:** 2026-07-31
 **Status:** Ready for planning
 
@@ -199,6 +201,8 @@ acceptance outcome, and future replacement seam documented below.
   4-8 exactly as defined by the roadmap.
 
 </deferred>
+
+<!-- markdownlint-enable MD001 -->
 
 ---
 

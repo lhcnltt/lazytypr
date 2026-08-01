@@ -34,7 +34,7 @@ This checkout intentionally contains no application code. Do **not** treat an up
 
 ### `src/shared/contracts.ts` and public state snapshots
 
-**Analog:** [`docs/IPC_CONTRACTS.md`](/home/lhchine/repo/lazytypr/docs/IPC_CONTRACTS.md:1), lines 1-77.
+**Analog:** [`docs/IPC_CONTRACTS.md`](../../../docs/IPC_CONTRACTS.md), lines 1-77.
 
 Copy the TypeScript-first, runtime-validated, exact-sender/role rule—not raw Electron values. Start public roles and result handling from lines 10-28:
 
@@ -50,7 +50,7 @@ Expected domain failures return `Result`; errors must have allowlisted details a
 
 ### `src/main/tracer/controller.ts`, stub processor, and capability ports
 
-**Analog:** [`docs/ARCHITECTURE.md`](/home/lhchine/repo/lazytypr/docs/ARCHITECTURE.md:129), lines 129-144; Phase-specific refinement [`01-UI-SPEC.md`](/home/lhchine/repo/lazytypr/.planning/phases/LT-01-secure-electron-walking-skeleton/01-UI-SPEC.md:112), lines 112-132.
+**Analog:** [`docs/ARCHITECTURE.md`](../../../docs/ARCHITECTURE.md), lines 129-144; Phase-specific refinement [`01-UI-SPEC.md`](01-UI-SPEC.md), lines 112-132.
 
 The sole controller owns one session, `AbortController`, target, callbacks keyed by `sessionId`, and terminal cleanup. The implementation order is fixed by research lines 254-281:
 
@@ -64,7 +64,7 @@ Use injected clock/timer, hotkey, clipboard, focus/paste, and stub-work ports; t
 
 ### Clipboard/focus-paste and native helpers
 
-**Analog:** [`docs/adr/0007-native-focus-and-paste.md`](/home/lhchine/repo/lazytypr/docs/adr/0007-native-focus-and-paste.md:6), lines 6-16; failure refinement [`docs/PRODUCT_SPEC.md`](/home/lhchine/repo/lazytypr/docs/PRODUCT_SPEC.md:78), lines 78-84.
+**Analog:** [`docs/adr/0007-native-focus-and-paste.md`](../../../docs/adr/0007-native-focus-and-paste.md), lines 6-16; failure refinement [`docs/PRODUCT_SPEC.md`](../../../docs/PRODUCT_SPEC.md), lines 78-84.
 
 Implement main-owned copy-first behavior: capture exact target before UI; validate, reactivate, and revalidate only that target immediately before native paste. Any refusal, target mismatch, verification failure, or activation failure becomes copy-only—never another target and never clipboard restoration.
 
@@ -72,7 +72,7 @@ Cancellation has an irreversible commit barrier: before synchronous clipboard wr
 
 ### Main window policy, IPC guard, and role-specific preloads
 
-**Analogs:** ADR 0002; [`docs/ARCHITECTURE.md`](/home/lhchine/repo/lazytypr/docs/ARCHITECTURE.md:57), lines 57-60; [`docs/IPC_CONTRACTS.md`](/home/lhchine/repo/lazytypr/docs/IPC_CONTRACTS.md:102), lines 102-129.
+**Analogs:** ADR 0002; [`docs/ARCHITECTURE.md`](../../../docs/ARCHITECTURE.md), lines 57-60; [`docs/IPC_CONTRACTS.md`](../../../docs/IPC_CONTRACTS.md), lines 102-129.
 
 Secure preferences must be explicit:
 
@@ -92,13 +92,13 @@ Apply deny-by-default navigation, popups, webviews, renderer downloads, arbitrar
 
 ### Control and overlay renderers
 
-**Analog:** [`01-UI-SPEC.md`](/home/lhchine/repo/lazytypr/.planning/phases/LT-01-secure-electron-walking-skeleton/01-UI-SPEC.md:90), lines 90-158.
+**Analog:** [`01-UI-SPEC.md`](01-UI-SPEC.md), lines 90-158.
 
 The overlay is transparent, always-on-top, non-focusable, `showInactive`, noninteractive, and redacted. Render icon + label only—never result text, clipboard content, target identity, session ID, or waveform data. The control surface is the focusable accessible alternate: hotkey status; copy-first/auto-paste safety card; `Run Safe Test`; and cancellable `Cancel tracer` before commit. Use the exact main-owned state/outcome table at lines 116-130 and stable message keys at lines 140-156. Use semantic controls, keyboard operation, focus restoration after the auto-paste safety confirmation, visible focus, live regions, reduced motion, wrapping at 200% text, and the locked blue/charcoal tokens.
 
 ### Tests and hardware evidence
 
-**Analog:** [`01-VALIDATION.md`](/home/lhchine/repo/lazytypr/.planning/phases/LT-01-secure-electron-walking-skeleton/01-VALIDATION.md:52), lines 52-109.
+**Analog:** [`01-VALIDATION.md`](01-VALIDATION.md), lines 52-109.
 
 Copy the three-layer split:
 
@@ -110,7 +110,7 @@ Never label Linux automation, fake ports, or Playwright as native focus/Accessib
 
 ### Config, licensing, and provenance
 
-**Analog:** [`docs/DEVELOPMENT.md`](/home/lhchine/repo/lazytypr/docs/DEVELOPMENT.md:3), lines 3-10; [`docs/LICENSING.md`](/home/lhchine/repo/lazytypr/docs/LICENSING.md:3), lines 3-33; [`01-VALIDATION.md`](/home/lhchine/repo/lazytypr/.planning/phases/LT-01-secure-electron-walking-skeleton/01-VALIDATION.md:65), lines 65-87.
+**Analog:** [`docs/DEVELOPMENT.md`](../../../docs/DEVELOPMENT.md), lines 3-10; [`docs/LICENSING.md`](../../../docs/LICENSING.md), lines 3-33; [`01-VALIDATION.md`](01-VALIDATION.md), lines 65-87.
 
 Wave 0 begins only after a human verifies the listed packages. Use exact package versions and lockfile, strict TypeScript, one-shot scripts, and `npm ci` after the first reviewed install. Commentable original source receives:
 
@@ -125,19 +125,19 @@ Every copied/substantially adapted native or UI file additionally needs upstream
 
 ### Authority and privacy
 
-**Sources:** ADR 0002 lines 6-18; [`docs/SECURITY_AND_PRIVACY_DESIGN.md`](/home/lhchine/repo/lazytypr/docs/SECURITY_AND_PRIVACY_DESIGN.md:13), lines 13-23 and 33-48.
+**Sources:** ADR 0002 lines 6-18; [`docs/SECURITY_AND_PRIVACY_DESIGN.md`](../../../docs/SECURITY_AND_PRIVACY_DESIGN.md), lines 13-23 and 33-48.
 
 Main is the only authority. Treat clipboard, stub result, target, path, secret, and session identifier as sensitive; renderer snapshots, logs, test reporters, screenshots, and diagnostics contain only public state/outcome codes.
 
 ### Lifecycle and fail-closed output
 
-**Sources:** [`docs/PRODUCT_SPEC.md`](/home/lhchine/repo/lazytypr/docs/PRODUCT_SPEC.md:53), lines 53-63 and 71-84; ADR 0007 lines 6-16.
+**Sources:** [`docs/PRODUCT_SPEC.md`](../../../docs/PRODUCT_SPEC.md), lines 53-63 and 71-84; ADR 0007 lines 6-16.
 
 One active session; stale callbacks ignored; all terminal paths clear resources and return idle. Copy precedes paste. Failed/denied paste is successful copy-only, never a fallback target.
 
 ### No scope leakage
 
-**Sources:** [`01-CONTEXT.md`](/home/lhchine/repo/lazytypr/.planning/phases/LT-01-secure-electron-walking-skeleton/01-CONTEXT.md:192), lines 192-199; [`01-UI-SPEC.md`](/home/lhchine/repo/lazytypr/.planning/phases/LT-01-secure-electron-walking-skeleton/01-UI-SPEC.md:13), lines 13-21.
+**Sources:** [`01-CONTEXT.md`](01-CONTEXT.md), lines 192-199; [`01-UI-SPEC.md`](01-UI-SPEC.md), lines 13-21.
 
 Exclude real audio, inference/sidecars, model/download UI, history, diagnostics, onboarding, tray configuration, and placeholder future screens. Phase 1 is a stub tracer only.
 
