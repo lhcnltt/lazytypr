@@ -31,14 +31,15 @@ describe("toolchain smoke", () => {
     expect(manifest.scripts).toMatchObject({
       "build:renderer": "vite build",
       "check:privacy": "node scripts/check-privacy.mjs",
-      "test:electron": "playwright test tests/integration --pass-with-no-tests",
+      "test:cycles": "playwright test tests/integration/tracer.electron.spec.ts --grep \"20 local cycles\"",
+      "test:electron": "playwright test tests/integration --pass-with-no-tests --grep-invert \"20 local cycles\"",
       "test:security": "node scripts/check-security.mjs",
       "test:licensing": "vitest run --config vitest.security.config.ts",
       "test:unit": "vitest run",
       typecheck: "tsc --noEmit",
     });
     expect(manifest.scripts.check).toBe(
-      "npm run typecheck && npm run test:unit && npm run build:renderer && npm run test:electron && npm run test:security && npm run test:licensing && npm run check:privacy",
+      "npm run typecheck && npm run test:unit && npm run build:renderer && npm run test:electron && npm run test:cycles && npm run test:security && npm run test:licensing && npm run check:privacy",
     );
     expect(config).toContain('environment: "node"');
     expect(config).toContain(
