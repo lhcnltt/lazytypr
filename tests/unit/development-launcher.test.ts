@@ -34,8 +34,9 @@ describe("development launcher manifest", () => {
 
   it("builds sandbox-executable CommonJS preloads that expose both named bridges", async () => {
     const repositoryRoot = resolve(import.meta.dirname, "../..");
-    const npmExecutable = process.platform === "win32" ? "npm.cmd" : "npm";
-    await execFileAsync(npmExecutable, ["run", "build:main"], { cwd: repositoryRoot });
+    const npmCli = process.env.npm_execpath;
+    if (npmCli === undefined) throw new Error("npm_execpath is required for the build-artifact test");
+    await execFileAsync(process.execPath, [npmCli, "run", "build:main"], { cwd: repositoryRoot });
 
     for (const [artifact, bridgeName] of [
       ["dist/preload/control.cjs", "lazytyprControl"],
