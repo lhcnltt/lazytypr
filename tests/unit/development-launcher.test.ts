@@ -1,10 +1,15 @@
 // SPDX-FileCopyrightText: 2026 lhcnltt
 // SPDX-License-Identifier: MIT
 
+import { execFile } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { promisify } from "node:util";
+import { runInNewContext } from "node:vm";
 
 import { describe, expect, it } from "vitest";
+
+const execFileAsync = promisify(execFile);
 
 interface PackageManifest {
   readonly main?: unknown;
@@ -25,5 +30,45 @@ describe("development launcher manifest", () => {
     expect(manifest.scripts?.["dev:smoke"]).toBe(
       "npm run build:renderer && npm run build:main && electron . --smoke",
     );
+  });
+
+  it("builds sandbox-executable CommonJS preloads that expose both named bridges", async () => {
+    const repositoryRoot = resolve(import.meta.dirname, "../..");
+    const npmExecutable = process.platform === "win32" ? "npm.cmd" : "npm";
+    await execFileAsync(npmExecutable, ["run", "build:main"], { cwd: repositoryRoot });
+
+    for (const [artifact, bridgeName] of [
+      ["dist/preload/control.cjs", "lazytyprControl"],
+      ["dist/preload/overlay.cjs", "lazytyprOverlay"],
+    ] as const) {
+      let exposedBridge: string | undefined;
+      let executed = false;
+      try {
+        const source = await readFile(resolve(repositoryRoot, artifact), "utf8");
+        const module = { exports: {} };
+        runInNewContext(source, {
+          exports: module.exports,
+          module,
+          process: { contextIsolated: true },
+          require: (specifier: string) => {
+            if (specifier !== "electron") throw new Error("Unexpected preload dependency");
+            return {
+              contextBridge: {
+                exposeInMainWorld: (name: string) => {
+                  exposedBridge = name;
+                },
+              },
+              ipcRenderer: {},
+            };
+          },
+        });
+        executed = true;
+      } catch {
+        executed = false;
+      }
+
+      expect(executed, `${artifact} must execute in a sandboxed CommonJS preload`).toBe(true);
+      expect(exposedBridge).toBe(bridgeName);
+    }
   });
 });

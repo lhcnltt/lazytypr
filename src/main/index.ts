@@ -30,8 +30,8 @@ async function startApplication(): Promise<void> {
     paths: {
       controlHtml: resolve(import.meta.dirname, "../renderer/control.html"),
       overlayHtml: resolve(import.meta.dirname, "../renderer/overlay.html"),
-      controlPreload: resolve(import.meta.dirname, "../preload/control.js"),
-      overlayPreload: resolve(import.meta.dirname, "../preload/overlay.js"),
+      controlPreload: resolve(import.meta.dirname, "../preload/control.cjs"),
+      overlayPreload: resolve(import.meta.dirname, "../preload/overlay.cjs"),
     },
     globalShortcut,
     clipboard,
