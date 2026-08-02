@@ -14,6 +14,7 @@ const profiles = {
     "src/preload/overlay.ts",
   ],
   network: [
+    "src/main/index.ts",
     "src/main/bootstrap.ts",
     "src/main/security/window-policy.ts",
     "src/renderer/control.html",
@@ -29,6 +30,7 @@ const profiles = {
     "src/native/macos/build.sh",
   ],
   "window-policy": [
+    "src/main/index.ts",
     "src/main/bootstrap.ts",
     "src/main/security/window-policy.ts",
     "src/renderer/control.html",

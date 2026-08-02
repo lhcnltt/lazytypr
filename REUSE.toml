@@ -33,6 +33,7 @@ path = [
   "package-lock.json",
   "package.json",
   "tsconfig.json",
+  "tsconfig.main.json",
   "tests/fixtures/native/macos-protocol.json",
   "tests/fixtures/native/windows-protocol.json",
 ]
