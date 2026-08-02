@@ -146,6 +146,10 @@ class FakeWindow {
 
   public on(_event: "closed", _listener: () => void): void {}
 
+  public isDestroyed(): boolean {
+    return false;
+  }
+
   public showInactive(): void {}
 
   public hide(): void {}

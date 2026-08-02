@@ -32,6 +32,7 @@ export interface ManagedWebContents {
 export interface ManagedWindow {
   readonly webContents: ManagedWebContents;
   on(event: "closed", listener: () => void): void;
+  isDestroyed(): boolean;
   loadFile(path: string): Promise<void>;
   showInactive(): void;
   hide(): void;
@@ -109,7 +110,10 @@ export function createApplication(dependencies: CreateApplicationDependencies): 
   }
 
   function sendTo(window: ManagedWindow | undefined, channel: "session:state-changed" | "hotkeys:status-changed", payload: unknown): void {
-    const contents = window?.webContents;
+    if (window === undefined || window.isDestroyed()) {
+      return;
+    }
+    const contents = window.webContents;
     if (contents?.send !== undefined && contents.isDestroyed?.() !== true) {
       contents.send(channel, payload);
     }

@@ -17,6 +17,7 @@ interface CapturedWindow {
   };
   on(event: "closed", listener: () => void): void;
   emit(event: "closed"): void;
+  isDestroyed(): boolean;
   loadFile(path: string): Promise<void>;
   showInactive(): void;
   hide(): void;
@@ -63,12 +64,17 @@ class FakeElectronRuntime {
 
   public createBrowserWindow(options: Record<string, unknown>): CapturedWindow {
     const listeners = new Map<string, Array<() => void>>();
+    let destroyed = false;
+    const webContents = {
+      id: this.nextId++,
+      on: () => undefined,
+      setWindowOpenHandler: () => undefined,
+    };
     const window: CapturedWindow = {
       options,
-      webContents: {
-        id: this.nextId++,
-        on: () => undefined,
-        setWindowOpenHandler: () => undefined,
+      get webContents() {
+        if (destroyed) throw new TypeError("Object has been destroyed");
+        return webContents;
       },
       on: (event, listener) => {
         listeners.set(event, [...(listeners.get(event) ?? []), listener]);
@@ -76,10 +82,13 @@ class FakeElectronRuntime {
       emit: (event) => {
         for (const listener of listeners.get(event) ?? []) listener();
       },
+      isDestroyed: () => destroyed,
       loadFile: async () => undefined,
       showInactive: () => undefined,
       hide: () => undefined,
-      destroy: () => undefined,
+      destroy: () => {
+        destroyed = true;
+      },
     };
     this.windows.push(window);
     return window;
@@ -107,6 +116,25 @@ test("requests application shutdown when the control window closes while the ove
   runtime.windows[0]?.emit("closed");
 
   expect(shutdownRequests).toBe(1);
+});
+
+test("does not access web contents after the control window is destroyed", async () => {
+  const runtime = new FakeElectronRuntime();
+  const application = createApplication({
+    runtime,
+    onControlClosed: () => undefined,
+    paths: {
+      controlHtml: "dist/renderer/control.html",
+      overlayHtml: "dist/renderer/overlay.html",
+      controlPreload: "dist/preload/control.js",
+      overlayPreload: "dist/preload/overlay.js",
+    },
+  });
+
+  await application.start();
+  runtime.windows[0]?.destroy();
+
+  expect(() => application.publishHotkeyStatus("unavailable")).not.toThrow();
 });
 
 test("creates one hardened control window and one inactive overlay", async () => {
