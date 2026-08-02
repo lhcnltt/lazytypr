@@ -10,6 +10,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <fcntl.h>
+#include <io.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -512,6 +514,12 @@ int main(void) {
     size_t bytes_read;
     FocusOutcome outcome;
     HWND target_window;
+
+    if (_setmode(_fileno(stdin), _O_BINARY) == -1 ||
+        _setmode(_fileno(stdout), _O_BINARY) == -1 ||
+        _setmode(_fileno(stderr), _O_BINARY) == -1) {
+        return EXIT_FAILURE;
+    }
 
     SecureZeroMemory(input, sizeof(input));
     SecureZeroMemory(&request, sizeof(request));
