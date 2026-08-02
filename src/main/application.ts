@@ -10,7 +10,7 @@ import type { AppError, Result } from "../shared/contracts.js";
 const SAFE_TEST_STOP_DELAY_MS = 150;
 
 const platformAccelerators = {
-  win32: "Ctrl+Shift+Space",
+  win32: "Alt+0",
   darwin: "Control+Option+Space",
 } as const;
 

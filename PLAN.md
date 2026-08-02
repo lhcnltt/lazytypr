@@ -226,7 +226,7 @@ Defaults:
 - Dictation language: automatic
 - Dictation and translation STT: Whisper Small
 - Translation LLM: Qwen3.5 4B Q4_K_M
-- Windows hotkeys: `Ctrl+Shift+Space` and `Ctrl+Alt+Space`
+- Windows hotkeys: `Alt+0` and `Ctrl+Alt+Space`
 - macOS hotkeys: `Control+Option+Space` and `Control+Option+T`
 - Maximum recording: five minutes
 

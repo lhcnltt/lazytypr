@@ -466,7 +466,7 @@ class ConflictThenReadyHotkeys implements HotkeyPort {
   public readonly registered = new Map<string, () => void>();
 
   public register(accelerator: string, callback: () => void): boolean {
-    if (accelerator === "Ctrl+Shift+Space" && !this.acceptDictation) {
+    if (accelerator === "Alt+0" && !this.acceptDictation) {
       return false;
     }
     this.registered.set(accelerator, callback);

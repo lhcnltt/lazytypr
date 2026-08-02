@@ -14,6 +14,8 @@ the documentation baseline claims none of these scenarios as executed.
 
 - Defaults: Whisper Small; Qwen3.5 4B Q4_K_M; language auto; clipboard-only.
 - Interaction: tap-to-start/tap-to-stop; five-minute maximum; Escape cancels.
+- Phase 1 dictation hotkey: `Alt+0` on Windows and
+  `Control+Option+Space` on macOS.
 - Local only after explicit direct-source model/runtime downloads.
 - No persistent audio, cloud inference, accounts, telemetry, analytics, updater,
   remote catalog, meeting capture, notes, team features, or Linux v1 target.

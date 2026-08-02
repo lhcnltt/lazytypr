@@ -131,7 +131,7 @@ describe("tracer-main.integration", () => {
     });
 
     expect(application.start()).toBe("ready");
-    expect([...hotkeys.registered.keys()]).toEqual(["Ctrl+Shift+Space"]);
+    expect([...hotkeys.registered.keys()]).toEqual(["Alt+0"]);
 
     await application.handleDictationHotkey();
     expect(sequence).toEqual(["capture-target"]);
