@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2026 lhcnltt
 // SPDX-License-Identifier: MIT
 
+import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 
 import { describe, expect, it } from "vitest";
@@ -12,6 +13,33 @@ async function readProjectFile(path: string): Promise<string> {
 }
 
 describe("windows-native-contract", () => {
+  it.skipIf(process.platform !== "win32")(
+    "emits one canonical LF-delimited protocol frame on Windows",
+    () => {
+      const helper = new URL(
+        "../../src/native/windows/bin/focus_paste.exe",
+        import.meta.url,
+      );
+      const request = JSON.stringify({
+        version: 1,
+        requestId: "00000000-0000-4000-8000-000000000001",
+        operation: "capture",
+        platform: "win32",
+      });
+      const result = spawnSync(helper, [], {
+        encoding: null,
+        input: `${request}\n`,
+        windowsHide: true,
+      });
+      const stdout = result.stdout ?? Buffer.alloc(0);
+
+      expect(result.status).toBe(0);
+      expect(result.stderr?.byteLength).toBe(0);
+      expect(stdout.at(-1)).toBe(0x0a);
+      expect(stdout.at(-2)).not.toBe(0x0d);
+    },
+  );
+
   it("defines a bounded version-one protocol without target fixture data", async () => {
     const fixture = JSON.parse(
       await readProjectFile("tests/fixtures/native/windows-protocol.json"),
