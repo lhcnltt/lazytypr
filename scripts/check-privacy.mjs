@@ -5,6 +5,8 @@ import { readFile, stat } from "node:fs/promises";
 import { relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { canonicalRepositoryPath } from "./repository-path.mjs";
+
 const repositoryRoot = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const rendererInputs = [
   "src/renderer/control.html",
@@ -63,7 +65,10 @@ async function readRepositoryFile(input) {
       fail("PRIVACY_INPUT_UNREADABLE");
       return null;
     }
-    return { path: safePath, content: await readFile(absolutePath, "utf8") };
+    return {
+      path: canonicalRepositoryPath(safePath),
+      content: await readFile(absolutePath, "utf8"),
+    };
   } catch {
     fail("PRIVACY_INPUT_UNREADABLE");
     return null;

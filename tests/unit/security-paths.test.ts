@@ -7,8 +7,8 @@ import { describe, expect, it } from "vitest";
 
 const execFileAsync = promisify(execFile);
 
-describe("security scanner repository paths", () => {
-  it("canonicalizes Windows separators for profile map lookups", async () => {
+describe("security and privacy scanner repository paths", () => {
+  it("canonicalizes Windows separators for lookups and diagnostics", async () => {
     const program = [
       'import { canonicalRepositoryPath } from "./scripts/repository-path.mjs";',
       'process.stdout.write(canonicalRepositoryPath("src\\\\main\\\\security\\\\ipc-guard.ts"));',
