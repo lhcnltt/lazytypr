@@ -31,6 +31,7 @@ export interface ManagedWebContents {
 
 export interface ManagedWindow {
   readonly webContents: ManagedWebContents;
+  on(event: "closed", listener: () => void): void;
   loadFile(path: string): Promise<void>;
   showInactive(): void;
   hide(): void;
@@ -54,6 +55,7 @@ export interface ApplicationPaths {
 export interface CreateApplicationDependencies {
   readonly runtime: ElectronRuntime;
   readonly paths: ApplicationPaths;
+  readonly onControlClosed: () => void;
   readonly services?: IpcServices;
 }
 
@@ -79,6 +81,7 @@ export interface ProductionPhase1Dependencies {
   readonly paths: ApplicationPaths;
   readonly globalShortcut: GlobalShortcut;
   readonly clipboard: Clipboard;
+  readonly onControlClosed: () => void;
   readonly clock?: ClockPort;
   readonly timers?: TimerPort;
 }
@@ -129,6 +132,7 @@ export function createApplication(dependencies: CreateApplicationDependencies): 
       overlayWindow = dependencies.runtime.createBrowserWindow(
         createOverlayWindowOptions(dependencies.paths.overlayPreload),
       );
+      controlWindow.on("closed", dependencies.onControlClosed);
       registerWindow(controlWindow, "control");
       registerWindow(overlayWindow, "overlay");
       if (dependencies.services !== undefined) {
@@ -198,6 +202,7 @@ export function createProductionPhase1Application(
   const shell = createApplication({
     runtime: dependencies.runtime,
     paths: dependencies.paths,
+    onControlClosed: dependencies.onControlClosed,
     services: deferredServices(() => main),
   });
   const presentation: PresentationPort = {

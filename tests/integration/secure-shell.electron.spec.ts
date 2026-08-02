@@ -3,7 +3,10 @@
 
 import { expect, test } from "@playwright/test";
 
-import { createApplication } from "../../src/main/bootstrap.js";
+import {
+  createApplication,
+  type CreateApplicationDependencies,
+} from "../../src/main/bootstrap.js";
 
 interface CapturedWindow {
   readonly options: Record<string, unknown>;
@@ -12,6 +15,8 @@ interface CapturedWindow {
     on(event: string, listener: (...arguments_: unknown[]) => void): void;
     setWindowOpenHandler(handler: () => { action: "deny" }): void;
   };
+  on(event: "closed", listener: () => void): void;
+  emit(event: "closed"): void;
   loadFile(path: string): Promise<void>;
   showInactive(): void;
   hide(): void;
@@ -57,12 +62,19 @@ class FakeElectronRuntime {
   private nextId = 1;
 
   public createBrowserWindow(options: Record<string, unknown>): CapturedWindow {
+    const listeners = new Map<string, Array<() => void>>();
     const window: CapturedWindow = {
       options,
       webContents: {
         id: this.nextId++,
         on: () => undefined,
         setWindowOpenHandler: () => undefined,
+      },
+      on: (event, listener) => {
+        listeners.set(event, [...(listeners.get(event) ?? []), listener]);
+      },
+      emit: (event) => {
+        for (const listener of listeners.get(event) ?? []) listener();
       },
       loadFile: async () => undefined,
       showInactive: () => undefined,
@@ -74,10 +86,34 @@ class FakeElectronRuntime {
   }
 }
 
+test("requests application shutdown when the control window closes while the overlay exists", async () => {
+  const runtime = new FakeElectronRuntime();
+  let shutdownRequests = 0;
+  const dependencies = {
+    runtime,
+    paths: {
+      controlHtml: "dist/renderer/control.html",
+      overlayHtml: "dist/renderer/overlay.html",
+      controlPreload: "dist/preload/control.js",
+      overlayPreload: "dist/preload/overlay.js",
+    },
+    onControlClosed: () => {
+      shutdownRequests += 1;
+    },
+  } as CreateApplicationDependencies;
+  const application = createApplication(dependencies);
+
+  await application.start();
+  runtime.windows[0]?.emit("closed");
+
+  expect(shutdownRequests).toBe(1);
+});
+
 test("creates one hardened control window and one inactive overlay", async () => {
   const runtime = new FakeElectronRuntime();
   const application = createApplication({
     runtime,
+    onControlClosed: () => undefined,
     paths: {
       controlHtml: "dist/renderer/control.html",
       overlayHtml: "dist/renderer/overlay.html",
@@ -119,6 +155,7 @@ test("installs the Phase 1 deny-by-default session and content policy before loc
   const runtime = new FakeElectronRuntime();
   const application = createApplication({
     runtime,
+    onControlClosed: () => undefined,
     paths: {
       controlHtml: "dist/renderer/control.html",
       overlayHtml: "dist/renderer/overlay.html",
@@ -152,6 +189,7 @@ test("registers only fixed guarded IPC handlers with main-owned services", async
   const runtime = new FakeElectronRuntime();
   const application = createApplication({
     runtime,
+    onControlClosed: () => undefined,
     paths: {
       controlHtml: "dist/renderer/control.html",
       overlayHtml: "dist/renderer/overlay.html",

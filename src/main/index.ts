@@ -35,6 +35,7 @@ async function startApplication(): Promise<void> {
     },
     globalShortcut,
     clipboard,
+    onControlClosed: () => app.quit(),
   });
 
   if (application === undefined) {

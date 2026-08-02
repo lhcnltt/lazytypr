@@ -144,6 +144,8 @@ class FakeWindow {
 
   public async loadFile(_path: string): Promise<void> {}
 
+  public on(_event: "closed", _listener: () => void): void {}
+
   public showInactive(): void {}
 
   public hide(): void {}
@@ -202,6 +204,7 @@ test("routes the guarded safe test through the main-owned copy-only tracer", asy
   const runtime = new FakeElectronRuntime();
   const shell = createApplication({
     runtime,
+    onControlClosed: () => undefined,
     paths: {
       controlHtml: "dist/renderer/control.html",
       overlayHtml: "dist/renderer/overlay.html",
