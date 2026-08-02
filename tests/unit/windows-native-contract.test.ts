@@ -3,6 +3,7 @@
 
 import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
@@ -16,9 +17,8 @@ describe("windows-native-contract", () => {
   it.skipIf(process.platform !== "win32")(
     "emits one canonical LF-delimited protocol frame on Windows",
     () => {
-      const helper = new URL(
-        "../../src/native/windows/bin/focus_paste.exe",
-        import.meta.url,
+      const helper = fileURLToPath(
+        new URL("../../src/native/windows/bin/focus_paste.exe", import.meta.url),
       );
       const request = JSON.stringify({
         version: 1,
