@@ -1,103 +1,149 @@
 # Session Checkpoint
 
-Updated: 2026-07-31 after Phase 1 plan-checker convergence.
+Updated: 2026-08-02 after the Windows native-frame correction and GitHub
+publication.
 
 ## Current outcome
 
-The public documentation/GSD baseline and Phase 1 planning are complete.
-Implementation has not started. The current branch is
-`phase/01-secure-electron-walking-skeleton`; `main` remains the documentation
-baseline, and no Git remote, tag, release, or push exists.
+Phase 1 implementation Plans 01-01 through 01-11 are complete. Plan 01-12 is
+active and remains blocked on two separate target-hardware checkpoints:
 
-`STATE.md` is authoritative for resume status:
+- Windows 11 x64 consecutive matrix: 0 of 20 accepted cycles.
+- macOS 13+ arm64 consecutive matrix: 0 of 20 accepted cycles.
 
-- Phase: 1 of 8, Secure Electron walking skeleton.
-- Status: Ready to execute.
-- Plans: 0 of 12 completed.
-- Next file: `01-01-PLAN.md`.
-- Auto-advance remains disabled.
+The public repository is `https://github.com/lhcnltt/lazytypr`. `main` remains
+the documentation baseline. Continue only on
+`phase/01-secure-electron-walking-skeleton`; its pull request must remain a
+draft until both platform gates and the final aggregate validation pass.
 
-Do not run `$gsd-execute-phase` or create application artifacts without an
-explicit user request to begin Phase 1 execution.
+No release, installer, tag, or Phase 1 completion claim exists.
 
-## Preserved planning artifacts
+## Latest validated implementation state
 
-The Phase 1 directory contains:
+The Phase 1 branch contains the approved package graph, secure Electron tracer,
+role-specific sandboxed renderers and preloads, deterministic stub processing,
+copy-first output controller, Windows C helper, macOS Swift helper, development
+SBOM, security/privacy/licensing gates, and outcome-only hardware evidence
+validator.
 
-- `01-CONTEXT.md` and `01-DISCUSSION-LOG.md`
-- approved `01-UI-SPEC.md`
-- `01-RESEARCH.md`, `01-PATTERNS.md`, and `01-VALIDATION.md`
-- `COVERAGE.md`, documenting that Electron IPC/native OS APIs are not an
-  external service integration
-- `01-01-PLAN.md` through `01-12-PLAN.md`, covering Waves 0 through 9
+The last Windows correction is commit `4f455e1`; commit `5fccdf2` records its
+sanitized checkpoint. Windows text-mode CRLF output had violated the native
+adapter's canonical NDJSON framing. The helper now puts standard streams in
+binary mode. The target-native x64 MSVC helper SHA-256 was:
 
-The independent GSD plan-checker initially blocked a 15-file Wave 0 plan and
-flagged a broad 14-file compliance plan. Both were split. The fresh convergence
-check approved the revised set: every plan is below 15 files, every
-implementation task touches at most five files, the graph is acyclic, and no
-same-wave file ownership collision remains.
+`92758ca42a682ec6b408aa34ca0089f2a224ab51c502a6bbef7cc1223b12073b`
 
-## Locked Phase 1 details
+A controlled full-application Windows diagnostic subsequently reached
+`Pasted`. That diagnostic is not a matrix cycle. The earlier clipboard-only
+observation was invalidated by the source correction, so the tracked run sheet
+correctly remains empty.
 
-- Use production process/security boundaries with deterministic stub capture
-  and processing; real PCM and Whisper remain Phase 2.
-- Main owns the sole session, hotkeys, clipboard, captured target, native paste,
-  window lifecycle, and all privileged IPC decisions.
-- Windows uses `Ctrl+Shift+Space`; macOS uses `Control+Option+Space`.
-- The native boundary is an attributed C helper on Windows and Swift helper on
-  macOS, each target-built and limited to a bounded sanitized protocol.
-- Clipboard-only is the default. Copy occurs before optional verified paste.
-- Cancellation linearizes at the main-owned clipboard commit barrier: before
-  commit, no output; after commit, retain the copy and suppress an undispatched
-  paste rather than claiming nothing was copied.
-- No cloud, telemetry, updater, runtime catalog, inference sidecar, model,
-  recording, history, or later-phase placeholder enters Phase 1.
+The Windows Phase 1 hotkey is `Alt+0`. The macOS hotkey remains
+`Control+Option+Space`.
 
-## Execution gates when explicitly resumed
+## Fresh Mac resume procedure
 
-1. Plan 01-01 is a blocking human review of the exact SUS npm package
-   identities. No package installation may precede that approval.
-2. Plans 01-02 through 01-11 build and validate the local tracer slices with
-   TDD, ASVS L2 high/critical blocking, REUSE/provenance, privacy, and local
-   repeatability evidence.
-3. Plan 01-12 contains separately blocking Windows 11 x64 and macOS 13+ arm64
-   20-cycle hardware checkpoints. Linux, fake-port, or Playwright results cannot
-   satisfy either checkpoint.
+Clone and select the Phase 1 branch:
 
-## Tooling and configuration
+```bash
+git clone https://github.com/lhcnltt/lazytypr.git
+cd lazytypr
+git switch phase/01-secure-electron-walking-skeleton
+git status --short --branch
+git rev-parse --short HEAD
+```
 
-- GSD Core is installed at version 1.9.1 through its official Codex
-  transformer.
-- Repository `.codex/config.toml` and global Codex config both set
-  `plan_mode_reasoning_effort = "xhigh"`.
-- `.planning/config.json` keeps committed planning, phase branches, TDD,
-  research, UI review/safety, Nyquist, deep code review, ASVS L2 security,
-  context coverage, no auto-advance, and no worktrees/parallelization.
-- The known GSD 1.9.1 warning that the bundled `safety` namespace is ignored
-  does not weaken repository or Codex confirmation rules.
+Use Node 24 as pinned by `.nvmrc`, install exactly the committed dependency
+graph, and build the target-native helper:
 
-## Validation checkpoint
+```bash
+node --version
+npm --version
+npm ci
+./src/native/macos/build.sh
+file src/native/macos/bin/focus_paste
+shasum -a 256 src/native/macos/bin/focus_paste
+```
 
-Latest completed evidence:
+Then run the complete automated gate before launching the tracer:
 
-- Markdown lint: 64 files, zero errors with pinned
-  `markdownlint-cli2@0.20.0`.
-- Markdown links: all checked internal and external links pass with pinned
-  `markdown-link-check@3.13.7`.
-- Mermaid: six architecture diagrams plus one research diagram compile with
-  pinned Mermaid CLI 11.4.2 and the local Linux Chromium executable.
-- JSON, YAML, and `REUSE.toml` parse successfully.
-- REUSE Specification 3.3: 94/94 files licensed and copyrighted; zero errors.
-- Traceability: 17/17 requirements mapped; 10/10 accepted ADRs present;
-  Phase 1 decision coverage 14/14.
-- GSD state validates with no warning; ingest remains at zero blockers and zero
-  warnings; the revised 12-plan set passed independent plan checking.
-- Sensitive-content/scope scans find no credential pattern, local-user path,
-  audio/model/signing file, tracked binary, application source, or package
-  manifest.
+```bash
+npm run check
+reuse lint
+npm run verify:hardware-evidence -- --schema-only
+npm run dev
+```
 
-## Evidence boundary
+If `swiftc` is unavailable, install or select Apple's command-line developer
+tools before building the helper. Do not commit the generated helper,
+`node_modules`, `dist`, logs, screenshots, audio, clipboard contents, or local
+machine details.
 
-Current evidence is pinned upstream source inspection, local static/document
-validation, and generated GSD planning validation only. No implementation,
-packaged-build, Windows hardware, or macOS hardware test has occurred.
+## macOS checkpoint to execute next
+
+Follow Task 3 in `01-12-PLAN.md` and the schema in
+`tests/hardware/phase1-run-sheet.md`.
+
+Before counting cycle 1:
+
+1. Confirm Apple Silicon reports `arm64`, the native helper builds, the full
+   automated gate passes, and exactly one lazytypr main process is running.
+2. Confirm the control window reports Ready and `Control+Option+Space` opens a
+   non-activating Listening overlay.
+3. Keep the run sheet free of dictated text, clipboard contents, application or
+   window identity, paths, process IDs, screenshots, audio, secrets, and session
+   identifiers.
+
+The matrix must contain exactly 20 consecutive successful cycles. It must
+include at least one clipboard-only result, one verified paste into TextEdit,
+one copy-only refusal caused by denied/revoked Accessibility or an unverifiable
+target, at least one capture cancellation, at least one processing
+cancellation, and five cancellations total. Any failed cycle invalidates the
+platform matrix and restarts it at cycle 1.
+
+After the macOS rows are complete, run:
+
+```bash
+npm run verify:hardware-evidence -- --platform macos
+```
+
+Do not run the all-platform approval gate until the Windows matrix has also
+been completed and recorded.
+
+## Windows checkpoint still required
+
+The corrected helper and full app have target-native diagnostic evidence, but
+the official Windows 20-cycle matrix has not started. Resume it later from
+cycle 1 using the rebuilt helper, `Alt+0`, Notepad, and Task 2 of
+`01-12-PLAN.md`. Do not count any observation recorded before commit `4f455e1`.
+
+## Current validation evidence
+
+At branch state `5fccdf2`, the following passed on Linux immediately before
+GitHub publication:
+
+- TypeScript typecheck.
+- Vitest: 44 passed; one Windows-only target test skipped.
+- Electron integration: 18 passed.
+- Automated local lifecycle matrix: 20 cycles passed.
+- Renderer build, security, privacy, and licensing checks.
+- REUSE Specification 3.3: 180 of 180 files compliant.
+- Git object integrity plus prohibited-artifact, local-path, and
+  credential-shaped-content publication scans.
+
+This is local automated evidence, not macOS or Windows matrix approval.
+
+## Locked boundaries
+
+- Main is the sole privileged application authority.
+- Audio remains in memory only; ordinary user speech is never recorded or
+  committed.
+- Copy always precedes optional verified paste; unverifiable targets remain
+  copy-only.
+- No cloud inference, telemetry, analytics, accounts, updater, sidecar, model,
+  history, or later-phase placeholder enters Phase 1.
+- Generated hardware evidence is outcome-only. Human observations do not
+  replace the fail-closed validator.
+- Phase 1 is incomplete until both target-hardware matrices, the all-platform
+  validator, the full automated gate, REUSE, review, and security verification
+  pass.

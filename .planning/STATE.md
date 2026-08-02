@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: Secure Electron walking skeleton
 status: executing
-stopped_at: Completed LT-01-11-PLAN.md
-last_updated: "2026-08-01T15:38:08.042Z"
-last_activity: 2026-08-01
-last_activity_desc: Phase 1 execution started
+stopped_at: Plan LT-01-12 target-hardware checkpoints open
+last_updated: "2026-08-02T22:46:55Z"
+last_activity: 2026-08-02
+last_activity_desc: Published Phase 1 branch with Windows matrix reset to zero and macOS gate open
 progress:
   total_phases: 8
   completed_phases: 0
@@ -40,10 +40,11 @@ Total Plans in Phase: 12
 
 Status: EXECUTING
 
-Last activity: 2026-08-01 — Phase 1 execution started after independent
-plan-checker convergence.
+Last activity: 2026-08-02 — Published the validated Phase 1 branch after the
+Windows native-frame correction; both target-hardware matrices remain open.
 
-Last Activity Description: Phase 1 execution started
+Last Activity Description: Phase 1 branch published; Plan 01-12 hardware gates
+remain open
 
 Progress: [█████████░] 92%
 
@@ -61,7 +62,8 @@ Progress: [█████████░] 92%
 |-------|-------|-------|----------|
 | LT-01 | 11 | 115m | 10m |
 
-**Recent Trend:** No execution data yet.
+**Recent Trend:** Plans 01-01 through 01-11 are complete; Plan 01-12 is blocked
+on target-hardware evidence.
 **Per-Plan Metrics:**
 
 | Plan | Duration | Tasks | Files |
@@ -129,12 +131,12 @@ relevant to the first tracer-first phases are:
 
 ### Pending Todos
 
-None yet.
+- Complete the macOS 13+ arm64 20-cycle matrix on target hardware.
+- Restart and complete the Windows 11 x64 20-cycle matrix from cycle 1.
+- Run the all-platform evidence validator and final Phase 1 gates only after
+  both matrices are complete.
 
 ### Blockers/Concerns
-
-- The first execution checkpoint requires human approval of every exact Phase 1
-  npm package identity before installation.
 
 - Phase completion requires distinct Windows and macOS target-hardware gates;
   Linux, fake-port, and Playwright evidence cannot satisfy them.
@@ -150,8 +152,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-08-01T15:38:08.022Z
+Last session: 2026-08-02T22:46:55Z
 
-Stopped at: Completed LT-01-11-PLAN.md
+Stopped at: Plan LT-01-12 target-hardware checkpoints open
 
-Resume file: None
+Resume file: `.planning/SESSION_CHECKPOINT.md`
