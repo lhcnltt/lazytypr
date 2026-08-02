@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 lhcnltt
 // SPDX-License-Identifier: MIT
 
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 
 import { describe, expect, it } from "vitest";
 
@@ -12,6 +12,14 @@ async function readProjectFile(path: string): Promise<string> {
 }
 
 describe("macos-native-contract", () => {
+  it("keeps the target-native build script executable after clone", async () => {
+    const buildScript = await stat(
+      new URL("src/native/macos/build.sh", projectRoot),
+    );
+
+    expect(buildScript.mode & 0o111).not.toBe(0);
+  });
+
   it("defines the bounded version-one macOS helper protocol without target fixture data", async () => {
     const fixture = JSON.parse(
       await readProjectFile("tests/fixtures/native/macos-protocol.json"),
