@@ -125,8 +125,11 @@ status: complete
 
 - `src/main/application.ts` - Main-only tracer composition and lifecycle ownership.
 - `src/main/bootstrap.ts` - Production Electron service binding and guarded IPC integration.
-- `src/main/os/{hotkey,clipboard,platform-focus-paste}.ts` - Strict platform hotkey, synchronous clipboard, and adapter-selection ports.
-- `src/main/tracer/{controller,stub-processor}.ts` - Session behavior and abortable deterministic stub work.
+- `src/main/os/hotkey.ts` - Strict platform hotkey port.
+- `src/main/os/clipboard.ts` - Synchronous clipboard port.
+- `src/main/os/platform-focus-paste.ts` - Platform adapter-selection port.
+- `src/main/tracer/controller.ts` - Session behavior.
+- `src/main/tracer/stub-processor.ts` - Abortable deterministic stub work.
 - `tests/integration/tracer-main.integration.test.ts` - Injected main-service lifecycle coverage.
 - `tests/integration/tracer.electron.spec.ts` - Electron composition coverage through production guards.
 - `vitest.config.ts` - Bounded deterministic discovery policy.

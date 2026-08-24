@@ -72,7 +72,7 @@ coverage:
     requirement: LT-PRV-001
     verification:
       - kind: other
-        ref: "npm run check:privacy -- tests/evidence/phase1-local-validation.md"
+        ref: "tests/evidence/phase1-local-validation.md"
         status: pass
       - kind: other
         ref: "reuse lint"
@@ -106,7 +106,7 @@ status: complete
 
 - Node `v24.13.1`: `npm ci` passed with 0 reported vulnerabilities.
 - `npm run check` passed: 38 unit/integration tests, 16 Electron tests, the exact 20-cycle matrix, 12 licensing/security tests, renderer build, scanner, and privacy gates.
-- `npm run test:electron -- tracer.electron`, `npm run check:privacy -- tests/evidence/phase1-local-validation.md`, and `reuse lint` passed.
+- `npm run test:electron -- tracer.electron`, `npm run check:privacy`, and `reuse lint` passed; the sanitized local record is `tests/evidence/phase1-local-validation.md`.
 - **Evidence level:** local static/development and injected-port Electron validation only; no Windows/macOS native-build, focus, paste, Accessibility, target-hardware, packaged-build, or external-network-contact claim is made.
 
 ## Task Commits

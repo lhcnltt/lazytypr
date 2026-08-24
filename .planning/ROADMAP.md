@@ -20,7 +20,7 @@ implementation phase begins.
 - No phase may pass its checkpoint with unclassified model licenses, unverified
   native hashes, or unresolved audio-cleanup failures.
 
-- [ ] **Phase 1: Secure Electron walking skeleton** - Establish the secure,
+- [x] **Phase 1: Secure Electron walking skeleton** - Establish the secure, (completed 2026-08-24)
   copy-first tracer before adding real inference.
 
 - [ ] **Phase 2: In-memory PCM and Whisper dictation** - Add bounded in-memory
@@ -250,7 +250,7 @@ Phase 6 → Phase 7 → Phase 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Secure Electron walking skeleton | 12/12 | Verifying |  |
+| 1. Secure Electron walking skeleton | 12/12 | Complete    | 2026-08-24 |
 | 2. In-memory PCM and Whisper dictation | 0/TBD | Not started | - |
 | 3. Cross-platform lifecycle hardening | 0/TBD | Not started | - |
 | 4. Complete model lifecycle and STT catalog | 0/TBD | Not started | - |
