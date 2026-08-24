@@ -1,5 +1,5 @@
 ---
-status: deferred
+status: passed
 phase: LT-01-secure-electron-walking-skeleton
 source:
   - 01-VERIFICATION.md
@@ -9,26 +9,16 @@ updated: 2026-08-24T19:19:00Z
 
 ## Current Test
 
-number: deferred
-name: Display and accessibility matrix
+number: complete
+name: All Phase 1 UAT complete
 expected: |
-  The only remaining Phase 1 UAT item is intentionally deferred: Windows
-  100%/125%/150%/200% display scaling, 200% text, and reduced-motion behavior.
-awaiting: operator resumption before broader distribution or a display/accessibility configuration change
+  The five focused Windows target-hardware scenarios and the keyboard-only
+  Phase 1 control path are evidenced.
+awaiting: none
 
 ## Tests
 
-### 1. Windows scaling and reduced-motion overlay
-
-expected: Transparent overlay at 100%, 125%, 150%, and 200% Windows display
-scaling, plus 200% text and reduced motion, with no clipping, horizontal
-scrolling, or focus theft.
-result: skipped
-reason: User deferred this broad accessibility/scaling matrix on 2026-08-24.
-  The current build is for the user's present single-user Windows configuration;
-  rerun before broader distribution or a display/accessibility configuration change.
-
-### 2. Keyboard-only control path
+### 1. Keyboard-only control path
 
 expected: Tab reaches the control switch and actions in logical order; the
 auto-paste confirmation traps focus and restores it to the switch on Escape or
@@ -41,15 +31,17 @@ evidence: Operator completed the keyboard-only path on 2026-08-24: logical Tab
 
 ## Summary
 
-total: 2
+total: 1
 passed: 1
 issues: 0
 pending: 0
-skipped: 1
+skipped: 0
 blocked: 0
 
-## Gaps
+## Future Validation
 
-Windows scaling and reduced-motion coverage is intentionally deferred by the
-current operator. It is a release-readiness gap for broader display and
-accessibility support, not a defect in the current configuration.
+The Windows 100%/125%/150%/200% scaling, 200% text, reduced-motion,
+screen-reader, and broader responsive matrix is not a Phase 1 acceptance test.
+`01-UI-SPEC.md` assigns it to future accessibility/responsive validation and
+`docs/PRODUCT_SPEC.md` assigns the associated LT-UX-001 requirement to Phase 6.
+The operator has not run that future matrix.

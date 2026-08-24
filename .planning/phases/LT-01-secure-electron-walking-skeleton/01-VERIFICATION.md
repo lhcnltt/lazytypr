@@ -1,7 +1,7 @@
 ---
 phase: LT-01-secure-electron-walking-skeleton
 verified: 2026-08-24
-status: human_needed
+status: passed
 score: 8/8
 ---
 
@@ -38,19 +38,18 @@ time.
 - Code review is clean after one corrected renderer-background finding; see
   01-REVIEW.md.
 
-## Deferred Verification Required Before Broader Distribution
+## Future Validation Boundary
 
-The Windows 100%/125%/150%/200% display scaling, 200% text, and reduced-motion
-matrix is explicitly deferred by the operator for this current single-user
-configuration. It remains recorded as a release-readiness gap in 01-UAT.md and
-must be rerun before broader distribution or a display/accessibility
-configuration change. The deferred macOS target-hardware proof is not a Phase 1
-blocker.
+The Windows 100%/125%/150%/200% display scaling, 200% text, reduced-motion,
+screen-reader, and responsive matrix is future accessibility/responsive
+validation under `01-UI-SPEC.md`; the associated LT-UX-001 requirement belongs
+to Phase 6 in `docs/PRODUCT_SPEC.md`. It is not a Phase 1 sign-off condition.
+The operator has not run that future matrix. The deferred macOS target-hardware
+proof remains assigned to Phase 3.
 
 ## Verdict
 
-**HUMAN_NEEDED** — all code, automated, security, privacy, and focused Windows
-focus/paste requirements are satisfied. The keyboard-only control path passed
-on native Windows. The display/accessibility matrix is explicitly deferred, so
-the phase remains open for broader-distribution sign-off while the current
-single-user configuration is ready for use.
+**PASS** — the Phase 1 goal is satisfied. All code, automated, security,
+privacy, focused Windows focus/paste, and keyboard-only control evidence
+passed. Future accessibility/responsive and macOS target-hardware validation
+remain accurately assigned to their planned phases.
