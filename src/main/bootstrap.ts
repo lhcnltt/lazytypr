@@ -35,6 +35,8 @@ export interface ManagedWindow {
   isDestroyed(): boolean;
   loadFile(path: string): Promise<void>;
   showInactive(): void;
+  setAlwaysOnTop(flag: boolean, level?: "floating"): void;
+  moveTop(): void;
   hide(): void;
   destroy(): void;
 }
@@ -164,7 +166,12 @@ export function createApplication(dependencies: CreateApplicationDependencies): 
       roles.clear();
     },
     showOverlayInactive(): void {
-      overlayWindow?.showInactive();
+      if (overlayWindow === undefined) {
+        return;
+      }
+      overlayWindow.showInactive();
+      overlayWindow.setAlwaysOnTop(true, "floating");
+      overlayWindow.moveTop();
     },
     hideOverlay(): void {
       overlayWindow?.hide();

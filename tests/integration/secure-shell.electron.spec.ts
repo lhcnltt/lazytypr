@@ -10,6 +10,7 @@ import {
 
 interface CapturedWindow {
   readonly options: Record<string, unknown>;
+  readonly calls: string[];
   readonly webContents: {
     readonly id: number;
     on(event: string, listener: (...arguments_: unknown[]) => void): void;
@@ -20,6 +21,8 @@ interface CapturedWindow {
   isDestroyed(): boolean;
   loadFile(path: string): Promise<void>;
   showInactive(): void;
+  setAlwaysOnTop(flag: boolean, level?: "floating"): void;
+  moveTop(): void;
   hide(): void;
   destroy(): void;
 }
@@ -72,6 +75,7 @@ class FakeElectronRuntime {
     };
     const window: CapturedWindow = {
       options,
+      calls: [],
       get webContents() {
         if (destroyed) throw new TypeError("Object has been destroyed");
         return webContents;
@@ -84,7 +88,9 @@ class FakeElectronRuntime {
       },
       isDestroyed: () => destroyed,
       loadFile: async () => undefined,
-      showInactive: () => undefined,
+      showInactive: () => window.calls.push("showInactive"),
+      setAlwaysOnTop: (flag, level) => window.calls.push(`setAlwaysOnTop:${flag}:${level ?? "default"}`),
+      moveTop: () => window.calls.push("moveTop"),
       hide: () => undefined,
       destroy: () => {
         destroyed = true;
@@ -177,6 +183,29 @@ test("creates one hardened control window and one inactive overlay", async () =>
   });
   expect(application.roleForWebContents(control?.webContents.id ?? 0)).toBe("control");
   expect(application.roleForWebContents(overlay?.webContents.id ?? 0)).toBe("overlay");
+});
+
+test("reasserts overlay topmost z-order every time it is shown inactive", async () => {
+  const runtime = new FakeElectronRuntime();
+  const application = createApplication({
+    runtime,
+    onControlClosed: () => undefined,
+    paths: {
+      controlHtml: "dist/renderer/control.html",
+      overlayHtml: "dist/renderer/overlay.html",
+      controlPreload: "dist/preload/control.js",
+      overlayPreload: "dist/preload/overlay.js",
+    },
+  });
+
+  await application.start();
+  application.showOverlayInactive();
+
+  expect(runtime.windows[1]?.calls).toEqual([
+    "showInactive",
+    "setAlwaysOnTop:true:floating",
+    "moveTop",
+  ]);
 });
 
 test("installs the Phase 1 deny-by-default session and content policy before local pages load", async () => {

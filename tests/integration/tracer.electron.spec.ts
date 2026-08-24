@@ -152,6 +152,10 @@ class FakeWindow {
 
   public showInactive(): void {}
 
+  public setAlwaysOnTop(_flag: boolean, _level?: "floating"): void {}
+
+  public moveTop(): void {}
+
   public hide(): void {}
 
   public destroy(): void {}
