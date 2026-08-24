@@ -1,22 +1,24 @@
 # Session Checkpoint
 
-Updated: 2026-08-24 after the Windows overlay z-order correction and focused
-hardware-gate amendment.
+Updated: 2026-08-24 after completing the focused Windows hardware gate and all
+Phase 1 implementation plans.
 
 ## Current outcome
 
-Phase 1 implementation Plans 01-01 through 01-11 are complete. Plan 01-12 is
-active and remains blocked on the focused Windows target-hardware checkpoint:
+All 12 Phase 1 implementation plans are complete:
 
-- Windows 11 x64 focused gate: 1 of 5 accepted scenarios at `feef839`.
-- macOS 13+ arm64 target proof: deferred to Phase 3; its schema remains empty.
+- Windows 11 x64 focused gate: 5 of 5 accepted scenarios at evidence commit
+  `4e294fe`.
+- Windows validator: passed with 5 rows and 2 cancellations.
+- macOS 13+ arm64 target proof: deferred to Phase 3; its schema remains empty
+  and schema-valid.
 
 The public repository is `https://github.com/lhcnltt/lazytypr`. `main` remains
 the documentation baseline. Continue only on
 `phase/01-secure-electron-walking-skeleton`; its pull request must remain a
-draft until the focused Windows gate and final Phase 1 validation pass.
+draft until Phase 1 goal, code, and security verification pass.
 
-No release, installer, tag, or Phase 1 completion claim exists.
+No release, installer, tag, merge, or final Phase 1 sign-off exists.
 
 ## Latest validated implementation state
 
@@ -29,8 +31,8 @@ validator.
 Commit `feef839` repairs a native Windows z-order defect found during the
 superseded manual matrix. Every inactive overlay show now reasserts topmost
 state and moves the non-activating overlay to the top. Native Windows diagnostic
-validation passed 5/5 repetitions, followed by the first accepted focused
-clipboard-only scenario at 125% scaling. The Windows helper SHA-256 is:
+validation passed 5/5 repetitions, followed by all five accepted focused
+scenarios. The Windows helper SHA-256 is:
 
 `6fdfe66308a528f374ecbb1cc13f91383ac6a45ed2bd7aaf42d0db5dfaec0c9a`
 
@@ -116,31 +118,34 @@ After the macOS rows are complete, run:
 npm run verify:hardware-evidence -- --platform macos
 ```
 
-Do not run the all-platform approval gate until the Windows matrix has also
-been completed and recorded.
+Do not run the all-platform approval gate until the deferred Phase 3 macOS
+matrix has also been completed and recorded.
 
-## Windows checkpoint still required
+## Windows checkpoint complete
 
-The focused Windows gate is 1/5 at `feef839`. Resume with verified Notepad paste,
-unavailable-target copy-only, capture cancellation, and processing cancellation.
-Do not count the invalidated pre-fix sequence or the 5/5 z-order diagnostic as
-focused scenario rows.
+The focused Windows gate is 5/5 at evidence commit `4e294fe`:
+clipboard-only, verified Notepad paste, unavailable-target copy-only, capture
+cancellation, and processing cancellation. The prior invalidated sequence and
+5/5 z-order diagnostic remain excluded from the focused scenario rows.
 
 ## Current validation evidence
 
-At branch state `5fccdf2`, the following passed on Linux immediately before
-GitHub publication:
+At branch state `4e294fe`, the following passed after Windows evidence
+completion:
 
 - TypeScript typecheck.
-- Native Windows Vitest: 46 passed.
-- Native Windows Electron integration: 19 passed.
+- Linux Vitest: 46 passed and one Windows-only test skipped.
+- Linux Electron integration: 19 passed.
 - Automated local lifecycle matrix: 20 cycles passed.
 - Renderer build, security, privacy, and licensing checks.
-- REUSE Specification 3.3: 180 of 180 files compliant.
-- Git object integrity plus prohibited-artifact, local-path, and
-  credential-shaped-content publication scans.
+- REUSE Specification 3.3: 181 of 181 files compliant.
+- Windows hardware validator: 5 rows and 2 cancellations passed.
+- Hardware schema validator: passed with the macOS section empty.
+- Live Windows process observation: zero non-loopback connections and zero
+  sidecar processes.
 
-This is local automated evidence, not macOS or Windows matrix approval.
+The five rows are Windows target-hardware evidence. Automated Linux results are
+local evidence only, and macOS remains unverified until Phase 3.
 
 ## Locked boundaries
 
@@ -153,6 +158,6 @@ This is local automated evidence, not macOS or Windows matrix approval.
   history, or later-phase placeholder enters Phase 1.
 - Generated hardware evidence is outcome-only. Human observations do not
   replace the fail-closed validator.
-- Phase 1 is incomplete until both target-hardware matrices, the all-platform
-  validator, the full automated gate, REUSE, review, and security verification
-  pass.
+- Phase 1 sign-off remains pending goal, code, and security verification. The
+  Windows target-hardware and full automated gates pass; macOS proof is deferred
+  to Phase 3.

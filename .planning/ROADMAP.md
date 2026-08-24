@@ -65,7 +65,7 @@ GSD ownership mappings.
   2. The deterministic local 20-cycle cleanup regression passes, and exactly five focused Windows 11 x64 target-hardware scenarios pass: clipboard-only, verified Notepad paste, refused/unavailable target copy-only, capture cancellation, and processing cancellation. macOS TextEdit/Accessibility target proof is deferred to Phase 3.
   3. The tracer operates through sandboxed overlay and control windows with typed, role-limited IPC, main-owned session ownership, deterministic terminal cleanup, no unauthorized external network, and no sensitive diagnostic content before real inference is admitted.
 
-**Plans**: 11/12 plans executed
+**Plans**: 12/12 plans executed
 
 - [x] 01-01-PLAN.md
 - [x] 01-02-PLAN.md
@@ -78,7 +78,7 @@ GSD ownership mappings.
 - [x] 01-09-PLAN.md
 - [x] 01-10-PLAN.md
 - [x] 01-11-PLAN.md
-- [ ] 01-12-PLAN.md
+- [x] 01-12-PLAN.md
 
 **Wave 0**
 
@@ -116,11 +116,11 @@ GSD ownership mappings.
 
 **Wave 8** *(blocked on Wave 7 completion)*
 
-- [ ] 01-11: Close ASVS L2 misuse paths and record sanitized local repeatability evidence.
+- [x] 01-11: Close ASVS L2 misuse paths and record sanitized local repeatability evidence.
 
 **Wave 9** *(blocked on Wave 8 completion)*
 
-- [ ] 01-12: Complete the focused Windows target-hardware checkpoint and preserve the deferred macOS schema for Phase 3.
+- [x] 01-12: Complete the focused Windows target-hardware checkpoint and preserve the deferred macOS schema for Phase 3.
 
 **UI hint**: yes
 
@@ -250,7 +250,7 @@ Phase 6 → Phase 7 → Phase 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Secure Electron walking skeleton | 11/12 | In Progress|  |
+| 1. Secure Electron walking skeleton | 12/12 | Verifying |  |
 | 2. In-memory PCM and Whisper dictation | 0/TBD | Not started | - |
 | 3. Cross-platform lifecycle hardening | 0/TBD | Not started | - |
 | 4. Complete model lifecycle and STT catalog | 0/TBD | Not started | - |
