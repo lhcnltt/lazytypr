@@ -40,19 +40,100 @@ build, all five rows, and the Windows validator pass.
   "platform": "windows-11-x64",
   "evidenceLevel": "target-hardware",
   "nativeBuild": {
-    "passed": null,
-    "compiler": null,
+    "passed": true,
+    "compiler": "MSVC 14.44.35228.0",
     "architecture": "x64",
-    "helperSha256": null
+    "helperSha256": "6fdfe66308a528f374ecbb1cc13f91383ac6a45ed2bd7aaf42d0db5dfaec0c9a"
   },
   "network": {
-    "externalConnections": null,
-    "sidecarProcesses": null
+    "externalConnections": 0,
+    "sidecarProcesses": 0
   },
-  "reviewer": null,
-  "date": null,
-  "approval": null,
-  "cycles": []
+  "reviewer": "reviewer-01",
+  "date": "2026-08-24",
+  "approval": true,
+  "cycles": [
+    {
+      "cycle": 1,
+      "scenario": "clipboard-only",
+      "copied": true,
+      "pasted": false,
+      "outcome": "copied",
+      "idleWithinTwoSeconds": true,
+      "terminalIdle": true,
+      "noStaleSession": true,
+      "focusClean": true,
+      "noMisdirectedPaste": true,
+      "overlayNonActivating": true,
+      "historyOutput": false,
+      "reviewer": "reviewer-01",
+      "timestamp": "2026-08-24T18:22:08.000Z"
+    },
+    {
+      "cycle": 2,
+      "scenario": "verified-paste",
+      "copied": true,
+      "pasted": true,
+      "outcome": "pasted",
+      "idleWithinTwoSeconds": true,
+      "terminalIdle": true,
+      "noStaleSession": true,
+      "focusClean": true,
+      "noMisdirectedPaste": true,
+      "overlayNonActivating": true,
+      "historyOutput": false,
+      "reviewer": "reviewer-01",
+      "timestamp": "2026-08-24T18:35:17.000Z"
+    },
+    {
+      "cycle": 3,
+      "scenario": "copy-only-refused",
+      "copied": true,
+      "pasted": false,
+      "outcome": "copy-only",
+      "idleWithinTwoSeconds": true,
+      "terminalIdle": true,
+      "noStaleSession": true,
+      "focusClean": true,
+      "noMisdirectedPaste": true,
+      "overlayNonActivating": true,
+      "historyOutput": false,
+      "reviewer": "reviewer-01",
+      "timestamp": "2026-08-24T18:37:28.000Z"
+    },
+    {
+      "cycle": 4,
+      "scenario": "cancelled-capture",
+      "copied": false,
+      "pasted": false,
+      "outcome": "cancelled",
+      "idleWithinTwoSeconds": true,
+      "terminalIdle": true,
+      "noStaleSession": true,
+      "focusClean": true,
+      "noMisdirectedPaste": true,
+      "overlayNonActivating": true,
+      "historyOutput": false,
+      "reviewer": "reviewer-01",
+      "timestamp": "2026-08-24T18:38:24.000Z"
+    },
+    {
+      "cycle": 5,
+      "scenario": "cancelled-processing",
+      "copied": false,
+      "pasted": false,
+      "outcome": "cancelled",
+      "idleWithinTwoSeconds": true,
+      "terminalIdle": true,
+      "noStaleSession": true,
+      "focusClean": true,
+      "noMisdirectedPaste": true,
+      "overlayNonActivating": true,
+      "historyOutput": false,
+      "reviewer": "reviewer-01",
+      "timestamp": "2026-08-24T18:39:54.000Z"
+    }
+  ]
 }
 ```
 
