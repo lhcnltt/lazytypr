@@ -40,20 +40,20 @@ time.
 
 ## Human Verification Required
 
-The remaining Phase 1 work is limited to the still-unrecorded Windows
-accessibility/scaling observations:
+The remaining Phase 1 work is limited to the keyboard-only control path:
 
-1. Verify the transparent non-activating overlay at Windows 100%, 125%, 150%,
-   and 200% display scaling plus 200% text; it must remain unclipped with no
-   horizontal scrolling.
-2. Verify the keyboard-only control path, including the auto-paste confirmation
+1. Verify the keyboard-only control path, including the auto-paste confirmation
    dialog focus trap/restore and the accessible cancellation control.
 
-These are persisted in 01-UAT.md. The deferred macOS target-hardware proof is
-not a Phase 1 blocker.
+The Windows 100%/125%/150%/200% display scaling, 200% text, and reduced-motion
+matrix is explicitly deferred by the operator for this current single-user
+configuration. It remains recorded as a release-readiness gap in 01-UAT.md and
+must be rerun before broader distribution or a display/accessibility
+configuration change. The deferred macOS target-hardware proof is not a Phase 1
+blocker.
 
 ## Verdict
 
 **HUMAN_NEEDED** — all code, automated, security, privacy, and focused Windows
-focus/paste requirements are satisfied. Phase sign-off awaits the two narrow
-Windows UAT observations above.
+focus/paste requirements are satisfied. Current-configuration sign-off awaits
+the keyboard-only UAT; the display/accessibility matrix is explicitly deferred.
