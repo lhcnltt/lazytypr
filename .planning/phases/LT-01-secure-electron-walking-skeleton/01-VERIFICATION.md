@@ -38,12 +38,7 @@ time.
 - Code review is clean after one corrected renderer-background finding; see
   01-REVIEW.md.
 
-## Human Verification Required
-
-The remaining Phase 1 work is limited to the keyboard-only control path:
-
-1. Verify the keyboard-only control path, including the auto-paste confirmation
-   dialog focus trap/restore and the accessible cancellation control.
+## Deferred Verification Required Before Broader Distribution
 
 The Windows 100%/125%/150%/200% display scaling, 200% text, and reduced-motion
 matrix is explicitly deferred by the operator for this current single-user
@@ -55,5 +50,7 @@ blocker.
 ## Verdict
 
 **HUMAN_NEEDED** — all code, automated, security, privacy, and focused Windows
-focus/paste requirements are satisfied. Current-configuration sign-off awaits
-the keyboard-only UAT; the display/accessibility matrix is explicitly deferred.
+focus/paste requirements are satisfied. The keyboard-only control path passed
+on native Windows. The display/accessibility matrix is explicitly deferred, so
+the phase remains open for broader-distribution sign-off while the current
+single-user configuration is ready for use.

@@ -1,21 +1,20 @@
 ---
-status: testing
+status: deferred
 phase: LT-01-secure-electron-walking-skeleton
 source:
   - 01-VERIFICATION.md
 started: 2026-08-24T19:00:21Z
-updated: 2026-08-24T19:18:00Z
+updated: 2026-08-24T19:19:00Z
 ---
 
 ## Current Test
 
-number: 2
-name: Keyboard-only control path
+number: deferred
+name: Display and accessibility matrix
 expected: |
-  Tab reaches the control switch and actions in logical order; the auto-paste
-  confirmation traps focus and restores it to the switch on Escape or Keep
-  Clipboard-Only; Cancel tracer is keyboard reachable while a session is active.
-awaiting: user response
+  The only remaining Phase 1 UAT item is intentionally deferred: Windows
+  100%/125%/150%/200% display scaling, 200% text, and reduced-motion behavior.
+awaiting: operator resumption before broader distribution or a display/accessibility configuration change
 
 ## Tests
 
@@ -35,14 +34,17 @@ expected: Tab reaches the control switch and actions in logical order; the
 auto-paste confirmation traps focus and restores it to the switch on Escape or
 Keep Clipboard-Only; Cancel tracer is keyboard reachable while a session is
 active.
-result: pending
+result: passed
+evidence: Operator completed the keyboard-only path on 2026-08-24: logical Tab
+  order, confirmation-dialog focus trap and Escape restoration, and keyboard
+  cancellation returning to Ready without automatic paste.
 
 ## Summary
 
 total: 2
-passed: 0
+passed: 1
 issues: 0
-pending: 1
+pending: 0
 skipped: 1
 blocked: 0
 
