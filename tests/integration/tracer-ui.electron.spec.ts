@@ -100,4 +100,14 @@ test.describe("auto-paste and accessibility", () => {
     const styleSource = await readFile(new URL("../../src/renderer/styles.css", import.meta.url), "utf8");
     expect(styleSource).toContain("overflow-wrap: anywhere");
   });
+
+  test("keeps the transparent overlay document background separate from the control surface", async () => {
+    const overlayHtml = await readFile(new URL("../../src/renderer/overlay.html", import.meta.url), "utf8");
+    const styleSource = await readFile(new URL("../../src/renderer/styles.css", import.meta.url), "utf8");
+
+    expect(overlayHtml).toContain('<body class="overlay-body">');
+    expect(styleSource).toContain(".overlay-body { margin: 0; min-width: 0; background: transparent; }");
+    const rootBlock = styleSource.match(/:root\s*\{([\s\S]*?)\}/u)?.[1] ?? "";
+    expect(rootBlock).not.toContain("background");
+  });
 });

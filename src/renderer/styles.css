@@ -3,7 +3,6 @@
 
 :root {
   color: #f5f7fa;
-  background: #172033;
   font-family: "Noto Sans", system-ui, sans-serif;
   font-size: 16px;
   font-weight: 400;
@@ -11,7 +10,8 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 0; background: #172033; }
+.control-body { margin: 0; min-width: 0; background: #172033; }
+.overlay-body { margin: 0; min-width: 0; background: transparent; }
 button, input { font: inherit; }
 button, input[type="checkbox"] { min-height: 44px; min-width: 44px; }
 button:focus-visible, input:focus-visible { outline: 2px solid #7db5b2; outline-offset: 2px; }
