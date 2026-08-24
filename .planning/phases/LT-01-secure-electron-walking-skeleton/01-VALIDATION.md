@@ -15,9 +15,10 @@ created: 2026-07-31
 
 Linux-hosted automation may establish source, type, unit, renderer, IPC, and
 deterministic integration behavior. It cannot establish Windows foreground
-activation or macOS Accessibility behavior. The Notepad/TextEdit 20-cycle gates
-remain future target-hardware validation and must never be replaced by fake-port
-or Playwright evidence.
+activation or macOS Accessibility behavior. Phase 1 therefore requires five
+focused Windows target-hardware scenarios in addition to the local 20-cycle
+cleanup regression. macOS TextEdit/Accessibility proof is deferred to Phase 3;
+neither native gate may be replaced by fake-port or Playwright evidence.
 
 ## Test Infrastructure
 
@@ -64,7 +65,7 @@ verification; the three human-only gates are explicitly identified.
 | 01-10-01, 01-10-02 | 10 | 7 | LT-LIC-001 | T-LT01-10-SUPPLY | REUSE, provenance, notices, dependency review, and development SBOM are complete | static/license | `reuse lint && npm run test:security -- licensing` | ❌ W0 | ⬜ pending |
 | 01-11-01, 01-11-02 | 11 | 8 | LT-NET-001, LT-SEC-001, LT-PRV-001 | T-LT01-11-E | Misuse paths fail closed and the local 20-cycle evidence is sanitized and honestly labeled | security/integration | `npm run check` | ❌ W0 | ⬜ pending |
 | 01-12-01 | 12 | 9 | LT-OUT-001, LT-PST-001 | T-LT01-12-R | The evidence validator rejects wrong counts, labels, platforms, or sensitive fields | unit/static | `npm run test:unit -- hardware-evidence-validator` | ❌ W0 | ⬜ pending |
-| 01-12-02, 01-12-03 | 12 | 9 | LT-OUT-001, LT-PST-001, LT-CAN-001 | T-LT01-12-TARGET | Windows and macOS each pass their distinct 20-cycle native proof | target-hardware | Blocking Windows/macOS run-sheet approval | N/A gate | ⬜ pending |
+| 01-12-02 | 12 | 9 | LT-OUT-001, LT-PST-001, LT-CAN-001 | T-LT01-12-TARGET | Windows passes exactly five focused native scenarios; macOS proof remains deferred to Phase 3 | target-hardware | Blocking Windows run-sheet approval | N/A gate | ⬜ pending |
 
 Status legend: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky
 
@@ -96,8 +97,8 @@ not authorize creating them before the Phase 1 plan is accepted.
 
 | Behavior | Requirement | Why Manual | Test Instructions |
 |----------|-------------|------------|-------------------|
-| Windows verified paste and safe fallback | LT-OUT-001, LT-PST-001 | Foreground restrictions and target identity require Windows 11 x64 hardware | Run 20 consecutive development-build cycles with Notepad as the only successful target; include clipboard-only, verified paste, at least one refused/unverifiable copy-only case, and at least five capture/processing cancellations. Record sanitized outcomes only. |
-| macOS verified paste and safe fallback | LT-OUT-001, LT-PST-001 | Accessibility permission and activation require macOS 13+ arm64 hardware | Run the same 20-cycle matrix with TextEdit as the only successful target, including denied/revoked Accessibility behavior. Record sanitized outcomes only. |
+| Windows verified paste and safe fallback | LT-OUT-001, LT-PST-001 | Foreground restrictions and target identity require Windows 11 x64 hardware | Run exactly five scenarios: clipboard-only, verified Notepad paste, refused/unavailable target copy-only, capture cancellation, and processing cancellation. Record sanitized outcomes only. |
+| Deferred macOS verified paste and safe fallback | LT-OUT-001, LT-PST-001 | Accessibility permission and activation require macOS 13+ arm64 hardware | Complete TextEdit paste, denied/revoked Accessibility, cancellation, and repeated lifecycle proof during Phase 3. Record sanitized outcomes only. |
 | Scaling and focus behavior | LT-FUN-001 foundation | Native window-manager and display scaling behavior is not fully represented by renderer automation | On both target OSes, verify the overlay never steals focus and remains visible/unclipped at the supported scaling levels from `01-UI-SPEC.md`. |
 
 ## Validation Sign-Off

@@ -52,7 +52,8 @@ function platformEvidence(platform: Platform) {
     "cancelled-processing",
     "cancelled-capture",
   ] as const;
-  const cycles = Array.from({ length: 20 }, (_, index) =>
+  const cycleCount = platform === "windows-11-x64" ? 5 : 20;
+  const cycles = Array.from({ length: cycleCount }, (_, index) =>
     cycle(index + 1, scenarios[index] ?? "clipboard-only"),
   );
 
@@ -74,6 +75,25 @@ function platformEvidence(platform: Platform) {
   };
 }
 
+function emptyPlatformEvidence(platform: Platform) {
+  return {
+    schemaVersion: 1,
+    platform,
+    evidenceLevel: "target-hardware",
+    nativeBuild: {
+      passed: null,
+      compiler: null,
+      architecture: platform === "windows-11-x64" ? "x64" : "arm64",
+      helperSha256: null,
+    },
+    network: { externalConnections: null, sidecarProcesses: null },
+    reviewer: null,
+    date: null,
+    approval: null,
+    cycles: [],
+  };
+}
+
 function runSheet(
   windows = platformEvidence("windows-11-x64"),
   macos = platformEvidence("macos-13-arm64"),
@@ -92,9 +112,9 @@ function runSheet(
 }
 
 describe("hardware evidence validator", () => {
-  it("accepts exact approved native target-hardware matrices", () => {
+  it("accepts the focused Windows gate and deferred macOS matrix contract", () => {
     expect(validateHardwareEvidenceDocument(runSheet())).toEqual([
-      { platform: "windows-11-x64", cycles: 20, cancellations: 5 },
+      { platform: "windows-11-x64", cycles: 5, cancellations: 2 },
       { platform: "macos-13-arm64", cycles: 20, cancellations: 5 },
     ]);
   });
@@ -113,7 +133,7 @@ describe("hardware evidence validator", () => {
     );
 
     const duplicate = platformEvidence("windows-11-x64");
-    duplicate.cycles[19] = { ...duplicate.cycles[19]!, cycle: 1 };
+    duplicate.cycles[4] = { ...duplicate.cycles[4]!, cycle: 1 };
     expect(() => validateHardwareEvidenceDocument(runSheet(duplicate))).toThrow(
       HardwareEvidenceError,
     );
@@ -129,36 +149,29 @@ describe("hardware evidence validator", () => {
     }
   });
 
+  it("approves focused Windows evidence while macOS remains deferred and empty", () => {
+    const document = runSheet(
+      platformEvidence("windows-11-x64"),
+      emptyPlatformEvidence("macos-13-arm64") as never,
+    );
+
+    expect(validateHardwareEvidenceDocument(document, { platform: "windows" })).toEqual([
+      { platform: "windows-11-x64", cycles: 5, cancellations: 2 },
+      { platform: "macos-13-arm64", cycles: 0, cancellations: 0 },
+    ]);
+    expect(() => validateHardwareEvidenceDocument(document)).toThrow(HardwareEvidenceError);
+  });
+
   it("accepts the empty tracked form only for schema validation", () => {
     const emptySheet = [
       "# Phase 1 Target-Hardware Run Sheet",
       "<!-- phase1-evidence:windows -->",
       "```json",
-      JSON.stringify({
-        schemaVersion: 1,
-        platform: "windows-11-x64",
-        evidenceLevel: "target-hardware",
-        nativeBuild: { passed: null, compiler: null, architecture: "x64", helperSha256: null },
-        network: { externalConnections: null, sidecarProcesses: null },
-        reviewer: null,
-        date: null,
-        approval: null,
-        cycles: [],
-      }),
+      JSON.stringify(emptyPlatformEvidence("windows-11-x64")),
       "```",
       "<!-- phase1-evidence:macos -->",
       "```json",
-      JSON.stringify({
-        schemaVersion: 1,
-        platform: "macos-13-arm64",
-        evidenceLevel: "target-hardware",
-        nativeBuild: { passed: null, compiler: null, architecture: "arm64", helperSha256: null },
-        network: { externalConnections: null, sidecarProcesses: null },
-        reviewer: null,
-        date: null,
-        approval: null,
-        cycles: [],
-      }),
+      JSON.stringify(emptyPlatformEvidence("macos-13-arm64")),
       "```",
     ].join("\n");
 

@@ -54,15 +54,15 @@ one-to-one ownership does not waive required slices in earlier phases.
 
 Phase 1 owns LT-OUT-001 and must also establish the foundational slices of
 LT-FUN-001, LT-PST-001, LT-CAN-001, LT-NET-001, LT-SEC-001, LT-LIC-001, and
-LT-PRV-001. Its measurable gate is 20 consecutive stub tracer cycles on each
-supported OS with no stale session/focus state or misdirected paste. The run set
-must include clipboard-only behavior, verified paste to Windows Notepad and
-macOS TextEdit, and at least one refused or unverifiable target per OS that
-remains copy-only. At least five cycles per OS cancel during stub capture or
-processing, return idle within two seconds, and produce no clipboard, paste, or
-history outcome. This is a development-build tracer gate; the full
-application/platform target matrix and 50/100 lifecycle stress counts remain
-due in Phase 3.
+LT-PRV-001. Its measurable gate combines the deterministic local 20-cycle
+cleanup regression with exactly five focused Windows 11 x64 target-hardware
+scenarios: clipboard-only, verified paste to Notepad, refused or unavailable
+target copy-only, capture cancellation, and processing cancellation. Every
+scenario must preserve focus safety, avoid misdirected paste, return idle within
+two seconds where applicable, and emit no history output. macOS TextEdit and
+Accessibility target-hardware proof is deferred to the Phase 3 cross-platform
+lifecycle checkpoint; Linux, fake-port, Electron, and Playwright evidence never
+substitute for either native platform proof.
 
 Every later phase continues to enforce LT-NET-001, LT-SEC-001, LT-LIC-001, and
 LT-PRV-001 at the scope it introduces, even though final requirement ownership

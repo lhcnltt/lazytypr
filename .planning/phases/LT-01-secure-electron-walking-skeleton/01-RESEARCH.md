@@ -57,11 +57,10 @@
   no inference sidecar. Diagnostics and test evidence contain no clipboard
   text, stub result text, focus-target identity, user path, secret, or ordinary
   user content.
-- **D-10:** The measurable checkpoint is 20 consecutive development-build
-  tracer cycles on each supported OS with no stale focus/session state or
-  misdirected paste. Each OS run set includes clipboard-only, verified paste,
-  at least one refused or unverifiable target that remains copy-only, and at
-  least five cancellations during capture or processing.
+- **D-10 (superseded 2026-08-24):** Phase 1 now combines the deterministic
+  local 20-cycle cleanup regression with exactly five focused Windows 11 x64
+  target-hardware scenarios. macOS TextEdit/Accessibility proof moved to the
+  Phase 3 cross-platform lifecycle checkpoint.
 - **D-11:** Planning and implementation stay on
   `phase/01-secure-electron-walking-skeleton`, use committed sanitized GSD
   artifacts, and do not auto-advance. No implementation begins until the Phase
@@ -436,7 +435,9 @@ Use a test-only fake that has controllable deferred completion, target outcome, 
 
 **Linux-host boundary:** The available Linux host may perform source inspection, type/lint/unit tests, deterministic Electron tests where the Electron runtime is installed, documentation validation, and package/supply-chain checks. It cannot validate Windows foreground policy/Notepad or macOS Accessibility/TextEdit; those remain future hardware evidence. [VERIFIED: docs/TESTING.md:3-14] [VERIFIED: docs/TESTING.md:50-59]
 
-**Missing dependencies with no fallback:** Windows 11 and macOS hardware for the Phase 1 20-cycle native target proof.
+**Missing dependencies with no fallback (amended 2026-08-24):** Windows 11 x64
+hardware is required for the five focused Phase 1 scenarios. macOS hardware is
+required later for the Phase 3 TextEdit/Accessibility checkpoint.
 
 **Missing dependencies with fallback:** Local Electron and REUSE CLIs—install only as an accepted-plan step after the described package/provenance review.
 
@@ -468,7 +469,10 @@ Use a test-only fake that has controllable deferred completion, target outcome, 
 
 - **Per task commit:** future `npm run test:unit` plus touched-file format/type checks; documentation-only changes currently use the gates in `docs/TESTING.md`. [VERIFIED: docs/TESTING.md:16-27]
 - **Per wave merge:** future `npm run check`.
-- **Phase gate:** full local suite green **and** the separately recorded Windows/macOS 20-cycle development-build run sheet. Do not label Playwright or Linux results as hardware validation. [VERIFIED: docs/PRODUCT_SPEC.md:53-63]
+- **Phase gate (amended 2026-08-24):** full local suite and deterministic
+  20-cycle regression green, plus the five-scenario Windows target-hardware
+  run sheet. The macOS target proof is deferred to Phase 3. Do not label
+  Playwright or Linux results as hardware validation.
 
 ### Wave 0 Gaps
 
@@ -478,7 +482,9 @@ Use a test-only fake that has controllable deferred completion, target outcome, 
 - [ ] `tests/unit/tracer-state.test.ts` — controller, output ordering, cancellation, stale callbacks, and terminal cleanup.
 - [ ] `tests/unit/ipc-security.test.ts` — role/sender/schema/size rejection and public snapshot redaction.
 - [ ] `tests/integration/tracer.electron.spec.ts` — main/renderer two-window path with injected fakes, including overlay non-focus/hidden terminal state.
-- [ ] `tests/hardware/phase1-run-sheet.md` — Windows Notepad/macOS TextEdit 20-cycle evidence form that records outcomes only, never result/target data.
+- [ ] `tests/hardware/phase1-run-sheet.md` — focused Windows Phase 1 evidence
+  plus the deferred macOS Phase 3 schema; both record outcomes only, never
+  result or target data.
 - [ ] Security/static scripts for CSP, navigation/new-window denial, endpoint scan, no sidecar launch, prohibited sensitive strings in reports, dependency license review, and `reuse lint`.
 
 ## Security Domain

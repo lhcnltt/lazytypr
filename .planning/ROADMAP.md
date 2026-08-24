@@ -62,7 +62,7 @@ GSD ownership mappings.
 **Success Criteria** (what must be TRUE):
 
   1. A user can invoke the hotkey and complete the tracer path — stub capture/result, clipboard copy, and verified optional paste — with copy retained if paste cannot safely proceed.
-  2. Twenty consecutive development-build tracer cycles pass on each supported OS with no stale focus/session state or misdirected paste, including clipboard-only, verified Notepad/TextEdit paste, a refused or unverifiable target that remains copy-only, and at least five cancellations during capture or processing that return idle within two seconds without clipboard, paste, or history output.
+  2. The deterministic local 20-cycle cleanup regression passes, and exactly five focused Windows 11 x64 target-hardware scenarios pass: clipboard-only, verified Notepad paste, refused/unavailable target copy-only, capture cancellation, and processing cancellation. macOS TextEdit/Accessibility target proof is deferred to Phase 3.
   3. The tracer operates through sandboxed overlay and control windows with typed, role-limited IPC, main-owned session ownership, deterministic terminal cleanup, no unauthorized external network, and no sensitive diagnostic content before real inference is admitted.
 
 **Plans**: 11/12 plans executed
@@ -120,7 +120,7 @@ GSD ownership mappings.
 
 **Wave 9** *(blocked on Wave 8 completion)*
 
-- [ ] 01-12: Complete separately blocking Windows and macOS target-hardware checkpoints.
+- [ ] 01-12: Complete the focused Windows target-hardware checkpoint and preserve the deferred macOS schema for Phase 3.
 
 **UI hint**: yes
 
@@ -153,7 +153,7 @@ GSD ownership mappings.
   1. Fifty rapid start/stop/cancel actions and 100 sequential sessions leave no stale session, orphan process, or lingering lifecycle resource; a processing hotkey reports busy rather than creating a second session.
   2. Auto-paste reaches only the target captured and reverified before the overlay, and a failed or refused activation remains copy-only across the documented Windows and macOS target matrix.
   3. Escape cancels every active available stage, produces no copied, pasted, or post-transcription history result, and returns the application to idle within two seconds except for a bounded sidecar restart.
-  4. The Windows and macOS lifecycle and repeated-use matrices pass, satisfying the documented Phase 3 checkpoint.
+  4. The deferred macOS TextEdit/Accessibility target proof and the Windows and macOS lifecycle and repeated-use matrices pass, satisfying the documented Phase 3 checkpoint.
 
 **Plans**: TBD
 

@@ -5,8 +5,18 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
 const platforms = Object.freeze({
-  windows: Object.freeze({ id: "windows-11-x64", architecture: "x64" }),
-  macos: Object.freeze({ id: "macos-13-arm64", architecture: "arm64" }),
+  windows: Object.freeze({
+    id: "windows-11-x64",
+    architecture: "x64",
+    requiredCycles: 5,
+    requiredCancellations: 2,
+  }),
+  macos: Object.freeze({
+    id: "macos-13-arm64",
+    architecture: "arm64",
+    requiredCycles: 20,
+    requiredCancellations: 5,
+  }),
 });
 const platformNames = Object.freeze(["windows", "macos"]);
 const rootKeys = Object.freeze([
@@ -237,10 +247,14 @@ function validateCompletedPlatform(record, platform) {
     "HARDWARE_EVIDENCE_METADATA_REJECTED",
   );
 
-  assert(record.cycles.length === 20, "HARDWARE_EVIDENCE_COUNT_REJECTED");
+  assert(record.cycles.length === platform.requiredCycles, "HARDWARE_EVIDENCE_COUNT_REJECTED");
   const cycles = record.cycles.map(validateCycle);
   const cycleNumbers = new Set(cycles.map((cycle) => cycle.cycle));
-  assert(cycleNumbers.size === 20 && [...cycleNumbers].every((cycle) => cycle >= 1 && cycle <= 20), "HARDWARE_EVIDENCE_CYCLE_REJECTED");
+  assert(
+    cycleNumbers.size === platform.requiredCycles &&
+      [...cycleNumbers].every((cycle) => cycle >= 1 && cycle <= platform.requiredCycles),
+    "HARDWARE_EVIDENCE_CYCLE_REJECTED",
+  );
 
   const count = (scenario) => cycles.filter((cycle) => cycle.scenario === scenario).length;
   const cancellations = count("cancelled-capture") + count("cancelled-processing");
@@ -250,7 +264,7 @@ function validateCompletedPlatform(record, platform) {
       count("copy-only-refused") >= 1 &&
       count("cancelled-capture") >= 1 &&
       count("cancelled-processing") >= 1 &&
-      cancellations >= 5,
+      cancellations >= platform.requiredCancellations,
     "HARDWARE_EVIDENCE_SCENARIO_REJECTED",
   );
 

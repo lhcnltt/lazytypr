@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: Secure Electron walking skeleton
 status: executing
-stopped_at: Plan LT-01-12 target-hardware checkpoints open
-last_updated: "2026-08-02T22:46:55Z"
-last_activity: 2026-08-02
-last_activity_desc: Published Phase 1 branch with Windows matrix reset to zero and macOS gate open
+stopped_at: Plan LT-01-12 focused Windows checkpoint at 1 of 5 scenarios
+last_updated: "2026-08-24T18:22:08Z"
+last_activity: 2026-08-24
+last_activity_desc: Fixed Windows overlay z-order, amended the manual gate, and accepted focused scenario 1 of 5
 progress:
   total_phases: 8
   completed_phases: 0
@@ -28,7 +28,7 @@ copy-first result.
 
 **Current focus:** Phase 1 — Secure Electron walking skeleton authorized
 execution run; Plans 01-01 through 01-11 are complete and Plan 01-12 retains
-the Windows/macOS target-hardware checkpoint.
+four focused Windows target-hardware scenarios. macOS proof moved to Phase 3.
 
 ## Current Position
 
@@ -40,11 +40,12 @@ Total Plans in Phase: 12
 
 Status: EXECUTING
 
-Last activity: 2026-08-02 — Published the validated Phase 1 branch after the
-Windows native-frame correction; both target-hardware matrices remain open.
+Last activity: 2026-08-24 — Published the overlay z-order correction at
+`feef839`, amended the repetitive hardware gate, and accepted Windows focused
+scenario 1 of 5.
 
-Last Activity Description: Phase 1 branch published; Plan 01-12 hardware gates
-remain open
+Last Activity Description: Focused Windows gate is 1/5; macOS is deferred to
+Phase 3
 
 Progress: [█████████░] 92%
 
@@ -131,15 +132,18 @@ relevant to the first tracer-first phases are:
 
 ### Pending Todos
 
-- Complete the macOS 13+ arm64 20-cycle matrix on target hardware.
-- Restart and complete the Windows 11 x64 20-cycle matrix from cycle 1.
-- Run the all-platform evidence validator and final Phase 1 gates only after
-  both matrices are complete.
+- Complete the four remaining focused Windows scenarios: verified Notepad
+  paste, unavailable-target copy-only, capture cancellation, and processing
+  cancellation.
+- Run the Windows evidence validator and final Phase 1 gates after all five
+  focused scenarios are complete.
+- Carry the macOS TextEdit/Accessibility target proof into Phase 3.
 
 ### Blockers/Concerns
 
-- Phase completion requires distinct Windows and macOS target-hardware gates;
-  Linux, fake-port, and Playwright evidence cannot satisfy them.
+- Phase completion requires the focused Windows target-hardware gate; Linux,
+  fake-port, and Playwright evidence cannot satisfy it. macOS target hardware
+  remains required in Phase 3.
 
 - Every phase checkpoint must remain blocked by unclassified model licenses,
   unverified native hashes, or unresolved audio cleanup failures.
@@ -152,8 +156,8 @@ relevant to the first tracer-first phases are:
 
 ## Session Continuity
 
-Last session: 2026-08-02T22:46:55Z
+Last session: 2026-08-24T18:22:08Z
 
-Stopped at: Plan LT-01-12 target-hardware checkpoints open
+Stopped at: Plan LT-01-12 focused Windows checkpoint, scenario 1 of 5 passed
 
 Resume file: `.planning/SESSION_CHECKPOINT.md`

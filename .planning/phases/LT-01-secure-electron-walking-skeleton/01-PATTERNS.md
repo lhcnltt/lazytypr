@@ -104,7 +104,7 @@ Copy the three-layer split:
 
 - Unit: lifecycle/busy/stale callbacks, cleanup, commit barrier, output ordering, sender/role/schema/bounds/redaction.
 - Electron integration: injected fake ports, two-window flow, overlay non-focusability, truthful redacted outcomes.
-- Hardware run sheet: Windows 11 Notepad and macOS 13+ arm64 TextEdit, 20 consecutive cycles per OS, including copy-only, verified paste, refused/unverifiable copy-only, and five pre-commit cancellations.
+- Hardware run sheet: Phase 1 uses exactly five focused Windows 11 scenarios; the macOS 13+ arm64 TextEdit/Accessibility section remains reserved for Phase 3. Both stay outcome-only and target-hardware labeled.
 
 Never label Linux automation, fake ports, or Playwright as native focus/Accessibility proof. All test fixtures/evidence omit ordinary speech, result text, target identity, paths, secrets, and session IDs.
 

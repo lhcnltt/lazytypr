@@ -1,20 +1,20 @@
 # Session Checkpoint
 
-Updated: 2026-08-02 after the Windows native-frame correction and GitHub
-publication.
+Updated: 2026-08-24 after the Windows overlay z-order correction and focused
+hardware-gate amendment.
 
 ## Current outcome
 
 Phase 1 implementation Plans 01-01 through 01-11 are complete. Plan 01-12 is
-active and remains blocked on two separate target-hardware checkpoints:
+active and remains blocked on the focused Windows target-hardware checkpoint:
 
-- Windows 11 x64 consecutive matrix: 0 of 20 accepted cycles.
-- macOS 13+ arm64 consecutive matrix: 0 of 20 accepted cycles.
+- Windows 11 x64 focused gate: 1 of 5 accepted scenarios at `feef839`.
+- macOS 13+ arm64 target proof: deferred to Phase 3; its schema remains empty.
 
 The public repository is `https://github.com/lhcnltt/lazytypr`. `main` remains
 the documentation baseline. Continue only on
 `phase/01-secure-electron-walking-skeleton`; its pull request must remain a
-draft until both platform gates and the final aggregate validation pass.
+draft until the focused Windows gate and final Phase 1 validation pass.
 
 No release, installer, tag, or Phase 1 completion claim exists.
 
@@ -25,6 +25,14 @@ role-specific sandboxed renderers and preloads, deterministic stub processing,
 copy-first output controller, Windows C helper, macOS Swift helper, development
 SBOM, security/privacy/licensing gates, and outcome-only hardware evidence
 validator.
+
+Commit `feef839` repairs a native Windows z-order defect found during the
+superseded manual matrix. Every inactive overlay show now reasserts topmost
+state and moves the non-activating overlay to the top. Native Windows diagnostic
+validation passed 5/5 repetitions, followed by the first accepted focused
+clipboard-only scenario at 125% scaling. The Windows helper SHA-256 is:
+
+`6fdfe66308a528f374ecbb1cc13f91383ac6a45ed2bd7aaf42d0db5dfaec0c9a`
 
 The last Windows correction is commit `4f455e1`; commit `5fccdf2` records its
 sanitized checkpoint. Windows text-mode CRLF output had violated the native
@@ -79,10 +87,11 @@ tools before building the helper. Do not commit the generated helper,
 `node_modules`, `dist`, logs, screenshots, audio, clipboard contents, or local
 machine details.
 
-## macOS checkpoint to execute next
+## Deferred Phase 3 macOS checkpoint
 
-Follow Task 3 in `01-12-PLAN.md` and the schema in
-`tests/hardware/phase1-run-sheet.md`.
+The macOS schema remains in `tests/hardware/phase1-run-sheet.md`, but native
+TextEdit/Accessibility execution no longer blocks Phase 1. Route it through the
+Phase 3 cross-platform lifecycle checkpoint.
 
 Before counting cycle 1:
 
@@ -112,10 +121,10 @@ been completed and recorded.
 
 ## Windows checkpoint still required
 
-The corrected helper and full app have target-native diagnostic evidence, but
-the official Windows 20-cycle matrix has not started. Resume it later from
-cycle 1 using the rebuilt helper, `Alt+0`, Notepad, and Task 2 of
-`01-12-PLAN.md`. Do not count any observation recorded before commit `4f455e1`.
+The focused Windows gate is 1/5 at `feef839`. Resume with verified Notepad paste,
+unavailable-target copy-only, capture cancellation, and processing cancellation.
+Do not count the invalidated pre-fix sequence or the 5/5 z-order diagnostic as
+focused scenario rows.
 
 ## Current validation evidence
 
@@ -123,8 +132,8 @@ At branch state `5fccdf2`, the following passed on Linux immediately before
 GitHub publication:
 
 - TypeScript typecheck.
-- Vitest: 44 passed; one Windows-only target test skipped.
-- Electron integration: 18 passed.
+- Native Windows Vitest: 46 passed.
+- Native Windows Electron integration: 19 passed.
 - Automated local lifecycle matrix: 20 cycles passed.
 - Renderer build, security, privacy, and licensing checks.
 - REUSE Specification 3.3: 180 of 180 files compliant.

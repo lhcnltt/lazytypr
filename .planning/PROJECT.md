@@ -192,5 +192,11 @@ accepted decision here. Preserve source precedence and the fixed eight-phase
 sequence; do not use generated planning state to override an ADR or normative
 specification.
 
+- **2026-08-24 — Phase 1 hardware gate amended:** Retain the deterministic
+  local 20-cycle cleanup regression, require exactly five focused Windows 11
+  x64 target-hardware scenarios for Phase 1, and defer macOS
+  TextEdit/Accessibility target proof to Phase 3. Authoritative sources:
+  `docs/PRODUCT_SPEC.md`, `docs/TESTING.md`, and `PLAN.md`.
+
 ---
-*Last updated: 2026-07-31 after documentation ingestion and v1 roadmap creation.*
+*Last updated: 2026-08-24 after the approved Phase 1 hardware-gate amendment.*

@@ -28,11 +28,10 @@ Scenario codes are `clipboard-only`, `verified-paste`, `copy-only-refused`,
 
 Required metadata: `platform: windows-11-x64`; `evidenceLevel: target-hardware`.
 At validation time, replace only null metadata and the empty `cycles` array
-below. Add exactly 20 consecutive rows, including at least one
-`clipboard-only`, one `verified-paste`, one `copy-only-refused`, at least one
-of each cancellation code, and five or more cancellations overall. `approval`
-may be true only after the target-native build, all rows, and the platform
-validator pass.
+below. Add exactly five rows, one for each scenario: `clipboard-only`,
+`verified-paste`, `copy-only-refused`, `cancelled-capture`, and
+`cancelled-processing`. `approval` may be true only after the target-native
+build, all five rows, and the Windows validator pass.
 
 <!-- phase1-evidence:windows -->
 ```json
@@ -58,6 +57,9 @@ validator pass.
 ```
 
 ## macOS 13+ arm64 target hardware
+
+This section is reserved for the Phase 3 cross-platform lifecycle checkpoint
+and remains empty during Phase 1.
 
 Required metadata: `platform: macos-13-arm64`; `evidenceLevel: target-hardware`.
 At validation time, replace only null metadata and the empty `cycles` array

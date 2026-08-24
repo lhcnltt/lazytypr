@@ -69,11 +69,11 @@ real audio or inference is introduced.
   no inference sidecar. Diagnostics and test evidence contain no clipboard
   text, stub result text, focus-target identity, user path, secret, or ordinary
   user content.
-- **D-10:** The measurable checkpoint is 20 consecutive development-build
-  tracer cycles on each supported OS with no stale focus/session state or
-  misdirected paste. Each OS run set includes clipboard-only, verified paste,
-  at least one refused or unverifiable target that remains copy-only, and at
-  least five cancellations during capture or processing.
+- **D-10:** The measurable checkpoint combines the deterministic local
+  20-cycle cleanup regression with exactly five focused Windows 11 x64
+  target-hardware scenarios: clipboard-only, verified Notepad paste,
+  refused/unavailable target copy-only, capture cancellation, and processing
+  cancellation. macOS TextEdit/Accessibility proof is deferred to Phase 3.
 - **D-11:** Planning and implementation stay on
   `phase/01-secure-electron-walking-skeleton`, use committed sanitized GSD
   artifacts, and do not auto-advance. No implementation begins until the Phase
