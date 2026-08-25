@@ -6,9 +6,17 @@ planned dependencies from being misrepresented as shipped components.
 
 ## Source-adapted material
 
-OpenWhispr is the planned source of selected interaction concepts and may later
-be the source of copied or substantially adapted MIT-licensed files. No such
-file is present in this baseline. Its exact license is preserved at
+The following admitted Phase 1 development sources are substantially adapted
+from OpenWhispr. They retain the upstream MIT license and copyright notice in
+their SPDX headers. They are source evidence only: no native helper binary is
+currently built, bundled, or distributed.
+
+| Local source | Immutable upstream source | Revision | Upstream SHA-256 | License | Notice status |
+|---|---|---|---|---|---|
+| `src/native/windows/focus_paste.c` | `resources/windows-fast-paste.c` | `bf8b7e0b4e1de0c9779c63f4752bd80bdd39ee2c` | `851cedde6cc8e2b1476d0e121eadd3a2951161873a0f712444828c65717c9165` | MIT | Actual source-adapted notice; see `docs/PROVENANCE.yaml`. |
+| `src/native/macos/FocusPaste.swift` | `resources/macos-fast-paste.swift` | `bf8b7e0b4e1de0c9779c63f4752bd80bdd39ee2c` | `b8a075370d44fd6893948fb532f7b2974888d664df47ba15ccc526c25bf014d1` | MIT | Actual source-adapted notice; see `docs/PROVENANCE.yaml`. |
+
+OpenWhispr’s exact pinned MIT license is preserved at
 `third_party/openwhispr/LICENSE`; SHA-256:
 `ecf1a12d3dc51085d2f3a720dc177c7da3cd075ea3fadcc6a1b719fb44ed30e0`.
 
@@ -23,13 +31,19 @@ file is present in this baseline. Its exact license is preserved at
 These tools stay outside application artifacts. GSD npm integrity is
 `sha512-dDfc0cf6mI0BaklJOvsQY9FPa4fKFT5zF+t0XQSxpAYQHMhV+uF8xtWnRoCvNjDYg69nBWkFjpM2TB4SMx7jmQ==`.
 
-## Planned runtime-bundled components
+## Development dependency graph and future runtime-bundled components
+
+The exact installed Phase 1 development graph is recorded in
+`docs/DEPENDENCY_REVIEW.md` and its generated development-only SPDX evidence is
+`artifacts/sbom/phase1-development.spdx.json`. This records local source and
+lockfile evidence; it is not a packaged or release-artifact notice set.
 
 Electron/Chromium, whisper.cpp CPU runtimes, llama.cpp CPU runtimes,
 sherpa-onnx, better-sqlite3, native paste helpers, Noto Sans, and their
-transitive dependencies are planned. They are not distributed now. Every
-future binary must ship applicable license texts/notices and an SPDX or
-CycloneDX SBOM. The root MIT license does not relicense them.
+transitive dependencies are either development-installed or planned. None are
+currently distributed by lazytypr. Every future binary must ship applicable
+license texts/notices and an SPDX or CycloneDX release SBOM. The root MIT
+license does not relicense them.
 
 ## Planned user-downloaded components
 

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "maximumFrameBytes": 4096,
+  "operations": ["capture", "paste"],
+  "nonSuccessOutcomes": [
+    "target_mismatch",
+    "activation_denied",
+    "permission_denied",
+    "target_unavailable",
+    "timeout",
+    "helper_error",
+    "invalid_request"
+  ],
+  "invalidRequestLabels": ["malformed", "oversize", "unknown_key"],
+  "adapterRefusalLabels": [
+    "missing_binary",
+    "timeout",
+    "aborted",
+    "extra_frame",
+    "invalid_utf8",
+    "wrong_request",
+    "wrong_platform"
+  ]
+}

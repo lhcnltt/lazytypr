@@ -99,7 +99,7 @@ audio, secrets, raw filesystem paths, stack traces, or provider bodies.
 | `history:clear` | control | confirmation nonce | removed count |
 | `diagnostics:get-snapshot` | control | empty | sanitized bounded report |
 | `diagnostics:copy-report` | control | snapshot revision | clipboard outcome |
-| `session:cancel` | overlay | current session ID | accepted/no-active-session |
+| `session:cancel` | overlay, control | current session ID | accepted/no-active-session |
 | `session:dismiss` | overlay | terminal session ID | void |
 | `capture:ready` | overlay | current session ID + protocol version | transferred port or rejection |
 
@@ -107,6 +107,12 @@ No invocation accepts arbitrary paths, URLs, commands, clipboard text, SQL,
 model metadata, or sidecar connection information. Destructive confirmations
 are short-lived, action-bound nonces created by main after the matching UI
 disclosure.
+
+Both role-specific preloads may expose `session:cancel` so the non-focusable
+overlay has an accessible control-window alternative. Main accepts it only from
+the exact registered overlay or control `webContents`, requires the current
+main-owned session ID, and treats a stale or absent session as
+`no-active-session`; a renderer cannot select or create a different session.
 
 ## Event catalog
 

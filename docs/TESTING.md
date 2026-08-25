@@ -47,6 +47,17 @@ duplicate history result. Interrupt and resume downloads; delete models only
 while idle; block all external network after setup and repeat dictation and
 translation.
 
+## Phase 1 target-hardware gate
+
+Phase 1 combines the deterministic local 20-cycle cleanup regression with
+exactly five focused Windows 11 x64 target-hardware scenarios: clipboard-only,
+verified Notepad paste, refused or unavailable target copy-only, capture
+cancellation, and processing cancellation. Record outcome-only evidence and
+require the target-native helper build/hash, zero non-loopback connections,
+zero sidecars, non-activating topmost overlay behavior, clean terminal state,
+and no misdirected paste. macOS TextEdit and Accessibility proof remains a
+target-hardware requirement deferred to Phase 3.
+
 ## Future platform matrix
 
 Windows 11 CPU-only tests cover Notepad, Word/Outlook, Chrome, VS Code, an

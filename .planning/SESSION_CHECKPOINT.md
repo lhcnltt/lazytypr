@@ -1,97 +1,163 @@
 # Session Checkpoint
 
-Updated: 2026-07-31 during documentation baseline generation.
+Updated: 2026-08-24 after completing the focused Windows hardware gate and all
+Phase 1 implementation plans.
 
-## User intent and hard boundary
+## Current outcome
 
-Implement the approved “lazytypr Public Documentation and GSD Readiness Plan.”
-This phase is documentation-only: no Electron/application source, package
-manifest, native helper, sidecar, installer, model, application test, remote,
-tag, release, or push. Initialize local Git on `main` and finish with one
-path-scoped documentation baseline commit.
+All 12 Phase 1 implementation plans are complete:
 
-Keep `.codex/config.toml` with:
+- Windows 11 x64 focused gate: 5 of 5 accepted scenarios at evidence commit
+  `4e294fe`.
+- Windows validator: passed with 5 rows and 2 cancellations.
+- macOS 13+ arm64 target proof: deferred to Phase 3; its schema remains empty
+  and schema-valid.
 
-```toml
-# Only while using Plan mode
-plan_mode_reasoning_effort = "xhigh"
+The public repository is `https://github.com/lhcnltt/lazytypr`. `main` remains
+the documentation baseline. Continue only on
+`phase/01-secure-electron-walking-skeleton`; its pull request must remain a
+draft until Phase 1 goal, code, and security verification pass.
+
+No release, installer, tag, merge, or final Phase 1 sign-off exists.
+
+## Latest validated implementation state
+
+The Phase 1 branch contains the approved package graph, secure Electron tracer,
+role-specific sandboxed renderers and preloads, deterministic stub processing,
+copy-first output controller, Windows C helper, macOS Swift helper, development
+SBOM, security/privacy/licensing gates, and outcome-only hardware evidence
+validator.
+
+Commit `feef839` repairs a native Windows z-order defect found during the
+superseded manual matrix. Every inactive overlay show now reasserts topmost
+state and moves the non-activating overlay to the top. Native Windows diagnostic
+validation passed 5/5 repetitions, followed by all five accepted focused
+scenarios. The Windows helper SHA-256 is:
+
+`6fdfe66308a528f374ecbb1cc13f91383ac6a45ed2bd7aaf42d0db5dfaec0c9a`
+
+The last Windows correction is commit `4f455e1`; commit `5fccdf2` records its
+sanitized checkpoint. Windows text-mode CRLF output had violated the native
+adapter's canonical NDJSON framing. The helper now puts standard streams in
+binary mode. The target-native x64 MSVC helper SHA-256 was:
+
+`92758ca42a682ec6b408aa34ca0089f2a224ab51c502a6bbef7cc1223b12073b`
+
+A controlled full-application Windows diagnostic subsequently reached
+`Pasted`. That diagnostic is not a matrix cycle. The earlier clipboard-only
+observation was invalidated by the source correction, so the tracked run sheet
+correctly remains empty.
+
+The Windows Phase 1 hotkey is `Alt+0`. The macOS hotkey remains
+`Control+Option+Space`.
+
+## Fresh Mac resume procedure
+
+Clone and select the Phase 1 branch:
+
+```bash
+git clone https://github.com/lhcnltt/lazytypr.git
+cd lazytypr
+git switch phase/01-secure-electron-walking-skeleton
+git status --short --branch
+git rev-parse --short HEAD
 ```
 
-## Completed in the working tree
+Use Node 24 as pinned by `.nvmrc`, install exactly the committed dependency
+graph, and build the target-native helper:
 
-- Revised all 16 sections of `PLAN.md` for public/local-first publication,
-  authenticated sidecars, JSON translation payloads, direct provider downloads,
-  test-audio provenance, GSD phases 1–8, and public/release risks.
-- Added root publication/policy files, MIT/REUSE material, OpenWhispr license,
-  GitHub CODEOWNERS/templates, `.gitignore`, and repository `AGENTS.md`.
-- Added ten accepted ADRs and normative product, architecture, IPC, UI, model,
-  testing, test-data, security/privacy, licensing, provenance, development, GSD,
-  release, and upstream-evidence documents.
-- Added six Mermaid diagrams in `docs/ARCHITECTURE.md`.
-- Installed GSD Core 1.9.1 globally through the official Codex transformer.
-  Verified commit `957ebd8e6c62201ce7a44d49bfa92a1c0807cc25`, npm integrity
-  `sha512-dDfc0cf6mI0BaklJOvsQY9FPa4fKFT5zF+t0XQSxpAYQHMhV+uF8xtWnRoCvNjDYg69nBWkFjpM2TB4SMx7jmQ==`,
-  and Codex 0.146.0.
-- Initialized local Git on branch `main`; no commit, remote, tag, or push yet.
-- Added the exact requested `.planning/config.json` and a 21-document ingest
-  manifest. Normalized the evidence document from unsupported type `RESEARCH`
-  to GSD-supported context type `DOC` at precedence 20.
+```bash
+node --version
+npm --version
+npm ci
+./src/native/macos/build.sh
+file src/native/macos/bin/focus_paste
+shasum -a 256 src/native/macos/bin/focus_paste
+```
 
-## GSD generation result
+Then run the complete automated gate before launching the tracer:
 
-The pinned `$gsd-ingest-docs` workflow completed in new mode against the curated
-21-document manifest. It generated:
+```bash
+npm run check
+reuse lint
+npm run verify:hardware-evidence -- --schema-only
+npm run dev
+```
 
-- `.planning/PROJECT.md`
-- `.planning/REQUIREMENTS.md`
-- `.planning/ROADMAP.md`
-- `.planning/STATE.md`
-- `.planning/INGEST-CONFLICTS.md`
-- `.planning/intel/`
+If `swiftc` is unavailable, install or select Apple's command-line developer
+tools before building the helper. Do not commit the generated helper,
+`node_modules`, `dist`, logs, screenshots, audio, clipboard contents, or local
+machine details.
 
-The result contains 10 locked decisions, 17 requirements mapped exactly once,
-and the exact eight tracer-first phases. `INGEST-CONFLICTS.md` reports zero
-blockers, warnings, and informational resolutions. Native GSD roadmap validation
-passes. Documentation is complete; implementation Phase 1 is not started. No
-GSD phase specification, planning, or execution command ran.
+## Deferred Phase 3 macOS checkpoint
 
-## Remaining work
+The macOS schema remains in `tests/hardware/phase1-run-sheet.md`, but native
+TextEdit/Accessibility execution no longer blocks Phase 1. Route it through the
+Phase 3 cross-platform lifecycle checkpoint.
 
-At resume, inspect Git first. If `main` has no commit, re-run the final static
-checks, stage only the documented baseline paths, and create the one baseline
-commit. If `main` has one baseline commit, the tree is clean, and no remote
-exists, this documentation phase is complete; do not begin Phase 1 without a
-separately accepted GSD phase plan.
+Before counting cycle 1:
 
-## Validation completed
+1. Confirm Apple Silicon reports `arm64`, the native helper builds, the full
+   automated gate passes, and exactly one lazytypr main process is running.
+2. Confirm the control window reports Ready and `Control+Option+Space` opens a
+   non-activating Listening overlay.
+3. Keep the run sheet free of dictated text, clipboard contents, application or
+   window identity, paths, process IDs, screenshots, audio, secrets, and session
+   identifiers.
 
-- Markdown lint: 45 Markdown files, zero errors with the repository policy.
-- Markdown links: all checked links passed.
-- Mermaid: all six diagrams compiled with Mermaid CLI 11.12.0.
-- JSON, YAML, `REUSE.toml`, and `.codex/config.toml`: parsed successfully.
-- REUSE 3.3: 75/75 files licensed and copyrighted; zero errors.
-- OpenWhispr preserved license SHA-256: exact pinned
-  `ecf1a12d3dc51085d2f3a720dc177c7da3cd075ea3fadcc6a1b719fb44ed30e0`.
-- Requirements/ADRs/roadmap: 17 requirements, 10 accepted ADRs, eight phases;
-  generated traceability is complete and one-to-one.
-- Scope/security scan: no local-user paths, credential patterns, audio/model
-  weights, signing material, executables, application source, or package
-  manifest found.
-- Fresh-context reader review found no contradiction. It identified ambiguous
-  Phase 1 shared-gate ownership and repeatability/platform scope; the product
-  spec, `PLAN.md`, generated requirements, and roadmap now clarify 20 cycles per
-  OS, Notepad/TextEdit verification, refused-target copy-only behavior, and
-  continuing security/network/privacy/licensing gates. A retest found and then
-  closed the remaining LT-CAN-001 omission: at least five cycles per OS must
-  cancel cleanly during stub capture or processing.
-- GSD 1.9.1 roadmap validation passes. Its config validator warns that the
-  bundled-template `safety` namespace is unknown/ignored; the exact locked keys
-  remain in config, and repository/Codex confirmation rules remain authoritative.
-- Final fresh-context retest: PASS; no missing product or technical decision
-  prevents Phase 1 planning.
+The matrix must contain exactly 20 consecutive successful cycles. It must
+include at least one clipboard-only result, one verified paste into TextEdit,
+one copy-only refusal caused by denied/revoked Accessibility or an unverifiable
+target, at least one capture cancellation, at least one processing
+cancellation, and five cancellations total. Any failed cycle invalidates the
+platform matrix and restarts it at cycle 1.
 
-## Evidence boundaries
+After the macOS rows are complete, run:
 
-Current evidence is limited to pinned upstream source inspection, local
-static/document validation, and generated GSD planning validation. No
-implementation, packaged-build, or Windows/macOS hardware test has occurred.
+```bash
+npm run verify:hardware-evidence -- --platform macos
+```
+
+Do not run the all-platform approval gate until the deferred Phase 3 macOS
+matrix has also been completed and recorded.
+
+## Windows checkpoint complete
+
+The focused Windows gate is 5/5 at evidence commit `4e294fe`:
+clipboard-only, verified Notepad paste, unavailable-target copy-only, capture
+cancellation, and processing cancellation. The prior invalidated sequence and
+5/5 z-order diagnostic remain excluded from the focused scenario rows.
+
+## Current validation evidence
+
+At branch state `4e294fe`, the following passed after Windows evidence
+completion:
+
+- TypeScript typecheck.
+- Linux Vitest: 46 passed and one Windows-only test skipped.
+- Linux Electron integration: 19 passed.
+- Automated local lifecycle matrix: 20 cycles passed.
+- Renderer build, security, privacy, and licensing checks.
+- REUSE Specification 3.3: 181 of 181 files compliant.
+- Windows hardware validator: 5 rows and 2 cancellations passed.
+- Hardware schema validator: passed with the macOS section empty.
+- Live Windows process observation: zero non-loopback connections and zero
+  sidecar processes.
+
+The five rows are Windows target-hardware evidence. Automated Linux results are
+local evidence only, and macOS remains unverified until Phase 3.
+
+## Locked boundaries
+
+- Main is the sole privileged application authority.
+- Audio remains in memory only; ordinary user speech is never recorded or
+  committed.
+- Copy always precedes optional verified paste; unverifiable targets remain
+  copy-only.
+- No cloud inference, telemetry, analytics, accounts, updater, sidecar, model,
+  history, or later-phase placeholder enters Phase 1.
+- Generated hardware evidence is outcome-only. Human observations do not
+  replace the fail-closed validator.
+- Phase 1 sign-off remains pending goal, code, and security verification. The
+  Windows target-hardware and full automated gates pass; macOS proof is deferred
+  to Phase 3.

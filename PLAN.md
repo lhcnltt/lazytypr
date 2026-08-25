@@ -226,7 +226,7 @@ Defaults:
 - Dictation language: automatic
 - Dictation and translation STT: Whisper Small
 - Translation LLM: Qwen3.5 4B Q4_K_M
-- Windows hotkeys: `Ctrl+Shift+Space` and `Ctrl+Alt+Space`
+- Windows hotkeys: `Alt+0` and `Ctrl+Alt+Space`
 - macOS hotkeys: `Control+Option+Space` and `Control+Option+T`
 - Maximum recording: five minutes
 
@@ -757,13 +757,12 @@ without that approval.
 - Prove hotkey → stub capture/result → clipboard → verified optional paste.
 - Establish sandboxed two-window boundaries, typed IPC, session ownership, and
   deterministic cleanup before adding real inference.
-- Checkpoint: 20 consecutive development-build tracer cycles pass on each
-  supported OS without stale focus/session state or misdirected paste. The set
-  includes clipboard-only, verified Notepad/TextEdit paste, and a refused or
-  unverifiable target that remains copy-only. At least five cycles per OS cancel
-  during stub capture or processing, return idle within two seconds, and produce
-  no clipboard, paste, or history outcome. Phase 3 owns the full target and
-  50/100-cycle lifecycle matrices.
+- Checkpoint: the deterministic local 20-cycle cleanup regression passes, then
+  exactly five focused Windows 11 x64 target-hardware scenarios pass:
+  clipboard-only, verified Notepad paste, refused/unavailable target copy-only,
+  capture cancellation, and processing cancellation. Phase 3 owns the deferred
+  macOS TextEdit/Accessibility proof plus the full target and 50/100-cycle
+  lifecycle matrices.
 
 ### Phase 2 — In-memory PCM and Whisper dictation
 
@@ -775,7 +774,8 @@ without that approval.
 
 - Harden hotkeys, permissions, focus, paste, cancellation, crash recovery, and
   repeated use on Windows and macOS.
-- Checkpoint: platform lifecycle and repeated-use matrices pass.
+- Checkpoint: the deferred macOS TextEdit/Accessibility target-hardware proof
+  and the platform lifecycle and repeated-use matrices pass.
 
 ### Phase 4 — Complete model lifecycle and STT catalog
 

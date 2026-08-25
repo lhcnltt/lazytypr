@@ -14,6 +14,8 @@ the documentation baseline claims none of these scenarios as executed.
 
 - Defaults: Whisper Small; Qwen3.5 4B Q4_K_M; language auto; clipboard-only.
 - Interaction: tap-to-start/tap-to-stop; five-minute maximum; Escape cancels.
+- Phase 1 dictation hotkey: `Alt+0` on Windows and
+  `Control+Option+Space` on macOS.
 - Local only after explicit direct-source model/runtime downloads.
 - No persistent audio, cloud inference, accounts, telemetry, analytics, updater,
   remote catalog, meeting capture, notes, team features, or Linux v1 target.
@@ -52,15 +54,15 @@ one-to-one ownership does not waive required slices in earlier phases.
 
 Phase 1 owns LT-OUT-001 and must also establish the foundational slices of
 LT-FUN-001, LT-PST-001, LT-CAN-001, LT-NET-001, LT-SEC-001, LT-LIC-001, and
-LT-PRV-001. Its measurable gate is 20 consecutive stub tracer cycles on each
-supported OS with no stale session/focus state or misdirected paste. The run set
-must include clipboard-only behavior, verified paste to Windows Notepad and
-macOS TextEdit, and at least one refused or unverifiable target per OS that
-remains copy-only. At least five cycles per OS cancel during stub capture or
-processing, return idle within two seconds, and produce no clipboard, paste, or
-history outcome. This is a development-build tracer gate; the full
-application/platform target matrix and 50/100 lifecycle stress counts remain
-due in Phase 3.
+LT-PRV-001. Its measurable gate combines the deterministic local 20-cycle
+cleanup regression with exactly five focused Windows 11 x64 target-hardware
+scenarios: clipboard-only, verified paste to Notepad, refused or unavailable
+target copy-only, capture cancellation, and processing cancellation. Every
+scenario must preserve focus safety, avoid misdirected paste, return idle within
+two seconds where applicable, and emit no history output. macOS TextEdit and
+Accessibility target-hardware proof is deferred to the Phase 3 cross-platform
+lifecycle checkpoint; Linux, fake-port, Electron, and Playwright evidence never
+substitute for either native platform proof.
 
 Every later phase continues to enforce LT-NET-001, LT-SEC-001, LT-LIC-001, and
 LT-PRV-001 at the scope it introduces, even though final requirement ownership
@@ -75,6 +77,11 @@ translation and sidecar-security outcomes.
 - STT failure produces no clipboard, paste, or history item.
 - Translation failure preserves successful Portuguese and marks the one history
   row `translation_failed`; user cancellation does not activate fallback.
+- Cancellation linearizes at a main-owned output commit barrier. An Escape
+  accepted before the synchronous clipboard write cancels with no output. Once
+  that write begins, lazytypr never restores or clears the copied result; an
+  accepted cancellation before native paste dispatch suppresses paste and
+  finishes copy-only, and the UI must not claim that nothing was copied.
 - Paste activation/verification failure becomes copy-only and never targets a
   different application.
 - Sidecar cancellation waits two seconds, force-kills if needed, restarts, and

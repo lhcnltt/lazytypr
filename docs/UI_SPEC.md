@@ -30,8 +30,8 @@ appear.
 | listening | Waveform + “Listening” | Same hotkey stops; Escape cancels |
 | transcribing | Spinner + “Transcribing” | Escape cancels |
 | translating | Direction icon + “Translating pt-BR → en-US” | Escape cancels |
-| copying | Clipboard icon + label | Escape cancels |
-| pasting | Target icon + label | Escape cancels |
+| copying | Clipboard icon + label | Escape cancels only before clipboard commit |
+| pasting | Target icon + label | Escape accepted before native dispatch suppresses paste; copy remains |
 | success | Check + copied/pasted outcome | Dismiss or 2 s timeout |
 | cancelled | Muted stop icon + label | 2 s timeout |
 | transcription error | Red error + recovery | Open diagnostics/dismiss |
@@ -42,6 +42,11 @@ appear.
 Only one session exists. A second hotkey while processing shows busy without
 creating another. Because the overlay is non-focusable, Escape is registered by
 main and a visible control is exposed through an accessible alternate route.
+Cancellation is linearized at the main-owned clipboard commit barrier: before
+commit it produces the normal no-output cancelled outcome; after commit it
+never restores or clears the clipboard, may suppress a not-yet-dispatched
+paste, and must report the retained copied outcome rather than “nothing was
+copied.”
 
 ## Onboarding
 

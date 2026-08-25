@@ -1,12 +1,19 @@
 ---
-gsd_state_version: '1.0'
-status: documentation_baseline
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+current_phase: 2
+current_phase_name: In-memory PCM and Whisper dictation
+status: planning
+stopped_at: Phase 1 verified and complete; Phase 2 is ready for context and planning
+last_updated: "2026-08-24T19:10:48.394Z"
+last_activity: 2026-08-24
+last_activity_desc: Phase 1 complete, transitioned to Phase 2
 progress:
   total_phases: 8
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  completed_phases: 1
+  total_plans: 12
+  completed_plans: 12
 ---
 
 # Project State
@@ -19,38 +26,56 @@ See: `.planning/PROJECT.md` (updated 2026-07-31)
 recordings or exposing it to cloud services, while retaining a dependable
 copy-first result.
 
-**Current focus:** Roadmap review; Phase 1 is next only after an accepted phase
-plan authorizes implementation.
+**Current focus:** Phase 2 — establish bounded in-memory PCM capture and real
+Whisper dictation without persisting a recording.
 
 ## Current Position
 
-Phase: 1 of 8 (Secure Electron walking skeleton)
+Phase: 2 — In-memory PCM and Whisper dictation
 
-Plan: 0 of 0 (no phase plan exists)
+Plan: 0 of TBD
 
-Status: Documentation baseline — roadmap created; planning and implementation
-are not authorized yet.
+Total Plans in Phase: TBD
 
-Last activity: 2026-07-31 — ingested authoritative documents and created the
-v1 requirements, fixed eight-phase roadmap, and traceability map.
+Status: Ready for context and planning
 
-Progress: [░░░░░░░░░░] 0%
+Last activity: 2026-08-24 — Phase 1 complete, transitioned to Phase 2
+
+Last Activity Description: Phase 1 verification passed; Phase 2 is ready to begin
+
+Milestone progress: 1 of 8 phases complete
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
+- Total plans completed: 12
+- Average duration: not recalculated for the hardware checkpoint
+- Total execution time: 115m recorded plus the hardware checkpoint
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| LT-01 | 12 | 115m + checkpoint | n/a |
 
-**Recent Trend:** No execution data yet.
+**Recent Trend:** Phase 1 is verified and complete. Phase 2 has not started.
+**Per-Plan Metrics:**
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase LT-01 P01 | 15m | 1 tasks | 4 files |
+| Phase LT-01 P02 | 5m | 2 tasks | 5 files |
+| Phase LT-01 P03 | 7m | 2 tasks | 10 files |
+| Phase LT-01 P04 | 7m | 3 tasks | 6 files |
+| Phase LT-01 P05 | 15m | 3 tasks | 9 files |
+| Phase LT-01 P06 | 9m | 2 tasks | 8 files |
+| Phase LT-01 P07 | 5m | 2 tasks | 7 files |
+| Phase LT-01 P08 | 17m | 3 tasks | 11 files |
+| Phase LT-01 P09 | 9m | 3 tasks | 15 files |
+| Phase LT-01 P10 | 8m | 2 tasks | 11 files |
+| Phase LT-01 P11 | 18m | 2 tasks | 9 files |
+| Phase LT-01 P12 | checkpoint | 3 tasks | 5 key files |
 
 ## Accumulated Context
 
@@ -61,22 +86,55 @@ relevant to the first tracer-first phases are:
 
 - Electron main is the sole authority; overlay and control renderers are
   sandboxed with role-specific preloads.
+
 - PCM is bounded to active-session memory; no recording or filesystem audio
   path is permitted.
+
 - Inference uses authenticated random-loopback sidecars; model downloads are
   explicit, main-owned, and immutable-provider based.
+
 - Copy precedes paste, and a paste failure is copy-only.
 - This documentation baseline cannot begin a phase without an accepted plan,
   phase branch, and one PR to `main`.
 
+- [Phase 1]: Approved the exact seven-package Phase 1 SUS npm set, including reviewed integrity and lifecycle metadata.
+- [Phase 1]: Accepted react-dom@19.1.0 as the matching createRoot renderer counterpart to react@19.1.0.
+- [Phase 1]: No additional direct npm dependency is authorized before the Plan 01-02 approved install and lockfile review.
+- [Phase 1]: Used only the approved eight-package Phase 1 graph with exact versions and a reproducible lockfile.
+- [Phase 1]: Established strict Node 24 TypeScript and a deterministic one-shot Vitest unit seam before renderer or Electron behavior.
+- [Phase 1]: Vite builds direct packaged renderer entries from a renderer-root configuration.
+- [Phase 1]: Local Playwright configuration remains evidence-limited and cannot satisfy target-hardware gates.
+- [Phase 1]: Outcome-only evidence records reject protected fields, simulation labels, and duplicate platform-cycle rows.
+- [Phase 1]: Kept tracer output text and focus targets main-only; presentation receives only safe state and finite outcomes.
+- [Phase 1]: Linearized cancellation at the synchronous clipboard write: pre-commit has no output and post-commit is retained copy-only.
+- [Phase 1]: Bound native focus/paste helpers to strict 4096-byte version-1 NDJSON with finite outcome codes only.
+- [Phase 1]: Main owns immutable webContents role registration and binds guarded IPC before renderer load.
+- [Phase 1]: Phase 1 renderer session policy denies every permission and all HTTP(S) renderer requests.
+- [Phase 1]: Preloads expose only fixed named methods and idempotent subscription disposers.
+- [Phase 1]: Windows helper refuses held modifiers rather than synthesizing release/repress input.
+- [Phase 1]: Windows adapter accepts only canonical version-one frames with strict Zod keys and fixed finite stderr codes.
+- [Phase 1]: Windows compile and focus validation remain assigned to Plan 01-12 target hardware.
+- [Phase 1]: macOS native focus/paste keeps Accessibility refusal and identity uncertainty as finite copy-only outcomes.
+- [Phase 1]: macOS helper transport uses a fixed execFile path, strict protocol v1 frames, a two-second timeout, and no shell fallback.
+- [Phase 1]: Linux proves macOS source, protocol, and adapter behavior only; Plan 01-12 retains target-native compile and hardware focus validation.
+- [Phase 1]: Vitest unit runs include only dependency-injected tracer integration tests while retaining bounded deterministic one-shot constraints.
+- [Phase 1]: Renderer terminal and busy display uses sanitized finite outcomes from main snapshots; no controlled text or target data crosses the boundary.
+- [Phase 1]: The approved dependency set remains unchanged; a local declaration shim enables TSX inspection without adding an unreviewed package.
+- [Phase 1]: Pinned compliance evidence to the committed npm lockfile and approved direct package graph.
+- [Phase 1]: Generated a sanitized offline SPDX document as development evidence, not release qualification.
+- [Phase 1]: Isolated licensing tests so the established unit and integration runner boundary remains intact.
+- [Phase 1]: The aggregate check runs normal Electron coverage and the deterministic cycle matrix as disjoint commands so each local evidence case executes once.
+- [Phase 1]: Plan 01-11 evidence is local injected-port/Electron validation only; Windows/macOS target-hardware proof remains Plan 01-12.
+
 ### Pending Todos
 
-None yet.
+- Gather Phase 2 context and approve a Phase 2 plan before implementation.
+- Carry the macOS TextEdit/Accessibility target proof into Phase 3.
 
 ### Blockers/Concerns
 
-- Implementation is intentionally blocked by the documentation-only baseline
-  until a phase plan is accepted.
+- macOS target hardware remains required in Phase 3.
+
 - Every phase checkpoint must remain blocked by unclassified model licenses,
   unverified native hashes, or unresolved audio cleanup failures.
 
@@ -88,10 +146,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-31
+Last session: 2026-08-24T19:10:48Z
 
-Stopped at: Roadmap and one-to-one requirement traceability were created from
-the accepted ADRs, product specification, normative specifications, and
-`PLAN.md` section 13.
+Stopped at: Phase 1 verified and complete; Phase 2 ready for context and planning
 
 Resume file: `.planning/SESSION_CHECKPOINT.md`
